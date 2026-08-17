@@ -1,4 +1,6 @@
-import type { QuestionType } from './types.ts'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import type { Meta, PublicQuestion, Question, QuestionsDoc, QuestionType } from './types.ts'
 
 const TYPES: QuestionType[] = ['mcq', 'multi', 'blank', 'short', 'code', 'match']
 
@@ -178,6 +180,37 @@ function validateQuestions(doc: unknown): string[] {
     validateQuestion(raw, i, seen, out)
   }
   return out
+}
+
+function readJson(path: string, label: string): unknown {
+  let raw: string
+  try {
+    raw = readFileSync(path, 'utf8')
+  } catch (err) {
+    throw new QuizError(`cannot read ${label} at ${path}`, [(err as Error).message])
+  }
+  try {
+    return JSON.parse(raw)
+  } catch (err) {
+    throw new QuizError(`${label} is not valid JSON`, [(err as Error).message])
+  }
+}
+
+export function loadFull(dir: string): { meta: Meta; questions: Question[] } {
+  const meta = readJson(join(dir, 'meta.json'), 'meta.json') as Meta
+  const doc = readJson(join(dir, 'questions.json'), 'questions.json')
+  const errors = validateQuestions(doc)
+  if (errors.length > 0) throw new QuizError('questions.json failed validation', errors)
+  return { meta, questions: (doc as QuestionsDoc).questions }
+}
+
+export function loadPublic(dir: string): { meta: Meta; questions: PublicQuestion[] } {
+  const { meta, questions } = loadFull(dir)
+  const questionsList: PublicQuestion[] = questions.map((q) => {
+    const { answer: _answer, rationale: _rationale, ...rest } = q
+    return rest as PublicQuestion
+  })
+  return { meta, questions: questionsList }
 }
 
 export { QuizError, TYPES, validateQuestions }

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
-import { validateQuestions } from '../lib/quiz.ts'
+import { loadFull, loadPublic, QuizError, validateQuestions } from '../lib/quiz.ts'
 
 const JSON_OBJECT_RE = /JSON object/
 const VERSION_RE = /version/
@@ -98,4 +99,42 @@ test('reports a missing prompt without throwing, even for blank', () => {
   doc.questions[2].prompt = undefined
   const errors = validateQuestions(doc)
   expect(errors.join('\n')).toMatch(MISSING_PROMPT_RE)
+})
+
+const FIXTURE_DIR = fileURLToPath(new URL('../examples/all-types', import.meta.url))
+
+test('loadFull keeps the answer key', () => {
+  const { meta, questions } = loadFull(FIXTURE_DIR)
+  expect(meta.id).toBe('a3f9')
+  const first = questions[0]
+  if (first?.type !== 'mcq') throw new Error('fixture drifted')
+  expect(first.answer).toBe('b')
+  expect(first.rationale).toBeTruthy()
+})
+
+test('loadPublic strips answer and rationale from every question', () => {
+  for (const q of loadPublic(FIXTURE_DIR).questions) {
+    expect(q, `${q.id} still has answer`).not.toHaveProperty('answer')
+    expect(q, `${q.id} still has rationale`).not.toHaveProperty('rationale')
+  }
+})
+
+test('serialized loadPublic output contains no answer key anywhere', () => {
+  const json = JSON.stringify(loadPublic(FIXTURE_DIR))
+  expect(json).not.toContain('"answer"')
+  expect(json).not.toContain('"rationale"')
+})
+
+test('loadPublic keeps the fields the browser needs', () => {
+  const { questions } = loadPublic(FIXTURE_DIR)
+  const mcq = questions.find((q) => q.type === 'mcq')
+  const code = questions.find((q) => q.type === 'code')
+  const match = questions.find((q) => q.type === 'match')
+  expect(mcq?.type === 'mcq' && mcq.choices).toHaveLength(3)
+  expect(code?.type === 'code' && code.language).toBe('typescript')
+  expect(match?.type === 'match' && match.right).toHaveLength(3)
+})
+
+test('loadFull throws QuizError for a missing directory', () => {
+  expect(() => loadFull('/nonexistent/quiz/dir')).toThrow(QuizError)
 })
