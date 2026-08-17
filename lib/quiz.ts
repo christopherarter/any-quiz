@@ -1,6 +1,14 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { Meta, PublicQuestion, Question, QuestionsDoc, QuestionType } from './types.ts'
+import type {
+  Answers,
+  Meta,
+  PublicQuestion,
+  Question,
+  QuestionsDoc,
+  QuestionType,
+  ResponseEntry,
+} from './types.ts'
 
 const TYPES: QuestionType[] = ['mcq', 'multi', 'blank', 'short', 'code', 'match']
 
@@ -182,6 +190,18 @@ function validateQuestions(doc: unknown): string[] {
   return out
 }
 
+const STAMP_STRIP_RE = /[-:]/g
+const STAMP_FRACTIONAL_SECONDS_RE = /\.\d+Z$/
+
+function skeleton(quizId: string, questionIds: string[]): Answers {
+  const now = new Date().toISOString()
+  const responses: Record<string, ResponseEntry> = {}
+  for (const id of questionIds) {
+    responses[id] = { value: null, flagged: false }
+  }
+  return { quizId, status: 'draft', startedAt: now, updatedAt: now, submittedAt: null, responses }
+}
+
 function readJson(path: string, label: string): unknown {
   let raw: string
   try {
@@ -217,6 +237,42 @@ export function loadPublic(dir: string): { meta: Meta; questions: PublicQuestion
     return rest as PublicQuestion
   })
   return { meta, questions: questionsList }
+}
+
+export function answersPath(dir: string): string {
+  return join(dir, 'answers.json')
+}
+
+export function readAnswers(dir: string, quizId: string, questionIds: string[]): Answers {
+  const path = answersPath(dir)
+  if (!existsSync(path)) {
+    return skeleton(quizId, questionIds)
+  }
+  const saved = readJson(path, 'answers.json') as Answers
+  saved.responses ??= {}
+  for (const id of questionIds) {
+    saved.responses[id] ??= { value: null, flagged: false }
+  }
+  return saved
+}
+
+export function writeAnswers(dir: string, answers: Answers): void {
+  answers.updatedAt = new Date().toISOString()
+  const path = answersPath(dir)
+  const tmpPath = `${path}.tmp`
+  writeFileSync(tmpPath, `${JSON.stringify(answers, null, 2)}\n`)
+  renameSync(tmpPath, path)
+}
+
+export function archiveAnswers(dir: string): string {
+  const path = answersPath(dir)
+  const saved = readJson(path, 'answers.json') as Answers
+  const stamp = (saved.submittedAt ?? new Date().toISOString())
+    .replace(STAMP_STRIP_RE, '')
+    .replace(STAMP_FRACTIONAL_SECONDS_RE, 'Z')
+  const target = join(dir, `answers-${stamp}.json`)
+  renameSync(path, target)
+  return target
 }
 
 export { QuizError, TYPES, validateQuestions }

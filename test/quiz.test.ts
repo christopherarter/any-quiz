@@ -1,7 +1,18 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
-import { loadFull, loadPublic, QuizError, validateQuestions } from '../lib/quiz.ts'
+import {
+  answersPath,
+  archiveAnswers,
+  loadFull,
+  loadPublic,
+  QuizError,
+  readAnswers,
+  validateQuestions,
+  writeAnswers,
+} from '../lib/quiz.ts'
 
 const JSON_OBJECT_RE = /JSON object/
 const VERSION_RE = /version/
@@ -16,6 +27,7 @@ const RIGHT_ID_RE = /right id/
 const LEFT_IDS_RE = /left ids/
 const LANGUAGE_RE = /language/
 const MISSING_PROMPT_RE = /missing prompt/
+const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T/
 
 // biome-ignore lint/suspicious/noExplicitAny: the point of these tests is to feed invalid shapes in
 const fixture = (): any =>
@@ -141,4 +153,60 @@ test('loadPublic keeps the fields the browser needs', () => {
 
 test('loadFull throws QuizError for a missing directory', () => {
   expect(() => loadFull('/nonexistent/quiz/dir')).toThrow(QuizError)
+})
+
+const tmp = () => mkdtempSync(join(tmpdir(), 'anyquiz-'))
+
+test('readAnswers returns a skeleton when no file exists', () => {
+  const a = readAnswers(tmp(), 'a3f9', ['q1', 'q2'])
+  expect(a.quizId).toBe('a3f9')
+  expect(a.status).toBe('draft')
+  expect(a.submittedAt).toBeNull()
+  expect(a.responses).toEqual({
+    q1: { value: null, flagged: false },
+    q2: { value: null, flagged: false },
+  })
+})
+
+test('writeAnswers then readAnswers round-trips', () => {
+  const dir = tmp()
+  const a = readAnswers(dir, 'a3f9', ['q1'])
+  a.responses.q1 = { value: 'b', flagged: true }
+  writeAnswers(dir, a)
+  // biome-ignore lint/suspicious/noUnnecessaryConditions: tsc requires the `?.` under noUncheckedIndexedAccess even though biome's inferencer doesn't model it
+  expect(readAnswers(dir, 'a3f9', ['q1']).responses.q1?.value).toBe('b')
+})
+
+test('writeAnswers stamps updatedAt and leaves no tmp file behind', () => {
+  const dir = tmp()
+  writeAnswers(dir, readAnswers(dir, 'a3f9', ['q1']))
+  expect(readAnswers(dir, 'a3f9', ['q1']).updatedAt).toMatch(ISO_TIMESTAMP_RE)
+  expect(readdirSync(dir)).toEqual(['answers.json'])
+})
+
+test('readAnswers backfills question ids added since the draft was saved', () => {
+  const dir = tmp()
+  writeAnswers(dir, readAnswers(dir, 'a3f9', ['q1']))
+  expect(readAnswers(dir, 'a3f9', ['q1', 'q2']).responses.q2).toEqual({
+    value: null,
+    flagged: false,
+  })
+})
+
+test('archiveAnswers renames the file to a filename-safe timestamp', () => {
+  const dir = tmp()
+  const a = readAnswers(dir, 'a3f9', ['q1'])
+  a.status = 'submitted'
+  a.submittedAt = '2026-08-17T14:11:48.000Z'
+  writeAnswers(dir, a)
+  const archived = archiveAnswers(dir)
+  expect(archived).toBe(join(dir, 'answers-20260817T141148Z.json'))
+  expect(existsSync(archived)).toBe(true)
+  expect(existsSync(answersPath(dir))).toBe(false)
+})
+
+test('readAnswers throws QuizError on a corrupt answers file', () => {
+  const dir = tmp()
+  writeFileSync(answersPath(dir), '{ not json')
+  expect(() => readAnswers(dir, 'a3f9', ['q1'])).toThrow(QuizError)
 })
