@@ -1,6 +1,8 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.8/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  // "!app/dist" (no trailing "/**") is Biome's own useBiomeIgnoreFolder fix: since 2.2.0,
+  // a trailing "/**" on a folder-exclude pattern is the pre-2.2.0 idiom and no longer needed.
   "files": { "includes": ["**", "!app/dist"] },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
   "linter": {
@@ -8,9 +10,13 @@
     "rules": {
       "preset": "all",
       "correctness": {
+        // Off: this rule is Qwik-specific (serializable-closure check) and this project has
+        // no Qwik dependency; it false-positives on ordinary arrow functions/closures.
         "useQwikValidLexicalScope": "off"
       },
       "suspicious": {
+        // Bumped to error: under preset "all" this rule defaults to "warn", which exits 0
+        // and would let `any` slip through `npm run lint` silently. Error makes it a real gate.
         "noExplicitAny": "error"
       },
       "nursery": { "preset": "recommended" }
@@ -23,6 +29,8 @@
       "linter": {
         "rules": {
           "style": {
+            // Off here only: Vite/Vitest require the config to be the module's default
+            // export; there is no named-export form their loaders will pick up.
             "noDefaultExport": "off"
           }
         }
@@ -33,6 +41,8 @@
       "linter": {
         "rules": {
           "correctness": {
+            // Off here only: these paths run under Node (test runner, build tooling, dev
+            // server), not in the browser bundle this rule exists to protect.
             "noNodejsModules": "off"
           }
         }
