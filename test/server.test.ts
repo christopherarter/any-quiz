@@ -20,6 +20,12 @@ const NOT_FOUND = 404
 const REJECTED_STATUSES = [BAD_REQUEST, NOT_FOUND]
 const FIXTURE_QUESTION_COUNT = 6
 const ONE_MEGABYTE = 1_000_000
+const CAP_OVERAGE_BYTES = 49
+const JUST_OVER_CAP = ONE_MEGABYTE + CAP_OVERAGE_BYTES
+const TWO_MEGABYTES = 2_000_000
+const FIVE_MEGABYTES = 5_000_000
+const OVERSIZED_TRIAL_SIZES = [JUST_OVER_CAP, TWO_MEGABYTES, FIVE_MEGABYTES]
+const TRIALS_PER_SIZE = 10
 
 function freshQuizDir(): string {
   const dir = mkdtempSync(join(tmpdir(), 'anyquiz-'))
@@ -177,16 +183,42 @@ test('PUT with malformed JSON is rejected', async () => {
   expect(res.status).toBe(BAD_REQUEST)
 })
 
-test('PUT over the 1 MB body cap is rejected and the server keeps serving requests', async () => {
-  const oversized = JSON.stringify({
-    responses: { q1: { value: 'x'.repeat(ONE_MEGABYTE), flagged: false } },
-  })
-  const res = await fetch(`${base}/api/answers`, {
-    method: 'PUT',
-    headers: { 'content-type': 'application/json' },
-    body: oversized,
-  })
-  expect(res.status).toBe(BAD_REQUEST)
+function oversizedBody(byteLength: number): string {
+  return JSON.stringify({ responses: { q1: { value: 'x'.repeat(byteLength), flagged: false } } })
+}
+
+// A single trial at one size (the original version of this test) is exactly what let a
+// real race through review: closing the connection as soon as the byte cap is exceeded,
+// rather than draining the rest of the client's upload first, causes the OS to send a
+// TCP RST for the unread remainder -- which the client sees as a transport error
+// ("fetch failed"), not a 400. That only reproduces once enough of the oversized body is
+// still in flight when the server responds, so it is timing- and size-dependent: a body
+// just barely over the cap almost always finishes arriving before the reject fires (false
+// green), while multi-megabyte bodies race far more often. Covering three sizes across
+// the failure range, with many trials each, is what actually pins "every oversized body,
+// at any size, gets a readable 400" instead of "this one body size happened to work."
+test('PUT well over the 1 MB body cap always gets a readable 400, at multiple oversized sizes, and leaves the draft and server unaffected', async () => {
+  const before = await (await fetch(`${base}/api/answers`)).json()
+
+  for (const byteLength of OVERSIZED_TRIAL_SIZES) {
+    for (let trial = 0; trial < TRIALS_PER_SIZE; trial += 1) {
+      // Sequential and awaited on purpose: each trial must fully complete (response
+      // received) before the next starts, so a failure is attributable to one specific
+      // (size, trial) pair rather than blurred across a batch of concurrent uploads.
+      // biome-ignore lint/performance/noAwaitInLoops: sequential trials are the point, not an oversight -- see comment above
+      const res = await fetch(`${base}/api/answers`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: oversizedBody(byteLength),
+      })
+      expect(res.status, `size ${byteLength}, trial ${trial}`).toBe(BAD_REQUEST)
+      const parsed = await res.json()
+      expect(parsed, `size ${byteLength}, trial ${trial}`).toHaveProperty('error')
+    }
+  }
+
+  const after = await (await fetch(`${base}/api/answers`)).json()
+  expect(after).toEqual(before)
   const followUp = await fetch(`${base}/api/quiz`)
   expect(followUp.status).toBe(OK)
 })

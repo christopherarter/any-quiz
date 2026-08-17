@@ -31,17 +31,11 @@ const MAX_BODY = 1_000_000
 
 const LEADING_DOTDOT_RE = /^(\.\.[/\\])+/
 
-function sendJson(
-  res: ServerResponse,
-  status: number,
-  body: unknown,
-  extraHeaders?: Record<string, string>,
-): void {
+function sendJson(res: ServerResponse, status: number, body: unknown): void {
   const payload = JSON.stringify(body)
   res.writeHead(status, {
     'content-type': JSON_MIME,
     'content-length': Buffer.byteLength(payload),
-    ...extraHeaders,
   })
   res.end(payload)
 }
@@ -68,31 +62,40 @@ function serveStatic(res: ServerResponse, urlPath: string): void {
   res.end(readFileSync(path))
 }
 
-// Rejects once the body exceeds MAX_BODY without calling `req.destroy()`: destroying the
-// request would tear down the whole duplex socket before a response can be written,
-// resetting the client's connection instead of handing it a 400. Later chunks on an
-// already-rejected request are dropped rather than buffered, so memory stays bounded.
+// Stops buffering once the body exceeds MAX_BODY -- memory stays bounded regardless of
+// how large the client's body actually is -- but does NOT reject as soon as that happens.
+// The `data` listener already put the stream in flowing mode, so it keeps draining
+// (and discarding) the remainder even after buffering stops; we wait for `end` before
+// settling the promise either way. Responding (or destroying the socket) while the
+// client is still uploading causes the OS to send a TCP RST for the unread remainder on
+// close, which the client sees as a transport error ("fetch failed") instead of a
+// readable 400 -- and that failure mode is size- and timing-dependent, so a body only
+// slightly over the cap can look "fixed" while a multi-megabyte body still races. Only
+// settling after the whole request has genuinely ended means the client's upload always
+// completes normally and it always gets a real status code, at any oversized body size.
 function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     let size = 0
-    let rejected = false
+    let tooLarge = false
     const chunks: Buffer[] = []
     req.on('data', (chunk: Buffer) => {
-      if (rejected) {
+      if (tooLarge) {
         return
       }
       size += chunk.length
       if (size > MAX_BODY) {
-        rejected = true
-        reject(new Error('body too large'))
+        tooLarge = true
+        chunks.length = 0
         return
       }
       chunks.push(chunk)
     })
     req.on('end', () => {
-      if (!rejected) {
-        resolve(Buffer.concat(chunks).toString('utf8'))
+      if (tooLarge) {
+        reject(new Error('body too large'))
+        return
       }
+      resolve(Buffer.concat(chunks).toString('utf8'))
     })
     req.on('error', reject)
   })
@@ -117,10 +120,9 @@ async function handlePutAnswers(
   try {
     body = await readBody(req)
   } catch {
-    // The request's remaining bytes are never fully drained, so this connection
-    // cannot be safely reused for a pipelined next request -- tell the client (and
-    // Node) to close it rather than keep it alive.
-    sendJson(res, BAD_REQUEST, { error: 'body too large' }, { connection: 'close' })
+    // By the time this rejects, `readBody` has already drained the full request (see
+    // its comment), so the connection is left in a normal state and safely reusable.
+    sendJson(res, BAD_REQUEST, { error: 'body too large' })
     return
   }
   let patch: { responses?: Record<string, ResponseEntry> }
