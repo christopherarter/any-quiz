@@ -50,6 +50,20 @@
           }
         }
       }
+    },
+    {
+      "includes": ["test/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            // Off here only: the rule's heuristic recognizes test(name, fn) but not
+            // test.skipIf(cond)(name, fn), so every assertion inside a conditionally
+            // skipped vitest test reads as "misplaced". Those callbacks are real test
+            // bodies; the rule cannot tell the difference and only fires in test files.
+            "noMisplacedAssertion": "off"
+          }
+        }
+      }
     }
   ]
 }

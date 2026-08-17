@@ -50,7 +50,6 @@ test.skipIf(LAN === null)('binds loopback only, not every interface', async () =
   const port = Number(new URL(base).port)
 
   const outcome = await dial(String(LAN), port)
-  // biome-ignore lint/suspicious/noMisplacedAssertion: biome's heuristic does not recognize test.skipIf(cond)(name, fn) as a test call
   expect(outcome, `the quiz answered on ${LAN}:${port}`).not.toBe('connected')
 
   s.child.kill('SIGTERM')

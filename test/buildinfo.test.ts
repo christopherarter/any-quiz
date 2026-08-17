@@ -21,7 +21,6 @@ test('readStampedHash returns null when nothing has been built', () => {
 test.skipIf(!existsSync(DIST_DIR))(
   'the committed bundle matches the current frontend sources',
   () => {
-    // biome-ignore lint/suspicious/noMisplacedAssertion: biome does not recognize test.skipIf(...)(...) as a test() call; this callback is the test body vitest actually runs
     expect(isDistFresh(), 'app/dist is stale — run `npm run build` and commit the result').toBe(
       true,
     )
