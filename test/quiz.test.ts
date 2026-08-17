@@ -106,8 +106,10 @@ const FIXTURE_DIR = fileURLToPath(new URL('../examples/all-types', import.meta.u
 test('loadFull keeps the answer key', () => {
   const { meta, questions } = loadFull(FIXTURE_DIR)
   expect(meta.id).toBe('a3f9')
-  const first = questions[0]
-  if (first?.type !== 'mcq') throw new Error('fixture drifted')
+  const [first] = questions
+  if (first?.type !== 'mcq') {
+    throw new Error('fixture drifted')
+  }
   expect(first.answer).toBe('b')
   expect(first.rationale).toBeTruthy()
 })
@@ -130,8 +132,10 @@ test('loadPublic keeps the fields the browser needs', () => {
   const mcq = questions.find((q) => q.type === 'mcq')
   const code = questions.find((q) => q.type === 'code')
   const match = questions.find((q) => q.type === 'match')
+  // biome-ignore lint/style/noMagicNumbers: fixture's mcq question has exactly 3 choices; a named constant would be less clear than the literal here
   expect(mcq?.type === 'mcq' && mcq.choices).toHaveLength(3)
   expect(code?.type === 'code' && code.language).toBe('typescript')
+  // biome-ignore lint/style/noMagicNumbers: fixture's match question has exactly 3 right-side entries; a named constant would be less clear than the literal here
   expect(match?.type === 'match' && match.right).toHaveLength(3)
 })
 

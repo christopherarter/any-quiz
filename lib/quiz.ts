@@ -187,12 +187,16 @@ function readJson(path: string, label: string): unknown {
   try {
     raw = readFileSync(path, 'utf8')
   } catch (err) {
-    throw new QuizError(`cannot read ${label} at ${path}`, [(err as Error).message])
+    const error = new QuizError(`cannot read ${label} at ${path}`, [(err as Error).message])
+    error.cause = err
+    throw error
   }
   try {
     return JSON.parse(raw)
   } catch (err) {
-    throw new QuizError(`${label} is not valid JSON`, [(err as Error).message])
+    const error = new QuizError(`${label} is not valid JSON`, [(err as Error).message])
+    error.cause = err
+    throw error
   }
 }
 
@@ -200,7 +204,9 @@ export function loadFull(dir: string): { meta: Meta; questions: Question[] } {
   const meta = readJson(join(dir, 'meta.json'), 'meta.json') as Meta
   const doc = readJson(join(dir, 'questions.json'), 'questions.json')
   const errors = validateQuestions(doc)
-  if (errors.length > 0) throw new QuizError('questions.json failed validation', errors)
+  if (errors.length > 0) {
+    throw new QuizError('questions.json failed validation', errors)
+  }
   return { meta, questions: (doc as QuestionsDoc).questions }
 }
 

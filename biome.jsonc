@@ -38,12 +38,14 @@
       }
     },
     {
-      "includes": ["test/**", "tools/**", "serve.ts"],
+      "includes": ["lib/**", "test/**", "tools/**", "serve.ts"],
       "linter": {
         "rules": {
           "correctness": {
-            // Off here only: these paths run under Node (test runner, build tooling, dev
-            // server), not in the browser bundle this rule exists to protect.
+            // Off here only: these paths run under Node (server-side quiz loading/validation
+            // in lib/, the test runner, build tooling, dev server), not in the browser bundle
+            // this rule exists to protect. No client code imports from lib/; browser code
+            // lives under app/.
             "noNodejsModules": "off"
           }
         }
