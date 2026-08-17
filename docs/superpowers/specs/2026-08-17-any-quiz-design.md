@@ -23,6 +23,7 @@ The quiz is a shared workspace between user and Claude: Claude owns authoring an
 - Server-side rendering. One user on `127.0.0.1` with no SEO, no crawler, and no cold cache — SSR would buy nothing and would take process lifetime away from `serve.ts`, which is where the submit handshake lives.
 - Persistent quiz history UI. The folder listing is the history.
 - Timers or exam-simulation pressure features.
+- Ordering / sequencing questions. Cut from v1: a drag-to-reorder list has no natural "untouched" state, so either it seeds an initial arrangement that counts as answered, or it tracks a separate touched flag that nothing else in the model needs. Not worth the asymmetry for one question type.
 - Publishing to npm.
 
 ## Tech stack
@@ -97,14 +98,14 @@ any-quiz/
       blanks.ts             # parseBlanks
       progress.ts           # isAnswered, summarize
     questions/
-      Mcq.tsx Multi.tsx Blank.tsx Short.tsx Code.tsx Order.tsx Match.tsx
+      Mcq.tsx Multi.tsx Blank.tsx Short.tsx Code.tsx Match.tsx
       registry.ts           # type -> component
       *.test.tsx            # one component test file per type
     dist/                   # COMMITTED build output
   test/                     # node-environment tests
   tools/
     stamp-build.ts          # writes app/dist/.buildinfo.json
-  examples/all-types/       # fixture quiz covering all 7 types
+  examples/all-types/       # fixture quiz covering all 6 types
   docs/superpowers/
 ```
 
@@ -146,7 +147,6 @@ export type Question =
   | (Base & { type: 'blank'; blanks: { id: string; hint?: string }[]; answer: Record<string, string[]> })
   | (Base & { type: 'short'; answer: string })
   | (Base & { type: 'code';  language: string; answer: string })
-  | (Base & { type: 'order'; items: Choice[]; answer: string[] })
   | (Base & { type: 'match'; left: Choice[]; right: Choice[]; answer: Record<string, string> })
 
 export type QuestionType = Question['type']
@@ -205,7 +205,6 @@ Folder name: `YYYY-MM-DD-<slug>-<id>`. `slug` is a kebab-case topic summary; `id
 | `blank` | prompt contains `{{1}}`, `{{2}}`; `blanks: {id, hint}[]` | accept-lists: `{"1": ["heap", "binary heap"]}` |
 | `short` | — | reference prose answer |
 | `code` | `language` | reference solution |
-| `order` | `items: Choice[]` | item ids in correct order |
 | `match` | `left: Choice[]`, `right: Choice[]` | `{"l1": "r3"}` |
 
 `blank` accept-lists are compared with case folded, surrounding whitespace trimmed, and internal whitespace collapsed. All other comparisons are literal.
@@ -287,7 +286,7 @@ If `--port` is given and busy, the server warns and falls back to an ephemeral p
 
 ## Deterministic pre-scoring
 
-`lib/score.ts` scores the five closed types — `mcq`, `multi`, `blank`, `order`, `match` — by exact comparison before the server exits. `short` and `code` are listed in `needsGrading` for Claude.
+`lib/score.ts` scores the four closed types — `mcq`, `multi`, `blank`, `match` — by exact comparison before the server exits. `short` and `code` are listed in `needsGrading` for Claude.
 
 Scoring in code rather than in the model makes closed-question results deterministic, free, and immune to arithmetic slips. The scorer switches exhaustively over the `Question` union, so adding a type without scoring it is a compile error.
 
@@ -298,9 +297,9 @@ stdout on successful submit:
   "quizId": "a3f9",
   "quizDir": "/Users/chrisarter/.any-quiz/2026-08-17-rust-lifetimes-a3f9",
   "auto": {
-    "correct": 4,
-    "total": 5,
-    "perQuestion": { "q1": true, "q2": false, "q3": true, "q6": true, "q7": true }
+    "correct": 3,
+    "total": 4,
+    "perQuestion": { "q1": true, "q2": false, "q3": true, "q6": true }
   },
   "needsGrading": ["q4", "q5"],
   "flagged": ["q3"],
@@ -332,8 +331,6 @@ export interface QuestionProps<Q extends PublicQuestion, V> {
 
 **Flagging:** every question renders a "not sure" toggle beside its number.
 
-**`order` accessibility:** HTML5 drag-and-drop for mouse, plus ↑/↓ buttons on each item so the type is fully usable from the keyboard.
-
 **Post-submit:** the page swaps to "Answers sent back to Claude — you can close this tab." No score is shown; the coaching conversation is the feedback channel, and a score here would front-run it.
 
 ## Testing
@@ -343,7 +340,7 @@ Vitest with two projects in `vite.config.ts`:
 - **`node`** — `test/**/*.test.ts`, `environment: 'node'`. Validation, key stripping, atomic writes, scoring, HTTP routes, CLI exit codes, build freshness.
 - **`browser`** — `app/**/*.test.tsx`, `environment: 'jsdom'`. One component test file per question type.
 
-**Every question type gets a component test** driving real user interaction through `user-event` and asserting the exact `onChange` payload — clicking a radio yields the choice id, checking two boxes yields choice-order-stable ids, typing in a blank yields the right record, dragging and arrow-keying `order` yields the right sequence, and each component renders the value it is given. These are the tests that catch a renderer wired to the wrong field, which type-checking alone cannot.
+**Every question type gets a component test** driving real user interaction through `user-event` and asserting the exact `onChange` payload — clicking a radio yields the choice id, checking two boxes yields choice-order-stable ids, typing in a blank yields the right record, selecting a `match` dropdown yields the right pair, and each component renders the value it is given. These are the tests that catch a renderer wired to the wrong field, which type-checking alone cannot.
 
 Pure logic that does not need a DOM — `parseBlanks`, `isAnswered`, `summarize` — lives in `app/lib/` and is tested in the node project.
 
