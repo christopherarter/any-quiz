@@ -14,10 +14,12 @@ const JS_CONTENT_TYPE_RE = /javascript/
 const ASSET_SRC_RE = /src="(\/assets\/[^"]+\.js)"/
 
 const OK = 200
+const NO_CONTENT = 204
 const BAD_REQUEST = 400
 const NOT_FOUND = 404
 const REJECTED_STATUSES = [BAD_REQUEST, NOT_FOUND]
 const FIXTURE_QUESTION_COUNT = 6
+const ONE_MEGABYTE = 1_000_000
 
 function freshQuizDir(): string {
   const dir = mkdtempSync(join(tmpdir(), 'anyquiz-'))
@@ -125,4 +127,66 @@ test('resolveDistPath contains every input under DIST_DIR, even raw traversal', 
     ).toBe(true)
     expect(resolved, `resolved to the real source file for ${input}`).not.toBe(realQuizTsPath)
   }
+})
+
+// Windows-style backslash separators are not path separators to Node's (posix) `path`
+// module on this platform, so `normalize` will not collapse them the way it does "/".
+// This pins the containment invariant for that separator form too, rather than assuming
+// it behaves the same as the forward-slash cases above.
+test('resolveDistPath contains backslash-separated input under DIST_DIR too', () => {
+  const resolved = resolveDistPath('..\\..\\lib\\quiz.ts')
+  expect(resolved === null || resolved.startsWith(DIST_DIR), 'escaped DIST_DIR').toBe(true)
+})
+
+const putAnswers = (body: unknown) =>
+  fetch(`${base}/api/answers`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+
+test('GET /api/answers returns a draft skeleton before anything is saved', async () => {
+  const a = await (await fetch(`${base}/api/answers`)).json()
+  expect(a.status).toBe('draft')
+  expect(a.quizId).toBe('a3f9')
+  expect(a.responses.q1).toEqual({ value: null, flagged: false })
+})
+
+test('PUT /api/answers persists a draft that GET reads back', async () => {
+  const put = await putAnswers({ responses: { q1: { value: 'b', flagged: true } } })
+  expect(put.status).toBe(NO_CONTENT)
+  const a = await (await fetch(`${base}/api/answers`)).json()
+  expect(a.responses.q1).toEqual({ value: 'b', flagged: true })
+  expect(a.status).toBe('draft')
+})
+
+test('PUT with an unknown question id is rejected and changes nothing', async () => {
+  const res = await putAnswers({ responses: { nope: { value: 'x', flagged: false } } })
+  expect(res.status).toBe(BAD_REQUEST)
+  const a = await (await fetch(`${base}/api/answers`)).json()
+  expect(a.responses).not.toHaveProperty('nope')
+  expect(a.responses.q1.value).toBe('b')
+})
+
+test('PUT with malformed JSON is rejected', async () => {
+  const res = await fetch(`${base}/api/answers`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: '{ not json',
+  })
+  expect(res.status).toBe(BAD_REQUEST)
+})
+
+test('PUT over the 1 MB body cap is rejected and the server keeps serving requests', async () => {
+  const oversized = JSON.stringify({
+    responses: { q1: { value: 'x'.repeat(ONE_MEGABYTE), flagged: false } },
+  })
+  const res = await fetch(`${base}/api/answers`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: oversized,
+  })
+  expect(res.status).toBe(BAD_REQUEST)
+  const followUp = await fetch(`${base}/api/quiz`)
+  expect(followUp.status).toBe(OK)
 })
