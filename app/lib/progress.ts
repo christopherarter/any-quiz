@@ -1,16 +1,16 @@
 import type { AnswerValue, PublicQuestion, ResponseEntry } from '../../lib/types.ts'
+import { asMap } from './values.ts'
 
 function filled(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0
 }
 
-// Drafts round-trip through JSON on disk, so a stored value can arrive shaped for a
-// different question type than the one now asking about it. Coercing anything that is not
-// a plain object to `{}` makes every key look absent, which reads as unanswered -- the
-// safe direction, since the opposite would let a quiz be submitted with a question the
-// user never actually filled in.
+// A value shaped for a different question type becomes an empty record, so every key
+// looks absent and the question reads as unanswered. That is the safe direction -- the
+// opposite would let a quiz be submitted with a question the user never filled in.
+// `asMap` is shared with the render path so both agree on what counts as a map.
 function asRecord(value: AnswerValue): Record<string, string> {
-  return typeof value === 'object' && !Array.isArray(value) ? value : {}
+  return asMap(value) ?? {}
 }
 
 // No `default` branch on purpose: adding a seventh question type must fail `tsc` here
@@ -19,6 +19,7 @@ export function isAnswered(question: PublicQuestion, value: AnswerValue | null):
   if (value === null) {
     return false
   }
+  // biome-ignore lint/style/useDefaultSwitchClause: exhaustive switch over the Question union by design; a default would silently report a future unhandled type as unanswered instead of failing tsc
   switch (question.type) {
     case 'mcq':
     case 'short':

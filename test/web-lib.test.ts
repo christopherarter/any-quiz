@@ -6,7 +6,10 @@ import { loadPublic } from '../lib/quiz.ts'
 import type { PublicQuestion, ResponseEntry } from '../lib/types.ts'
 
 const { questions } = loadPublic(fileURLToPath(new URL('../examples/all-types', import.meta.url)))
-const byId = Object.fromEntries(questions.map((q) => [q.id, q])) as Record<string, PublicQuestion>
+const byId = Object.fromEntries(questions.map((each) => [each.id, each])) as Record<
+  string,
+  PublicQuestion
+>
 
 const FIXTURE_QUESTION_COUNT = 6
 
@@ -56,7 +59,12 @@ test('parseBlanks segments reassemble into the original prompt', () => {
   const prompts = ['A {{1}} tree in an {{2}}.', '{{a}}{{b}}', 'no blanks', '{{x}}', '']
   for (const prompt of prompts) {
     const rebuilt = parseBlanks(prompt)
-      .map((s) => (s.kind === 'text' ? s.value : `{{${s.id}}}`))
+      .map((segment) => {
+        if (segment.kind === 'text') {
+          return segment.value
+        }
+        return `{{${segment.id}}}`
+      })
       .join('')
     expect(rebuilt, `lost text for ${JSON.stringify(prompt)}`).toBe(prompt)
   }

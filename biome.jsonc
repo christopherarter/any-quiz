@@ -13,7 +13,11 @@
       "correctness": {
         // Off: this rule is Qwik-specific (serializable-closure check) and this project has
         // no Qwik dependency; it false-positives on ordinary arrow functions/closures.
-        "useQwikValidLexicalScope": "off"
+        "useQwikValidLexicalScope": "off",
+        // Off for the same reason, one framework over: Solid props are getters, so
+        // destructuring them drops reactivity. React props are a plain object and
+        // destructuring in the parameter list is the idiom. No Solid dependency here.
+        "noSolidDestructuredProps": "off"
       },
       "suspicious": {
         // Bumped to error: under preset "all" this rule defaults to "warn", which exits 0
@@ -47,6 +51,20 @@
             // this rule exists to protect. No client code imports from lib/; browser code
             // lives under app/.
             "noNodejsModules": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["app/**/*.test.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            // Off here only: the rule exists so Fast Refresh can swap a module without
+            // losing state, which needs every export to be a component. Test files are
+            // never hot-reloaded, and their local render harnesses are test fixtures --
+            // exporting them purely to satisfy the rule would be misleading.
+            "useComponentExportOnlyModules": "off"
           }
         }
       }
