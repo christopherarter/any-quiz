@@ -8,7 +8,8 @@ import {
 import { extname, join, normalize } from 'node:path'
 import { DIST_DIR } from './buildinfo.ts'
 import { loadFull, loadPublic, readAnswers, writeAnswers } from './quiz.ts'
-import type { Meta, ResponseEntry } from './types.ts'
+import { scoreQuiz } from './score.ts'
+import type { Meta, Question, ResponseEntry, ResultPayload } from './types.ts'
 
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -25,6 +26,7 @@ const NO_CONTENT = 204
 const BAD_REQUEST = 400
 const NOT_FOUND = 404
 const METHOD_NOT_ALLOWED = 405
+const CONFLICT = 409
 const INTERNAL_ERROR = 500
 
 const MAX_BODY = 1_000_000
@@ -107,8 +109,12 @@ function readBody(req: IncomingMessage): Promise<string> {
 interface QuizContext {
   dir: string
   meta: Meta
+  questions: Question[]
   questionIds: string[]
   known: Set<string>
+  // Set once the server object exists, so the submit handler can announce a finished
+  // attempt without the handler itself holding a reference to the server.
+  emitSubmitted: (payload: ResultPayload) => void
 }
 
 async function handlePutAnswers(
@@ -154,6 +160,37 @@ async function handlePutAnswers(
   res.end()
 }
 
+// The server deliberately does NOT exit here. Process lifetime belongs to the CLI, which
+// listens for `submitted` and decides what to do; a route handler that called
+// `process.exit` would make the server untestable and unusable from anything else.
+function handleSubmit(res: ServerResponse, ctx: QuizContext): void {
+  const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds)
+  if (answers.status === 'submitted') {
+    sendJson(res, CONFLICT, { error: 'this quiz has already been submitted' })
+    return
+  }
+
+  answers.status = 'submitted'
+  answers.submittedAt = new Date().toISOString()
+  // Persist before scoring and before emitting: a crash after this point still leaves a
+  // submitted attempt on disk, whereas emitting first could announce a result that was
+  // never durably recorded.
+  writeAnswers(ctx.dir, answers)
+
+  const { auto, needsGrading, flagged } = scoreQuiz(ctx.questions, answers.responses)
+  // Respond before emitting so a listener cannot act on the payload while the browser is
+  // still waiting on its request.
+  sendJson(res, OK, { ok: true })
+  ctx.emitSubmitted({
+    quizId: ctx.meta.id,
+    quizDir: ctx.dir,
+    auto,
+    needsGrading,
+    flagged,
+    responses: answers.responses,
+  })
+}
+
 async function handleRequest(
   req: IncomingMessage,
   res: ServerResponse,
@@ -171,6 +208,10 @@ async function handleRequest(
   }
   if (url.pathname === '/api/answers' && req.method === 'PUT') {
     await handlePutAnswers(req, res, ctx)
+    return
+  }
+  if (url.pathname === '/api/submit' && req.method === 'POST') {
+    handleSubmit(res, ctx)
     return
   }
   if (url.pathname.startsWith('/api/')) {
@@ -204,14 +245,21 @@ export function resolveDistPath(urlPath: string): string | null {
 
 export function createServer({ dir }: { dir: string }): Server {
   const { meta, questions } = loadFull(dir)
+  // Created empty so `ctx` can close over it, then wired to the request handler below --
+  // the alternative orderings all require referencing `server` or `ctx` before it exists.
+  const server = httpCreateServer()
   const ctx: QuizContext = {
     dir,
     meta,
+    questions,
     questionIds: questions.map((q) => q.id),
     known: new Set(questions.map((q) => q.id)),
+    emitSubmitted: (payload) => {
+      server.emit('submitted', payload)
+    },
   }
 
-  return httpCreateServer((req, res) => {
+  server.on('request', (req, res) => {
     // `handleRequest` is async (it awaits the request body for PUT), so a synchronous
     // call here would leave its returned promise unhandled. Routing errors -- including
     // any thrown before a response is sent -- through this `.catch` (instead of `void`)
@@ -225,4 +273,6 @@ export function createServer({ dir }: { dir: string }): Server {
       res.destroy()
     })
   })
+
+  return server
 }
