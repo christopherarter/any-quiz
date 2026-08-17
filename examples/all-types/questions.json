@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "q1",
+      "type": "mcq",
+      "prompt": "What is the average-case time complexity of heapsort?",
+      "choices": [
+        { "id": "a", "text": "O(n)" },
+        { "id": "b", "text": "O(n log n)" },
+        { "id": "c", "text": "O(n^2)" }
+      ],
+      "answer": "b",
+      "rationale": "Each of the n sift-down operations costs O(log n)."
+    },
+    {
+      "id": "q2",
+      "type": "multi",
+      "prompt": "Which of these are stable sorting algorithms?",
+      "choices": [
+        { "id": "a", "text": "merge sort" },
+        { "id": "b", "text": "heapsort" },
+        { "id": "c", "text": "insertion sort" },
+        { "id": "d", "text": "quicksort" }
+      ],
+      "answer": ["a", "c"],
+      "rationale": "Merge and insertion sort preserve the relative order of equal keys; heapsort and quicksort do not."
+    },
+    {
+      "id": "q3",
+      "type": "blank",
+      "prompt": "A binary heap is a {{1}} tree stored in an {{2}}.",
+      "blanks": [
+        { "id": "1", "hint": "shape property" },
+        { "id": "2", "hint": "backing structure" }
+      ],
+      "answer": {
+        "1": ["complete", "complete binary"],
+        "2": ["array", "flat array"]
+      },
+      "rationale": "The complete-tree shape is what makes the implicit array layout possible."
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "prompt": "Why does heapsort not benefit from nearly-sorted input the way insertion sort does?",
+      "answer": "Building the heap destroys any existing order, so the sift-down cost is paid in full regardless of the input's initial arrangement.",
+      "rationale": "Tests whether the learner understands that heapify is input-order-insensitive."
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "language": "typescript",
+      "prompt": "Write a function returning the index of the parent of node i in a 0-indexed binary heap.",
+      "answer": "const parent = (i: number) => Math.floor((i - 1) / 2)",
+      "rationale": "The 0-indexed formula is (i-1)/2, not i/2 as in the 1-indexed form."
+    },
+    {
+      "id": "q6",
+      "type": "match",
+      "prompt": "Match each operation to its worst-case cost on a binary heap.",
+      "left": [
+        { "id": "l1", "text": "peek max" },
+        { "id": "l2", "text": "insert" },
+        { "id": "l3", "text": "build heap from array" }
+      ],
+      "right": [
+        { "id": "r1", "text": "O(1)" },
+        { "id": "r2", "text": "O(log n)" },
+        { "id": "r3", "text": "O(n)" }
+      ],
+      "answer": { "l1": "r1", "l2": "r2", "l3": "r3" },
+      "rationale": "Build-heap is O(n), not O(n log n) — the bound is dominated by the many cheap shallow nodes."
+    }
+  ]
+}
