@@ -12,6 +12,21 @@ test('PublicQuestion has no answer or rationale on any member', () => {
   expectTypeOf<PublicQuestion>().not.toHaveProperty('rationale')
 })
 
+test('each PublicQuestion member has no answer or rationale', () => {
+  expectTypeOf<Extract<PublicQuestion, { type: 'mcq' }>>().not.toHaveProperty('answer')
+  expectTypeOf<Extract<PublicQuestion, { type: 'mcq' }>>().not.toHaveProperty('rationale')
+  expectTypeOf<Extract<PublicQuestion, { type: 'multi' }>>().not.toHaveProperty('answer')
+  expectTypeOf<Extract<PublicQuestion, { type: 'multi' }>>().not.toHaveProperty('rationale')
+  expectTypeOf<Extract<PublicQuestion, { type: 'blank' }>>().not.toHaveProperty('answer')
+  expectTypeOf<Extract<PublicQuestion, { type: 'blank' }>>().not.toHaveProperty('rationale')
+  expectTypeOf<Extract<PublicQuestion, { type: 'short' }>>().not.toHaveProperty('answer')
+  expectTypeOf<Extract<PublicQuestion, { type: 'short' }>>().not.toHaveProperty('rationale')
+  expectTypeOf<Extract<PublicQuestion, { type: 'code' }>>().not.toHaveProperty('answer')
+  expectTypeOf<Extract<PublicQuestion, { type: 'code' }>>().not.toHaveProperty('rationale')
+  expectTypeOf<Extract<PublicQuestion, { type: 'match' }>>().not.toHaveProperty('answer')
+  expectTypeOf<Extract<PublicQuestion, { type: 'match' }>>().not.toHaveProperty('rationale')
+})
+
 test('PublicQuestion keeps its discriminant and the fields the browser needs', () => {
   type Mcq = Extract<PublicQuestion, { type: 'mcq' }>
   expectTypeOf<Mcq['choices']>().toEqualTypeOf<import('../lib/types.ts').Choice[]>()

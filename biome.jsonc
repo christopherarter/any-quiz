@@ -3,7 +3,8 @@
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   // "!app/dist" (no trailing "/**") is Biome's own useBiomeIgnoreFolder fix: since 2.2.0,
   // a trailing "/**" on a folder-exclude pattern is the pre-2.2.0 idiom and no longer needed.
-  "files": { "includes": ["**", "!app/dist"] },
+  // "!.claude" excludes Claude Code harness files that are managed externally.
+  "files": { "includes": ["**", "!app/dist", "!.claude"] },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
   "linter": {
     "enabled": true,
