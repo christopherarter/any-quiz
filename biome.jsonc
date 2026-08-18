@@ -19,10 +19,20 @@
         // destructuring in the parameter list is the idiom. No Solid dependency here.
         "noSolidDestructuredProps": "off"
       },
+      "performance": {
+        // Off: Solid again. `<For>` exists because Solid re-runs `.map()` on every signal
+        // read; React re-renders the component instead and `.map()` is the idiom. No Solid
+        // dependency here, and there is no `<For>` to import.
+        "useSolidForComponent": "off"
+      },
       "suspicious": {
         // Bumped to error: under preset "all" this rule defaults to "warn", which exits 0
         // and would let `any` slip through `npm run lint` silently. Error makes it a real gate.
-        "noExplicitAny": "error"
+        "noExplicitAny": "error",
+        // Off: this rule wants `class` over `className`, which is right for every framework
+        // that renders to real HTML attributes and wrong for React, where `class` is not a
+        // recognized prop and would be dropped. React is the only renderer in this project.
+        "noReactSpecificProps": "off"
       },
       "nursery": { "preset": "recommended" }
     }
@@ -65,6 +75,13 @@
             // never hot-reloaded, and their local render harnesses are test fixtures --
             // exporting them purely to satisfy the rule would be misleading.
             "useComponentExportOnlyModules": "off"
+          },
+          "performance": {
+            // Off here only: the rule hoists regex literals out of hot paths so they are
+            // compiled once. Query matchers like `findByText(/1\/2 answered/)` run once per
+            // test and read as part of the assertion; naming 30 of them at module scope
+            // would move the interesting half of each test away from the test.
+            "useTopLevelRegex": "off"
           }
         }
       }
