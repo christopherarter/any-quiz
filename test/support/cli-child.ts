@@ -31,7 +31,13 @@ export function freshQuizDir(): string {
 // appears on stderr. Every assertion about exit codes and stream separation has to go
 // through a real process -- calling `main()` in-process could observe neither.
 export function start(args: string[]): Child {
-  const child = spawn(process.execPath, [SERVE, ...args, '--no-open'], {
+  return startAt(SERVE, args)
+}
+
+// Same as `start`, but with the entry path spelled out, so a test can run the CLI through
+// a symlink the way the documented install does.
+export function startAt(entry: string, args: string[]): Child {
+  const child = spawn(process.execPath, [entry, ...args, '--no-open'], {
     stdio: ['ignore', 'pipe', 'pipe'],
   })
   let out = ''
@@ -58,3 +64,5 @@ export function start(args: string[]): Child {
   ready.catch(() => undefined)
   return { child, ready, exited, stdout: () => out, stderr: () => err }
 }
+
+export { SERVE }

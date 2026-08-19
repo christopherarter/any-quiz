@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync } from 'node:fs'
+import { existsSync, realpathSync } from 'node:fs'
 import type { Server } from 'node:http'
 import process from 'node:process'
 import { DIST_DIR, isDistFresh } from './lib/buildinfo.ts'
@@ -143,7 +143,23 @@ function main(): void {
 
 // Importing this module for `parseArgs` (as the tests do) must not start a server, so the
 // CLI only runs when this file is the process entry point.
-if (process.argv[1] !== undefined && import.meta.filename === process.argv[1]) {
+// Compared through `realpathSync` because the documented install is a symlink into
+// ~/.claude/skills: `process.argv[1]` is then the link while `import.meta.filename` is its
+// target, and a direct comparison leaves `main` unrun -- the CLI exits 0, prints nothing,
+// and the skill looks installed while doing nothing at all.
+function invokedDirectly(): boolean {
+  const [, entry] = process.argv
+  if (entry === undefined) {
+    return false
+  }
+  try {
+    return realpathSync(entry) === realpathSync(import.meta.filename)
+  } catch {
+    return false
+  }
+}
+
+if (invokedDirectly()) {
   main()
 }
 

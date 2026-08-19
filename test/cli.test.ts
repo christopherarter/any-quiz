@@ -1,10 +1,11 @@
-import { readdirSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readdirSync, symlinkSync, writeFileSync } from 'node:fs'
 import { connect, createServer as netCreateServer, type Socket } from 'node:net'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, test } from 'vitest'
 import { openBrowser } from '../lib/open.ts'
 import { parseArgs } from '../serve.ts'
-import { freshQuizDir, start, URL_RE } from './support/cli-child.ts'
+import { freshQuizDir, SERVE, start, startAt, URL_RE } from './support/cli-child.ts'
 
 const OK = 200
 const EXIT_OK = 0
@@ -200,4 +201,20 @@ test('a busy --port falls back to an ephemeral port and still prints the banner'
 // what lets `main` fall back to printing the URL for the user to open by hand.
 test('openBrowser reports failure on a platform it has no launcher for', () => {
   expect(openBrowser('http://127.0.0.1:1234', 'plan9')).toBe(false)
+})
+
+// The README installs the skill as a symlink into ~/.claude/skills, which makes
+// `process.argv[1]` the link while the module resolves to its target. Comparing those two
+// paths directly leaves `main` unrun: the CLI exits 0 having printed nothing, so the skill
+// appears installed and quietly does nothing.
+test('runs when invoked through a symlink, as the install instructions do', async () => {
+  const link = join(mkdtempSync(join(tmpdir(), 'anyquiz-link-')), 'serve.ts')
+  symlinkSync(SERVE, link)
+  const s = startAt(link, [freshQuizDir()])
+
+  const base = await s.ready
+
+  expect(base).toMatch(URL_RE)
+  s.child.kill('SIGINT')
+  expect(await s.exited).toBe(EXIT_ABANDONED)
 })
