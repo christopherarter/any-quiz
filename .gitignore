@@ -1,5 +1,7 @@
 node_modules/
 *.tmp
 .DS_Store
-.ironlint/log.jsonl
+.ironlint/
 .superpowers
+.ironlint.yml
+.claude/

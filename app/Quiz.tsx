@@ -118,7 +118,6 @@ function Card({ question, index, total, entry, onValue, onFlag }: CardProps): Re
     <section className="q">
       <div className="q-head">
         <span className="q-num">{`${index + 1} / ${total}`}</span>
-        <span className="q-type">{question.type}</span>
         <button aria-pressed={flagged} className="q-flag" onClick={handleFlag} type="button">
           {flagLabel(flagged)}
         </button>

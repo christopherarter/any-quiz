@@ -1,8 +1,12 @@
-# any-quiz
+# AnyQuiz
 
-A Claude Code skill for ad-hoc interactive quizzes. Claude writes a quiz mid-conversation, you take it in the browser, and your answers flow back into the same session so Claude can grade the open-ended ones and coach you through the misses.
+<img src="assets/any-quiz.png" alt="any-quiz" width="760">
 
-Ships as a Claude Code plugin. No `npm install` on your end — `bin/any-quiz.mjs` is a committed, dependency-free bundle (hono, zod, and the rest inlined by esbuild), and the frontend bundle is committed too. Node 22.18+.
+A Claude Code skill for ad-hoc interactive quizzes to let Claude coach you through a quiz. Claude writes a quiz mid-conversation, you take it in the browser, and your answers flow back into the same session so Claude can grade the open-ended ones and coach you through the misses.
+
+Anything in Claude's context can be used to create a quiz.
+
+Ships as a Claude Code plugin. Requires Node 22.
 
 ## Install
 
@@ -13,11 +17,6 @@ claude plugin install any-quiz@any-quiz
 
 Then ask Claude to quiz you on something.
 
-## Run a quiz by hand
-
-    node bin/any-quiz.mjs examples/all-types
-
-The server opens your browser, autosaves as you type, and exits when you click Done — printing the results as JSON on stdout.
 
 ## Question types
 

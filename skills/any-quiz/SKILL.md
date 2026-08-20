@@ -39,7 +39,7 @@ Write `questions.json` — schema below. Aim for 5–10 questions unless the use
 node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" <quiz-dir>
 ```
 
-Run with `run_in_background: true`. Report the URL, then **stop**. Do not poll, do not ask whether they are finished, do not start another task that expects their attention. The process exit is your signal.
+Run with `run_in_background: true`. Report just the URL and question count — `Quiz up: <url> — 8 questions.` Do not mention topics, entities, or anything else drawn from the questions themselves; you wrote the answer key and anything you quote from memory risks being one. Then **stop**. Do not poll, do not ask whether they are finished, do not start another task that expects their attention. The process exit is your signal.
 
 ### 3. Coach
 
@@ -70,6 +70,18 @@ Then:
 4. Offer a follow-up quiz targeting what they missed.
 
 Exit code `3` means they closed it without submitting. Say so and offer to re-serve the same folder — the draft is intact.
+
+### Formatting the report
+
+Open with a one-line score: `**4/5 auto-scored** · 2 flagged · 1 needs grading`. Follow it with a compact table so the whole result is scannable before any prose:
+
+| # | Question | Result |
+|---|---|---|
+| 1 | Shape of a linked list node | ✅ |
+| 2 | Big-O of a hash lookup | ❌ flagged |
+| 3 | Explain amortized analysis | 🕐 grading |
+
+Then coach in prose, grouped by the signal tiers above — confident misconceptions first, quiet correct answers last — using a short header per question (`**Q2 — Big-O of a hash lookup**`) rather than a wall of paragraphs. Skip a tier entirely if nothing landed there; don't write "nothing to report here." Close with the follow-up offer as its own line, not folded into the last question's coaching.
 
 ### 4. Follow-up quizzes
 

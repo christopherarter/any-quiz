@@ -69,13 +69,6 @@ main {
   font-size: 0.85rem;
 }
 
-.q-type {
-  color: var(--dim);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .q-flag {
   margin-left: auto;
   background: none;

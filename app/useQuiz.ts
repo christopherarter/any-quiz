@@ -256,6 +256,12 @@ export function useQuiz(): QuizState {
 
   useLoad(onLoad, onFail)
 
+  useEffect(() => {
+    if (data?.meta.title) {
+      document.title = `${data.meta.title} - AnyQuiz`
+    }
+  }, [data?.meta.title])
+
   return {
     status,
     meta: data?.meta ?? null,
