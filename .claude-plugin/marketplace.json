@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "any-quiz",
+  "description": "Ad-hoc interactive quizzes for Claude Code -- Claude writes a quiz mid-conversation, you take it in the browser, and your answers flow back into the session for coaching.",
+  "owner": {
+    "name": "Chris Arter",
+    "url": "https://github.com/christopherarter"
+  },
+  "plugins": [
+    {
+      "name": "any-quiz",
+      "description": "Use when the user wants to be quizzed, tested, drilled, or have their understanding checked on a topic.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

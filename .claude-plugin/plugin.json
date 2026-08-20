@@ -1,0 +1,10 @@
+{
+  "name": "any-quiz",
+  "version": "0.1.0",
+  "description": "Ad-hoc interactive quizzes for Claude Code -- Claude writes a quiz mid-conversation, you take it in the browser, and your answers flow back into the session for coaching.",
+  "author": {
+    "name": "Chris Arter",
+    "url": "https://github.com/christopherarter"
+  },
+  "repository": "https://github.com/christopherarter/any-quiz"
+}

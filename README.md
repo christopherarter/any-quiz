@@ -2,13 +2,16 @@
 
 A Claude Code skill for ad-hoc interactive quizzes. Claude writes a quiz mid-conversation, you take it in the browser, and your answers flow back into the same session so Claude can grade the open-ended ones and coach you through the misses.
 
-Installs with nothing but a symlink — no runtime dependencies. Node 22.18+.
+Ships as a Claude Code plugin. No `npm install` on your end — `bin/any-quiz.mjs` is a committed, dependency-free bundle (hono, zod, and the rest inlined by esbuild), and the frontend bundle is committed too. Node 22.18+.
 
 ## Install
 
-    ln -s "$PWD" ~/.claude/skills/any-quiz
+```
+claude plugin marketplace add christopherarter/any-quiz
+claude plugin install any-quiz@any-quiz
+```
 
-Then ask Claude to quiz you on something. No `npm install` — `bin/any-quiz.mjs` is a committed, dependency-free bundle (hono, zod, and the rest inlined by esbuild), and the frontend bundle is committed too.
+Then ask Claude to quiz you on something.
 
 ## Run a quiz by hand
 
@@ -20,7 +23,7 @@ The server opens your browser, autosaves as you type, and exits when you click D
 
 `mcq`, `multi`, `blank`, `short`, `code`, `match`. The first two, plus `blank` and `match`, are scored by the server; `short` and `code` come back marked for grading, which is the part a session is actually good at. Any question can be flagged "not sure", and that flag is reported alongside the answer — a right answer someone flagged is worth more coaching than a right answer they were sure of.
 
-See `SKILL.md` for the authoring schema.
+See `skills/any-quiz/SKILL.md` for the authoring schema.
 
 ## Layout
 
@@ -43,4 +46,6 @@ Submitting closes the attempt. Re-serving the same folder needs `--retake`, whic
     npm run dev:api    # terminal 1 — API on :4711
     npm run dev:web    # terminal 2 — Vite with HMR, proxies /api
 
-`app/dist/` and `bin/any-quiz.mjs` are committed so the skill installs with nothing but a symlink. **Run `npm run build` and commit the result whenever you change anything under `app/`, `lib/`, or `serve.ts`** — a Vitest check fails if either bundle is stale.
+`app/dist/` and `bin/any-quiz.mjs` are committed so the plugin ships with nothing to install beyond itself. **Run `npm run build` and commit the result whenever you change anything under `app/`, `lib/`, or `serve.ts`** — a Vitest check fails if either bundle is stale.
+
+To try the plugin from a local clone without publishing it, point Claude Code at the working copy directly: `claude plugin marketplace add /path/to/any-quiz && claude plugin install any-quiz@any-quiz`.

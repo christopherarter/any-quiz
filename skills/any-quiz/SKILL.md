@@ -36,7 +36,7 @@ Write `questions.json` — schema below. Aim for 5–10 questions unless the use
 ### 2. Serve it
 
 ```
-node ~/.claude/skills/any-quiz/bin/any-quiz.mjs <quiz-dir>
+node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" <quiz-dir>
 ```
 
 Run with `run_in_background: true`. Report the URL, then **stop**. Do not poll, do not ask whether they are finished, do not start another task that expects their attention. The process exit is your signal.
