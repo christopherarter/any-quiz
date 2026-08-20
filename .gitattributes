@@ -1,1 +1,2 @@
 app/dist/** -diff linguist-generated=true
+bin/** -diff linguist-generated=true
