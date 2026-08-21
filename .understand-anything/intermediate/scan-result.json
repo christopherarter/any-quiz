@@ -1,0 +1,635 @@
+{
+  "name": "any-quiz",
+  "description": "An agent skill for ad-hoc interactive quizzes: the agent writes a quiz mid-conversation, the user takes it in the browser, and answers flow back into the same session so the agent can grade open-ended responses and coach through the misses. Ships as a shared Node quiz server/CLI with per-harness skill adapters for Claude Code, Pi, and Codex.",
+  "languages": [
+    "css",
+    "html",
+    "javascript",
+    "json",
+    "jsonc",
+    "markdown",
+    "typescript",
+    "yaml"
+  ],
+  "frameworks": [
+    "GitHub Actions",
+    "Hono",
+    "React",
+    "Vite",
+    "Vitest",
+    "Zod"
+  ],
+  "files": [
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "language": "json",
+      "sizeLines": 17,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".claude-plugin/plugin.json",
+      "language": "json",
+      "sizeLines": 10,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".claude/skills/harness-ports/SKILL.md",
+      "language": "markdown",
+      "sizeLines": 39,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".gitattributes",
+      "language": "unknown",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "language": "yaml",
+      "sizeLines": 26,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".superpowers/sdd/2026-08-17-any-quiz/task-2-report.md",
+      "language": "markdown",
+      "sizeLines": 171,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "sizeLines": 1,
+      "fileCategory": "config"
+    },
+    {
+      "path": "app/index.html",
+      "language": "html",
+      "sizeLines": 15,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "app/lib/blanks.ts",
+      "language": "typescript",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/lib/progress.ts",
+      "language": "typescript",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/lib/values.ts",
+      "language": "typescript",
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/main.tsx",
+      "language": "typescript",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/blank.test.tsx",
+      "language": "typescript",
+      "sizeLines": 110,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/Blank.tsx",
+      "language": "typescript",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/code.test.tsx",
+      "language": "typescript",
+      "sizeLines": 115,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/Code.tsx",
+      "language": "typescript",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/match.test.tsx",
+      "language": "typescript",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/Match.tsx",
+      "language": "typescript",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/mcq.test.tsx",
+      "language": "typescript",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/Mcq.tsx",
+      "language": "typescript",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/multi.test.tsx",
+      "language": "typescript",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/Multi.tsx",
+      "language": "typescript",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/question-view.test.tsx",
+      "language": "typescript",
+      "sizeLines": 123,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/QuestionView.tsx",
+      "language": "typescript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/short.test.tsx",
+      "language": "typescript",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/Short.tsx",
+      "language": "typescript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/questions/types.ts",
+      "language": "typescript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/quiz.test.tsx",
+      "language": "typescript",
+      "sizeLines": 245,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/Quiz.tsx",
+      "language": "typescript",
+      "sizeLines": 218,
+      "fileCategory": "code"
+    },
+    {
+      "path": "app/style.css",
+      "language": "css",
+      "sizeLines": 209,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "app/useQuiz.ts",
+      "language": "typescript",
+      "sizeLines": 275,
+      "fileCategory": "code"
+    },
+    {
+      "path": "bin/.buildinfo.json",
+      "language": "json",
+      "sizeLines": 4,
+      "fileCategory": "config"
+    },
+    {
+      "path": "bin/any-quiz.mjs",
+      "language": "javascript",
+      "sizeLines": 19123,
+      "fileCategory": "code"
+    },
+    {
+      "path": "biome.jsonc",
+      "language": "jsonc",
+      "sizeLines": 105,
+      "fileCategory": "config"
+    },
+    {
+      "path": "codex-skills/any-quiz/SKILL.md",
+      "language": "markdown",
+      "sizeLines": 132,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "language": "markdown",
+      "sizeLines": 3664,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+      "language": "markdown",
+      "sizeLines": 399,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "examples/all-types/meta.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "examples/all-types/questions.json",
+      "language": "json",
+      "sizeLines": 76,
+      "fileCategory": "config"
+    },
+    {
+      "path": "lib/answers-schema.ts",
+      "language": "typescript",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/buildinfo.ts",
+      "language": "typescript",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/open.ts",
+      "language": "typescript",
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/question-schema.ts",
+      "language": "typescript",
+      "sizeLines": 245,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/quiz.ts",
+      "language": "typescript",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/score.ts",
+      "language": "typescript",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/server.ts",
+      "language": "typescript",
+      "sizeLines": 156,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/types.ts",
+      "language": "typescript",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "sizeLines": 49,
+      "fileCategory": "config"
+    },
+    {
+      "path": "pi-skills/any-quiz/SKILL.md",
+      "language": "markdown",
+      "sizeLines": 132,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 89,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "serve.ts",
+      "language": "typescript",
+      "sizeLines": 198,
+      "fileCategory": "code"
+    },
+    {
+      "path": "skills/any-quiz/SKILL.md",
+      "language": "markdown",
+      "sizeLines": 126,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "test/bin-bundle.test.ts",
+      "language": "typescript",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/buildinfo.test.ts",
+      "language": "typescript",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/cli-bind.test.ts",
+      "language": "typescript",
+      "sizeLines": 57,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/cli.test.ts",
+      "language": "typescript",
+      "sizeLines": 220,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/fixture.test.ts",
+      "language": "typescript",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/quiz.test.ts",
+      "language": "typescript",
+      "sizeLines": 212,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/score.test.ts",
+      "language": "typescript",
+      "sizeLines": 99,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/server-submit.test.ts",
+      "language": "typescript",
+      "sizeLines": 111,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/server.test.ts",
+      "language": "typescript",
+      "sizeLines": 207,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/setup-dom.ts",
+      "language": "typescript",
+      "sizeLines": 4,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/support/cli-child.ts",
+      "language": "typescript",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/types.test.ts",
+      "language": "typescript",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/web-lib.test.ts",
+      "language": "typescript",
+      "sizeLines": 142,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tools/stamp-build.ts",
+      "language": "typescript",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tsconfig.json",
+      "language": "json",
+      "sizeLines": 23,
+      "fileCategory": "config"
+    },
+    {
+      "path": "vite.config.ts",
+      "language": "typescript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vitest.config.ts",
+      "language": "typescript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 70,
+  "filteredByIgnore": 0,
+  "estimatedComplexity": "moderate",
+  "importMap": {
+    ".claude-plugin/marketplace.json": [],
+    ".claude-plugin/plugin.json": [],
+    ".claude/skills/harness-ports/SKILL.md": [],
+    ".gitattributes": [],
+    ".github/workflows/ci.yml": [],
+    ".superpowers/sdd/2026-08-17-any-quiz/task-2-report.md": [],
+    ".understand-anything/.understandignore": [],
+    ".understand-anything/config.json": [],
+    "app/index.html": [],
+    "app/lib/blanks.ts": [],
+    "app/lib/progress.ts": [
+      "app/lib/values.ts",
+      "lib/types.ts"
+    ],
+    "app/lib/values.ts": [
+      "lib/types.ts"
+    ],
+    "app/main.tsx": [
+      "app/Quiz.tsx",
+      "app/style.css"
+    ],
+    "app/questions/blank.test.tsx": [
+      "app/questions/Blank.tsx",
+      "app/questions/types.ts"
+    ],
+    "app/questions/Blank.tsx": [
+      "app/lib/blanks.ts",
+      "app/questions/types.ts"
+    ],
+    "app/questions/code.test.tsx": [
+      "app/questions/Code.tsx",
+      "app/questions/types.ts"
+    ],
+    "app/questions/Code.tsx": [
+      "app/questions/types.ts"
+    ],
+    "app/questions/match.test.tsx": [
+      "app/questions/Match.tsx",
+      "app/questions/types.ts"
+    ],
+    "app/questions/Match.tsx": [
+      "app/questions/types.ts",
+      "lib/types.ts"
+    ],
+    "app/questions/mcq.test.tsx": [
+      "app/questions/Mcq.tsx",
+      "app/questions/types.ts"
+    ],
+    "app/questions/Mcq.tsx": [
+      "app/questions/types.ts",
+      "lib/types.ts"
+    ],
+    "app/questions/multi.test.tsx": [
+      "app/questions/Multi.tsx",
+      "app/questions/types.ts"
+    ],
+    "app/questions/Multi.tsx": [
+      "app/questions/types.ts",
+      "lib/types.ts"
+    ],
+    "app/questions/question-view.test.tsx": [
+      "app/questions/QuestionView.tsx",
+      "app/questions/types.ts",
+      "lib/types.ts"
+    ],
+    "app/questions/QuestionView.tsx": [
+      "app/lib/values.ts",
+      "app/questions/Blank.tsx",
+      "app/questions/Code.tsx",
+      "app/questions/Match.tsx",
+      "app/questions/Mcq.tsx",
+      "app/questions/Multi.tsx",
+      "app/questions/Short.tsx",
+      "lib/types.ts"
+    ],
+    "app/questions/short.test.tsx": [
+      "app/questions/Short.tsx",
+      "app/questions/types.ts"
+    ],
+    "app/questions/Short.tsx": [
+      "app/questions/types.ts"
+    ],
+    "app/questions/types.ts": [
+      "lib/types.ts"
+    ],
+    "app/quiz.test.tsx": [
+      "app/Quiz.tsx",
+      "lib/types.ts"
+    ],
+    "app/Quiz.tsx": [
+      "app/lib/progress.ts",
+      "app/questions/QuestionView.tsx",
+      "app/useQuiz.ts",
+      "lib/types.ts"
+    ],
+    "app/style.css": [],
+    "app/useQuiz.ts": [
+      "lib/types.ts"
+    ],
+    "bin/.buildinfo.json": [],
+    "bin/any-quiz.mjs": [],
+    "biome.jsonc": [],
+    "codex-skills/any-quiz/SKILL.md": [],
+    "docs/superpowers/plans/2026-08-17-any-quiz.md": [],
+    "docs/superpowers/specs/2026-08-17-any-quiz-design.md": [],
+    "examples/all-types/meta.json": [],
+    "examples/all-types/questions.json": [],
+    "lib/answers-schema.ts": [],
+    "lib/buildinfo.ts": [],
+    "lib/open.ts": [],
+    "lib/question-schema.ts": [
+      "lib/types.ts"
+    ],
+    "lib/quiz.ts": [
+      "lib/question-schema.ts",
+      "lib/types.ts"
+    ],
+    "lib/score.ts": [
+      "lib/types.ts"
+    ],
+    "lib/server.ts": [
+      "lib/answers-schema.ts",
+      "lib/buildinfo.ts",
+      "lib/quiz.ts",
+      "lib/score.ts",
+      "lib/types.ts"
+    ],
+    "lib/types.ts": [],
+    "package.json": [],
+    "pi-skills/any-quiz/SKILL.md": [],
+    "README.md": [],
+    "serve.ts": [
+      "lib/buildinfo.ts",
+      "lib/open.ts",
+      "lib/quiz.ts",
+      "lib/server.ts",
+      "lib/types.ts"
+    ],
+    "skills/any-quiz/SKILL.md": [],
+    "test/bin-bundle.test.ts": [
+      "lib/buildinfo.ts"
+    ],
+    "test/buildinfo.test.ts": [
+      "lib/buildinfo.ts"
+    ],
+    "test/cli-bind.test.ts": [
+      "test/support/cli-child.ts"
+    ],
+    "test/cli.test.ts": [
+      "lib/open.ts",
+      "serve.ts",
+      "test/support/cli-child.ts"
+    ],
+    "test/fixture.test.ts": [],
+    "test/quiz.test.ts": [
+      "lib/quiz.ts"
+    ],
+    "test/score.test.ts": [
+      "lib/quiz.ts",
+      "lib/score.ts",
+      "lib/types.ts"
+    ],
+    "test/server-submit.test.ts": [
+      "lib/server.ts",
+      "lib/types.ts"
+    ],
+    "test/server.test.ts": [
+      "lib/server.ts"
+    ],
+    "test/setup-dom.ts": [],
+    "test/support/cli-child.ts": [],
+    "test/types.test.ts": [
+      "lib/types.ts"
+    ],
+    "test/web-lib.test.ts": [
+      "app/lib/blanks.ts",
+      "app/lib/progress.ts",
+      "lib/quiz.ts",
+      "lib/types.ts"
+    ],
+    "tools/stamp-build.ts": [
+      "lib/buildinfo.ts"
+    ],
+    "tsconfig.json": [],
+    "vite.config.ts": [],
+    "vitest.config.ts": []
+  }
+}

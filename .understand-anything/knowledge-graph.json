@@ -1,0 +1,4531 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "any-quiz",
+    "languages": [
+      "typescript",
+      "javascript",
+      "json",
+      "jsonc",
+      "markdown",
+      "yaml",
+      "html",
+      "css"
+    ],
+    "frameworks": [
+      "React",
+      "Vite",
+      "Vitest",
+      "Hono",
+      "Zod",
+      "GitHub Actions"
+    ],
+    "description": "An agent skill for ad-hoc interactive quizzes: the agent writes a quiz mid-conversation, the user takes it in the browser, and answers flow back into the session for grading and coaching. A shared Node quiz server/CLI with per-harness skill adapters (Claude Code, Pi, Codex).",
+    "analyzedAt": "2026-08-21T15:37:41.642Z",
+    "gitCommitHash": "aa3d0588045201446465f3ae28951f484149833c"
+  },
+  "nodes": [
+    {
+      "id": "file:app/questions/Blank.tsx",
+      "type": "file",
+      "name": "Blank.tsx",
+      "filePath": "app/questions/Blank.tsx",
+      "summary": "Fill-in-the-blank question component that parses the prompt into text segments and inline input fields via parseBlanks, reporting per-blank answers as a keyed map.",
+      "tags": [
+        "component",
+        "question-type",
+        "form-input",
+        "fill-in-the-blank",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Composes small sub-components (Field, Piece) and memoizes fill handlers with useCallback to keep per-blank updates cheap."
+    },
+    {
+      "id": "function:app/questions/Blank.tsx:Field",
+      "type": "function",
+      "name": "Field",
+      "filePath": "app/questions/Blank.tsx",
+      "lineRange": [
+        31,
+        49
+      ],
+      "summary": "Renders a single inline blank input with an accessible label derived from the blank id and optional hint, propagating edits through onFill.",
+      "tags": [
+        "component",
+        "form-input",
+        "accessibility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Blank.tsx:Blank",
+      "type": "function",
+      "name": "Blank",
+      "filePath": "app/questions/Blank.tsx",
+      "lineRange": [
+        59,
+        83
+      ],
+      "summary": "Top-level fill-in-the-blank question view: maps parsed prompt pieces to text and Field inputs and merges each fill into the answer record via onChange.",
+      "tags": [
+        "component",
+        "question-type",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/questions/Code.tsx",
+      "type": "file",
+      "name": "Code.tsx",
+      "filePath": "app/questions/Code.tsx",
+      "summary": "Code-writing question component built on a textarea with Tab-key indentation support and cursor position restoration after controlled updates.",
+      "tags": [
+        "component",
+        "question-type",
+        "code-editor",
+        "event-handler",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses refs plus useEffect to restore the caret after Tab insertion, since controlled textarea updates would otherwise reset the selection."
+    },
+    {
+      "id": "function:app/questions/Code.tsx:Code",
+      "type": "function",
+      "name": "Code",
+      "filePath": "app/questions/Code.tsx",
+      "lineRange": [
+        14,
+        68
+      ],
+      "summary": "Renders the code answer textarea, intercepting Tab keydown to insert indentation at the caret and syncing edits back through onChange.",
+      "tags": [
+        "component",
+        "event-handler",
+        "code-editor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/questions/Match.tsx",
+      "type": "file",
+      "name": "Match.tsx",
+      "filePath": "app/questions/Match.tsx",
+      "summary": "Matching question component pairing left-hand items with right-hand options, storing pairs as a left-id to right-id record with a pure helper for updating pairings.",
+      "tags": [
+        "component",
+        "question-type",
+        "matching",
+        "state-management",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/questions/Match.tsx:paired",
+      "type": "function",
+      "name": "paired",
+      "filePath": "app/questions/Match.tsx",
+      "lineRange": [
+        20,
+        30
+      ],
+      "summary": "Pure helper computing the next pairing record when a left item is matched or unmatched to a right option, filtering out cleared pairs.",
+      "tags": [
+        "utility",
+        "state-management",
+        "pure-function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Match.tsx:Row",
+      "type": "function",
+      "name": "Row",
+      "filePath": "app/questions/Match.tsx",
+      "lineRange": [
+        32,
+        54
+      ],
+      "summary": "Renders one matching row: a left-hand item alongside a selector of right-hand options, notifying the parent via onPair when a choice is made.",
+      "tags": [
+        "component",
+        "form-input",
+        "matching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Match.tsx:Match",
+      "type": "function",
+      "name": "Match",
+      "filePath": "app/questions/Match.tsx",
+      "lineRange": [
+        56,
+        78
+      ],
+      "summary": "Top-level matching question view mapping each left item to a Row and committing updated pairings through onChange using the paired helper.",
+      "tags": [
+        "component",
+        "question-type",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/questions/Mcq.tsx",
+      "type": "file",
+      "name": "Mcq.tsx",
+      "filePath": "app/questions/Mcq.tsx",
+      "summary": "Single-answer multiple-choice question component rendering a radio group of choices, reporting the picked choice id through onChange.",
+      "tags": [
+        "component",
+        "question-type",
+        "multiple-choice",
+        "form-input",
+        "tested"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Mcq.tsx:Option",
+      "type": "function",
+      "name": "Option",
+      "filePath": "app/questions/Mcq.tsx",
+      "lineRange": [
+        12,
+        29
+      ],
+      "summary": "Renders one radio option within the MCQ group, invoking onPick with its choice id when selected.",
+      "tags": [
+        "component",
+        "form-input",
+        "multiple-choice"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Mcq.tsx:Mcq",
+      "type": "function",
+      "name": "Mcq",
+      "filePath": "app/questions/Mcq.tsx",
+      "lineRange": [
+        31,
+        50
+      ],
+      "summary": "Top-level MCQ view mapping question choices to Option radios and tracking the currently selected choice against the answer value.",
+      "tags": [
+        "component",
+        "question-type",
+        "multiple-choice"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/Multi.tsx",
+      "type": "file",
+      "name": "Multi.tsx",
+      "filePath": "app/questions/Multi.tsx",
+      "summary": "Multiple-select question component rendering checkboxes for each choice; selections are toggled via a pure helper that preserves the original choice ordering in the answer list.",
+      "tags": [
+        "component",
+        "question-type",
+        "multi-select",
+        "form-input",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "The toggled helper normalizes selections by re-filtering the canonical choice list, so answer order is deterministic regardless of click order."
+    },
+    {
+      "id": "function:app/questions/Multi.tsx:Box",
+      "type": "function",
+      "name": "Box",
+      "filePath": "app/questions/Multi.tsx",
+      "lineRange": [
+        26,
+        37
+      ],
+      "summary": "Renders one checkbox row for a choice, calling onToggle with the choice id when checked or unchecked.",
+      "tags": [
+        "component",
+        "form-input",
+        "multi-select"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Multi.tsx:Multi",
+      "type": "function",
+      "name": "Multi",
+      "filePath": "app/questions/Multi.tsx",
+      "lineRange": [
+        39,
+        60
+      ],
+      "summary": "Top-level multi-select view mapping choices to Box checkboxes and committing order-preserving selection lists via the toggled helper and onChange.",
+      "tags": [
+        "component",
+        "question-type",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/QuestionView.tsx",
+      "type": "file",
+      "name": "QuestionView.tsx",
+      "filePath": "app/questions/QuestionView.tsx",
+      "summary": "Dispatcher component that switches on the question type and renders the matching question component (Mcq, Multi, Match, Blank, Short, Code), coercing the stored answer value with asString/asList/asMap helpers.",
+      "tags": [
+        "component",
+        "dispatcher",
+        "factory",
+        "question-type",
+        "tested"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Central switch over the QuestionType union; value coercion helpers bridge the loosely-typed stored AnswerValue to each component's expected shape."
+    },
+    {
+      "id": "function:app/questions/QuestionView.tsx:QuestionView",
+      "type": "function",
+      "name": "QuestionView",
+      "filePath": "app/questions/QuestionView.tsx",
+      "lineRange": [
+        25,
+        41
+      ],
+      "summary": "Switches on question.type to select the correct question component and narrows the stored answer to the value shape that component expects.",
+      "tags": [
+        "component",
+        "dispatcher",
+        "type-narrowing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/Short.tsx",
+      "type": "file",
+      "name": "Short.tsx",
+      "filePath": "app/questions/Short.tsx",
+      "summary": "Short-answer question component: a single controlled text input that reports the typed answer through onChange.",
+      "tags": [
+        "component",
+        "question-type",
+        "form-input",
+        "short-answer",
+        "tested"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/Short.tsx:Short",
+      "type": "function",
+      "name": "Short",
+      "filePath": "app/questions/Short.tsx",
+      "lineRange": [
+        4,
+        20
+      ],
+      "summary": "Renders the short-answer text input with a memoized change handler forwarding the current value to onChange.",
+      "tags": [
+        "component",
+        "form-input",
+        "short-answer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/blank.test.tsx",
+      "type": "file",
+      "name": "blank.test.tsx",
+      "filePath": "app/questions/blank.test.tsx",
+      "summary": "Unit tests for the Blank component using a stateful Harness wrapper, covering prompt parsing into fields, per-blank filling, and answer record propagation.",
+      "tags": [
+        "test",
+        "component",
+        "fill-in-the-blank"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/questions/blank.test.tsx:Harness",
+      "type": "function",
+      "name": "Harness",
+      "filePath": "app/questions/blank.test.tsx",
+      "lineRange": [
+        37,
+        48
+      ],
+      "summary": "Stateful test wrapper that stores the Blank component's answer value with useState so controlled-input interactions behave as in the real app.",
+      "tags": [
+        "test",
+        "test-harness",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/code.test.tsx",
+      "type": "file",
+      "name": "code.test.tsx",
+      "filePath": "app/questions/code.test.tsx",
+      "summary": "Unit tests for the Code component using a stateful Harness, covering typing, Tab-key indentation insertion, and caret position behavior in the code textarea.",
+      "tags": [
+        "test",
+        "component",
+        "code-editor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/questions/code.test.tsx:Harness",
+      "type": "function",
+      "name": "Harness",
+      "filePath": "app/questions/code.test.tsx",
+      "lineRange": [
+        25,
+        36
+      ],
+      "summary": "Stateful test wrapper holding the Code component's textarea value in useState so controlled edits and Tab insertion can be asserted end-to-end.",
+      "tags": [
+        "test",
+        "test-harness",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/match.test.tsx",
+      "type": "file",
+      "name": "match.test.tsx",
+      "filePath": "app/questions/match.test.tsx",
+      "summary": "Unit tests for the Match component verifying that pairing left items to right options produces the expected id-to-id answer record and that pairs can be changed or cleared.",
+      "tags": [
+        "test",
+        "component",
+        "matching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/questions/mcq.test.tsx",
+      "type": "file",
+      "name": "mcq.test.tsx",
+      "filePath": "app/questions/mcq.test.tsx",
+      "summary": "Unit tests for the Mcq component verifying radio rendering per choice, selection reporting via onChange, and checked-state reflection of the current value.",
+      "tags": [
+        "test",
+        "component",
+        "multiple-choice"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/multi.test.tsx",
+      "type": "file",
+      "name": "multi.test.tsx",
+      "filePath": "app/questions/multi.test.tsx",
+      "summary": "Unit tests for the Multi component verifying checkbox toggling and that selection lists preserve the canonical choice ordering.",
+      "tags": [
+        "test",
+        "component",
+        "multi-select"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/question-view.test.tsx",
+      "type": "file",
+      "name": "question-view.test.tsx",
+      "filePath": "app/questions/question-view.test.tsx",
+      "summary": "Unit tests for the QuestionView dispatcher verifying that each question type renders its corresponding component and that stored answer values are coerced to the right shape.",
+      "tags": [
+        "test",
+        "component",
+        "dispatcher"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/questions/short.test.tsx",
+      "type": "file",
+      "name": "short.test.tsx",
+      "filePath": "app/questions/short.test.tsx",
+      "summary": "Unit tests for the Short component using a stateful Harness, covering text entry and onChange propagation of the typed answer.",
+      "tags": [
+        "test",
+        "component",
+        "short-answer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/questions/short.test.tsx:Harness",
+      "type": "function",
+      "name": "Harness",
+      "filePath": "app/questions/short.test.tsx",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "Stateful test wrapper storing the Short component's input value in useState so controlled typing can be simulated and asserted.",
+      "tags": [
+        "test",
+        "test-harness",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/questions/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "app/questions/types.ts",
+      "summary": "Shared type contract for question components: the generic QuestionProps interface plus Narrow and ValueFor conditional types that tie each QuestionType to its exact answer value shape.",
+      "tags": [
+        "type-definition",
+        "contract",
+        "question-type"
+      ],
+      "complexity": "simple",
+      "languageNotes": "ValueFor is a conditional type mapping question types to answer shapes (string[], Record, or string), so a component declaring the wrong value type fails to typecheck at its definition rather than at the dispatch site."
+    },
+    {
+      "id": "file:app/Quiz.tsx",
+      "type": "file",
+      "name": "Quiz.tsx",
+      "filePath": "app/Quiz.tsx",
+      "summary": "Top-level React quiz component orchestrating the browser quiz experience: renders question cards, progress footer, submit confirmation dialog, and error alerts, wiring state from the useQuiz hook to per-question views.",
+      "tags": [
+        "component",
+        "entry-point",
+        "ui",
+        "quiz-flow",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Composes several small function components (Card, Footer, Confirmation, Alert) in one file, keeping the entire quiz shell colocated."
+    },
+    {
+      "id": "file:app/lib/blanks.ts",
+      "type": "file",
+      "name": "blanks.ts",
+      "filePath": "app/lib/blanks.ts",
+      "summary": "Parses fill-in-the-blank question prompts into alternating text and blank segments by splitting on {{placeholder}} tokens, feeding the Blank question renderer.",
+      "tags": [
+        "utility",
+        "parsing",
+        "fill-in-blank",
+        "tested"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/lib/progress.ts",
+      "type": "file",
+      "name": "progress.ts",
+      "filePath": "app/lib/progress.ts",
+      "summary": "Computes quiz progress by determining whether each question type is fully answered (per-type completeness rules) and summarizing answered, unanswered, and flagged counts for the footer and submit confirmation.",
+      "tags": [
+        "utility",
+        "progress-tracking",
+        "validation",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/lib/values.ts",
+      "type": "file",
+      "name": "values.ts",
+      "filePath": "app/lib/values.ts",
+      "summary": "Type-narrowing helpers that safely coerce a stored AnswerValue into a string, string list, or record shape depending on the question type being rendered.",
+      "tags": [
+        "utility",
+        "type-narrowing",
+        "answer-values"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/main.tsx",
+      "type": "file",
+      "name": "main.tsx",
+      "filePath": "app/main.tsx",
+      "summary": "Browser entry point that mounts the Quiz React component into the DOM and pulls in the global stylesheet.",
+      "tags": [
+        "entry-point",
+        "bootstrap",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/quiz.test.tsx",
+      "type": "file",
+      "name": "quiz.test.tsx",
+      "filePath": "app/quiz.test.tsx",
+      "summary": "React Testing Library suite for the Quiz component covering loading, answering, autosave debounce timing, flagging, submit confirmation, and error states using mocked fetch replies and fake timers.",
+      "tags": [
+        "test",
+        "component",
+        "react-testing-library",
+        "autosave"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses vi.advanceTimersByTimeAsync inside act() to settle the 500ms autosave debounce deterministically."
+    },
+    {
+      "id": "file:app/useQuiz.ts",
+      "type": "file",
+      "name": "useQuiz.ts",
+      "filePath": "app/useQuiz.ts",
+      "summary": "Custom React hook layer holding all quiz client state: loads meta and questions from the server, tracks responses, debounces autosave PUTs (500ms), and handles the submit POST with status and error reporting. Composed from smaller useLoad, useAutosave, useEditor, and useSubmit hooks.",
+      "tags": [
+        "hook",
+        "state-management",
+        "api-client",
+        "autosave"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Decomposes one large hook into four focused sub-hooks connected via refs and callbacks; explicitly checks res.ok on every fetch since fetch does not reject on HTTP errors."
+    },
+    {
+      "id": "file:lib/question-schema.ts",
+      "type": "file",
+      "name": "question-schema.ts",
+      "filePath": "lib/question-schema.ts",
+      "summary": "Zod-based validation for quiz question documents: per-type schemas for the six question types, cross-field checks (placeholder/blank consistency, duplicate ids, accept lists), and validateQuestions which collects human-readable errors for an entire document.",
+      "tags": [
+        "validation",
+        "schema-definition",
+        "zod",
+        "data-model"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Accumulates all validation issues into an error list rather than throwing on the first failure, so agents get complete feedback on a malformed quiz file."
+    },
+    {
+      "id": "file:lib/quiz.ts",
+      "type": "file",
+      "name": "quiz.ts",
+      "filePath": "lib/quiz.ts",
+      "summary": "Server-side quiz persistence layer: reads and validates quiz JSON from disk, strips answers for the public payload, and manages the answers.json lifecycle (skeleton creation, atomic writes, and timestamped archiving after submission).",
+      "tags": [
+        "service",
+        "persistence",
+        "file-io",
+        "quiz-lifecycle",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses write-to-temp-then-rename for atomic answer file writes, and re-exports validateQuestions/TYPES as the library facade."
+    },
+    {
+      "id": "file:lib/score.ts",
+      "type": "file",
+      "name": "score.ts",
+      "filePath": "lib/score.ts",
+      "summary": "Auto-grading logic for closed question types (mcq, multi, blank, match): normalizes text, compares responses against answer keys, and produces a quiz-level result splitting auto-scored, needs-grading, and flagged questions.",
+      "tags": [
+        "service",
+        "scoring",
+        "grading",
+        "business-logic",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "lib/types.ts",
+      "summary": "Shared type definitions for the whole project: the discriminated Question union (mcq, multi, blank, short, code, match), PublicQuestion with answers stripped, response and answers-file shapes, quiz metadata, and the submission ResultPayload.",
+      "tags": [
+        "type-definition",
+        "data-model",
+        "shared",
+        "contract",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a distributive conditional type (Strip<T>) to remove answer/rationale from each union member individually while preserving each discriminant."
+    },
+    {
+      "id": "file:test/quiz.test.ts",
+      "type": "file",
+      "name": "quiz.test.ts",
+      "filePath": "test/quiz.test.ts",
+      "summary": "Vitest suite for lib/quiz.ts covering question document validation errors, public payload answer-stripping, and the answers.json lifecycle (skeleton creation, read/write round-trips, archiving) against temp directories and fixtures.",
+      "tags": [
+        "test",
+        "validation",
+        "persistence",
+        "vitest"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/score.test.ts",
+      "type": "file",
+      "name": "score.test.ts",
+      "filePath": "test/score.test.ts",
+      "summary": "Vitest suite for the scoring module: verifies per-type auto-grading correctness (mcq, multi, blank, match), text normalization, and quiz-level aggregation of correct, needs-grading, and flagged questions using fixture quizzes.",
+      "tags": [
+        "test",
+        "scoring",
+        "grading",
+        "vitest"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/types.test.ts",
+      "type": "file",
+      "name": "types.test.ts",
+      "filePath": "test/types.test.ts",
+      "summary": "Compile-time-oriented tests asserting the Question discriminated union narrows correctly by type and that PublicQuestion strips answer and rationale fields.",
+      "tags": [
+        "test",
+        "type-definition",
+        "type-safety"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/web-lib.test.ts",
+      "type": "file",
+      "name": "web-lib.test.ts",
+      "filePath": "test/web-lib.test.ts",
+      "summary": "Vitest suite for the browser-side helper libraries: blank-prompt parsing into segments, per-question-type answered detection, and progress summarization, exercised against fixture questions loaded via lib/quiz.",
+      "tags": [
+        "test",
+        "utility",
+        "progress-tracking",
+        "vitest"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/Quiz.tsx:Quiz",
+      "type": "function",
+      "name": "Quiz",
+      "filePath": "app/Quiz.tsx",
+      "lineRange": [
+        150,
+        218
+      ],
+      "summary": "Root quiz component: pulls state from useQuiz, computes progress via summarize, gates submission behind a confirmation dialog when questions are unanswered, and renders the question card list with footer and alerts.",
+      "tags": [
+        "component",
+        "quiz-flow",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/Quiz.tsx:Card",
+      "type": "function",
+      "name": "Card",
+      "filePath": "app/Quiz.tsx",
+      "lineRange": [
+        105,
+        129
+      ],
+      "summary": "Renders a single question card with its prompt, flag toggle, and delegated question-type-specific input via QuestionView, memoizing value and flag callbacks per question.",
+      "tags": [
+        "component",
+        "question-rendering",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/Quiz.tsx:Footer",
+      "type": "function",
+      "name": "Footer",
+      "filePath": "app/Quiz.tsx",
+      "lineRange": [
+        131,
+        148
+      ],
+      "summary": "Sticky footer showing answered/flagged progress text and the Done/submit button whose label reflects the confirming and sending states.",
+      "tags": [
+        "component",
+        "progress-tracking",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/Quiz.tsx:Confirmation",
+      "type": "function",
+      "name": "Confirmation",
+      "filePath": "app/Quiz.tsx",
+      "lineRange": [
+        85,
+        103
+      ],
+      "summary": "Inline confirmation prompt shown before submitting with unanswered questions, offering cancel to return to the quiz.",
+      "tags": [
+        "component",
+        "confirmation",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/Quiz.tsx:Alert",
+      "type": "function",
+      "name": "Alert",
+      "filePath": "app/Quiz.tsx",
+      "lineRange": [
+        72,
+        81
+      ],
+      "summary": "Displays an error or status message banner when a save or submit problem is reported, hidden when no message is present.",
+      "tags": [
+        "component",
+        "error-handling",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/lib/blanks.ts:parseBlanks",
+      "type": "function",
+      "name": "parseBlanks",
+      "filePath": "app/lib/blanks.ts",
+      "lineRange": [
+        10,
+        22
+      ],
+      "summary": "Splits a blank-question prompt on {{id}} placeholders and returns an ordered list of text and blank segments for rendering inline inputs.",
+      "tags": [
+        "utility",
+        "parsing",
+        "fill-in-blank"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/lib/progress.ts:isAnswered",
+      "type": "function",
+      "name": "isAnswered",
+      "filePath": "app/lib/progress.ts",
+      "lineRange": [
+        18,
+        35
+      ],
+      "summary": "Decides whether a response fully answers a question given its type: non-empty string for text types, non-empty list for multi, and every blank or match pair filled for blank/match questions.",
+      "tags": [
+        "utility",
+        "validation",
+        "progress-tracking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/lib/progress.ts:summarize",
+      "type": "function",
+      "name": "summarize",
+      "filePath": "app/lib/progress.ts",
+      "lineRange": [
+        39,
+        55
+      ],
+      "summary": "Aggregates responses across all questions into counts of answered, flagged, and a list of unanswered prompts used by the footer and submit confirmation.",
+      "tags": [
+        "utility",
+        "aggregation",
+        "progress-tracking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/lib/values.ts:asString",
+      "type": "function",
+      "name": "asString",
+      "filePath": "app/lib/values.ts",
+      "lineRange": [
+        9,
+        14
+      ],
+      "summary": "Narrows an AnswerValue to a string, returning an empty string for non-string values.",
+      "tags": [
+        "utility",
+        "type-narrowing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/lib/values.ts:asList",
+      "type": "function",
+      "name": "asList",
+      "filePath": "app/lib/values.ts",
+      "lineRange": [
+        16,
+        21
+      ],
+      "summary": "Narrows an AnswerValue to a string array, returning an empty array for non-array values.",
+      "tags": [
+        "utility",
+        "type-narrowing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/lib/values.ts:asMap",
+      "type": "function",
+      "name": "asMap",
+      "filePath": "app/lib/values.ts",
+      "lineRange": [
+        23,
+        28
+      ],
+      "summary": "Narrows an AnswerValue to a string record, returning an empty object for arrays, strings, or null.",
+      "tags": [
+        "utility",
+        "type-narrowing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/quiz.test.tsx:draft",
+      "type": "function",
+      "name": "draft",
+      "filePath": "app/quiz.test.tsx",
+      "lineRange": [
+        29,
+        38
+      ],
+      "summary": "Test helper constructing a draft Answers payload with the given responses for mocking the server's answers endpoint.",
+      "tags": [
+        "test",
+        "fixture",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/useQuiz.ts:useQuiz",
+      "type": "function",
+      "name": "useQuiz",
+      "filePath": "app/useQuiz.ts",
+      "lineRange": [
+        231,
+        275
+      ],
+      "summary": "Public hook composing load, editor, autosave, and submit sub-hooks into the full quiz client state machine (loading, ready, submitting, submitted, failed) consumed by the Quiz component.",
+      "tags": [
+        "hook",
+        "state-management",
+        "composition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/useQuiz.ts:useLoad",
+      "type": "function",
+      "name": "useLoad",
+      "filePath": "app/useQuiz.ts",
+      "lineRange": [
+        86,
+        109
+      ],
+      "summary": "Effect hook that fetches quiz meta/questions and saved answers in parallel on mount, invoking onLoad with the combined data or onFail with a described error.",
+      "tags": [
+        "hook",
+        "data-loading",
+        "api-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/useQuiz.ts:useAutosave",
+      "type": "function",
+      "name": "useAutosave",
+      "filePath": "app/useQuiz.ts",
+      "lineRange": [
+        111,
+        155
+      ],
+      "summary": "Debounced autosave hook batching pending response edits and flushing them via PUT after 500ms of inactivity, reporting save errors and cancelling the timer on unmount or submit.",
+      "tags": [
+        "hook",
+        "autosave",
+        "debounce",
+        "api-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/useQuiz.ts:useEditor",
+      "type": "function",
+      "name": "useEditor",
+      "filePath": "app/useQuiz.ts",
+      "lineRange": [
+        157,
+        194
+      ],
+      "summary": "Response editing hook holding the responses map plus a latest ref, exposing seed, setValue, and toggleFlag mutations that also queue autosave writes.",
+      "tags": [
+        "hook",
+        "state-management",
+        "editing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/useQuiz.ts:useSubmit",
+      "type": "function",
+      "name": "useSubmit",
+      "filePath": "app/useQuiz.ts",
+      "lineRange": [
+        201,
+        218
+      ],
+      "summary": "Submit hook that cancels pending autosaves, flushes the latest responses via PUT, then POSTs the submit endpoint, transitioning status to submitted or back to ready with an error.",
+      "tags": [
+        "hook",
+        "submission",
+        "api-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/useQuiz.ts:putResponses",
+      "type": "function",
+      "name": "putResponses",
+      "filePath": "app/useQuiz.ts",
+      "lineRange": [
+        66,
+        75
+      ],
+      "summary": "Sends a PUT with a JSON batch of response entries to the server's answers endpoint, throwing on non-ok HTTP status.",
+      "tags": [
+        "api-client",
+        "utility",
+        "http"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/question-schema.ts:validateQuestions",
+      "type": "function",
+      "name": "validateQuestions",
+      "filePath": "lib/question-schema.ts",
+      "lineRange": [
+        211,
+        243
+      ],
+      "summary": "Validates an entire quiz document: checks the root shape, version literal 1, and a non-empty questions array, then delegates each question to validateQuestion, returning either typed questions or a full list of error messages.",
+      "tags": [
+        "validation",
+        "schema-definition",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/question-schema.ts:validateQuestion",
+      "type": "function",
+      "name": "validateQuestion",
+      "filePath": "lib/question-schema.ts",
+      "lineRange": [
+        170,
+        207
+      ],
+      "summary": "Validates one raw question: id presence and uniqueness, prompt, recognized type, then the type-specific Zod schema, appending indexed human-readable issues to the shared error list.",
+      "tags": [
+        "validation",
+        "zod",
+        "error-reporting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/quiz.ts:QuizError",
+      "type": "class",
+      "name": "QuizError",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        13,
+        20
+      ],
+      "summary": "Error subclass carrying the list of validation or load error messages so callers (server, CLI) can present all problems with a quiz directory at once.",
+      "tags": [
+        "error-handling",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:readJson",
+      "type": "function",
+      "name": "readJson",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        34,
+        50
+      ],
+      "summary": "Reads and parses a JSON file, wrapping missing-file and parse failures into QuizError with a labeled message.",
+      "tags": [
+        "file-io",
+        "utility",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:loadFull",
+      "type": "function",
+      "name": "loadFull",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        52,
+        60
+      ],
+      "summary": "Loads meta.json and questions.json from a quiz directory and runs validateQuestions, throwing QuizError with all validation issues on failure.",
+      "tags": [
+        "persistence",
+        "validation",
+        "quiz-lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:loadPublic",
+      "type": "function",
+      "name": "loadPublic",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        62,
+        69
+      ],
+      "summary": "Loads the full quiz then strips answer and rationale from every question, producing the PublicQuestion payload served to the browser.",
+      "tags": [
+        "persistence",
+        "security",
+        "quiz-lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:readAnswers",
+      "type": "function",
+      "name": "readAnswers",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        75,
+        86
+      ],
+      "summary": "Reads answers.json for a quiz, or synthesizes a fresh draft skeleton with null responses for every question id when no file exists yet.",
+      "tags": [
+        "persistence",
+        "quiz-lifecycle",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:writeAnswers",
+      "type": "function",
+      "name": "writeAnswers",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        88,
+        94
+      ],
+      "summary": "Persists answers atomically by stamping updatedAt, writing to a temp file, and renaming over answers.json.",
+      "tags": [
+        "persistence",
+        "file-io",
+        "atomic-write"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:archiveAnswers",
+      "type": "function",
+      "name": "archiveAnswers",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        96,
+        105
+      ],
+      "summary": "Moves a submitted answers.json to a timestamped archive filename so the quiz directory can accept a fresh attempt.",
+      "tags": [
+        "persistence",
+        "quiz-lifecycle",
+        "archiving"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/score.ts:normalizeText",
+      "type": "function",
+      "name": "normalizeText",
+      "filePath": "lib/score.ts",
+      "lineRange": [
+        10,
+        12
+      ],
+      "summary": "Normalizes free-text answers for comparison by trimming, lowercasing, and collapsing whitespace.",
+      "tags": [
+        "utility",
+        "scoring",
+        "normalization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/score.ts:scoreQuestion",
+      "type": "function",
+      "name": "scoreQuestion",
+      "filePath": "lib/score.ts",
+      "lineRange": [
+        28,
+        61
+      ],
+      "summary": "Grades a single closed-type question against its answer key: exact choice match for mcq, set equality for multi, accept-list matching per blank, and pair equality for match.",
+      "tags": [
+        "scoring",
+        "grading",
+        "business-logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/score.ts:scoreQuiz",
+      "type": "function",
+      "name": "scoreQuiz",
+      "filePath": "lib/score.ts",
+      "lineRange": [
+        63,
+        91
+      ],
+      "summary": "Walks all questions and responses to build the ResultPayload: auto-scores closed types, routes short/code answers to needsGrading, and collects flagged question ids.",
+      "tags": [
+        "scoring",
+        "aggregation",
+        "business-logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/answers-schema.ts",
+      "type": "file",
+      "name": "answers-schema.ts",
+      "filePath": "lib/answers-schema.ts",
+      "summary": "Defines the Zod schema for the PUT /api/answers request body, validating per-question response entries whose values may be a string, string array, or string record, plus an optional flagged marker.",
+      "tags": [
+        "validation",
+        "zod-schema",
+        "api-contract",
+        "type-definition"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Uses Zod unions and records to model the polymorphic answer value shapes (text, multi-select, matching) in a single schema."
+    },
+    {
+      "id": "file:lib/buildinfo.ts",
+      "type": "file",
+      "name": "buildinfo.ts",
+      "filePath": "lib/buildinfo.ts",
+      "summary": "Computes deterministic SHA-256 hashes over frontend and server source trees and compares them against .buildinfo.json stamps to decide whether the committed app/dist bundle and bin/any-quiz.mjs server bundle are fresh.",
+      "tags": [
+        "build-system",
+        "utility",
+        "hashing",
+        "freshness-check",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Freshness is content-addressed: a sorted recursive walk feeds relative paths, sizes, and file bytes into one hash so any source edit invalidates the stamp."
+    },
+    {
+      "id": "file:lib/open.ts",
+      "type": "file",
+      "name": "open.ts",
+      "filePath": "lib/open.ts",
+      "summary": "Cross-platform helper that opens a URL in the user's default browser by spawning the platform-appropriate command (open, start, or xdg-open) as a detached process.",
+      "tags": [
+        "utility",
+        "browser",
+        "cross-platform",
+        "tested"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/server.ts",
+      "type": "file",
+      "name": "server.ts",
+      "filePath": "lib/server.ts",
+      "summary": "Builds the Hono quiz HTTP server: serves the public quiz JSON and static UI, handles GET/PUT of in-progress answers with Zod validation and a body limit, and scores POST /submit via scoreQuiz while emitting a 'submitted' event for the CLI.",
+      "tags": [
+        "api-handler",
+        "http-server",
+        "service",
+        "validation",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Routes are registered through small register* functions that share a context object (quiz dir, known question ids, submit emitter), keeping the Hono app assembly declarative."
+    },
+    {
+      "id": "file:serve.ts",
+      "type": "file",
+      "name": "serve.ts",
+      "filePath": "serve.ts",
+      "summary": "CLI entry point that parses arguments (--port, --no-open, --retake), loads and validates the quiz directory, starts the localhost server, prints the URL, opens the browser, and shuts down cleanly on submission or SIGINT.",
+      "tags": [
+        "entry-point",
+        "cli",
+        "http-server",
+        "lifecycle",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Guards direct execution with a realpath comparison so the file is import-safe for tests, and warns when the committed dist bundle is stale via isDistFresh."
+    },
+    {
+      "id": "file:test/bin-bundle.test.ts",
+      "type": "file",
+      "name": "bin-bundle.test.ts",
+      "filePath": "test/bin-bundle.test.ts",
+      "summary": "Verifies the esbuild-produced bin/any-quiz.mjs bundle is dependency-free by copying it (with app/dist) into a temp dir with no node_modules ancestor and asserting the spawned server still starts.",
+      "tags": [
+        "test",
+        "build-system",
+        "integration-test",
+        "bundling"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses os.tmpdir() isolation so a bare 'hono' or 'zod' specifier left in the bundle would fail resolution, proving esbuild inlined all dependencies."
+    },
+    {
+      "id": "file:test/buildinfo.test.ts",
+      "type": "file",
+      "name": "buildinfo.test.ts",
+      "filePath": "test/buildinfo.test.ts",
+      "summary": "Tests the build freshness system: sourceHash stability, null stamp handling before any build, and that the committed app/dist and bin/any-quiz.mjs bundles match the current sources (failing with a 'run npm run build' hint when stale).",
+      "tags": [
+        "test",
+        "build-system",
+        "freshness-check"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/cli-bind.test.ts",
+      "type": "file",
+      "name": "cli-bind.test.ts",
+      "filePath": "test/cli-bind.test.ts",
+      "summary": "Security-focused test that spawns the CLI and dials both localhost and the machine's LAN address to prove the quiz server binds to loopback only and is not reachable from the network.",
+      "tags": [
+        "test",
+        "security",
+        "networking",
+        "integration-test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/cli.test.ts",
+      "type": "file",
+      "name": "cli.test.ts",
+      "filePath": "test/cli.test.ts",
+      "summary": "End-to-end CLI tests that spawn serve.ts as a child process, covering URL announcement, submit-triggered shutdown (including with idle keep-alive sockets open), retake archiving, error exits, and parseArgs flag handling.",
+      "tags": [
+        "test",
+        "cli",
+        "integration-test",
+        "lifecycle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:test/server-submit.test.ts",
+      "type": "file",
+      "name": "server-submit.test.ts",
+      "filePath": "test/server-submit.test.ts",
+      "summary": "Tests the POST /api/submit flow against an in-process server instance: scoring results, answers persistence with a submittedAt timestamp, and rejection of empty or repeat submissions.",
+      "tags": [
+        "test",
+        "api-handler",
+        "scoring",
+        "integration-test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/server.test.ts",
+      "type": "file",
+      "name": "server.test.ts",
+      "filePath": "test/server.test.ts",
+      "summary": "Tests the quiz server's HTTP API surface: public quiz payload shape (no leaked answers), GET/PUT /api/answers round-tripping and validation errors, unknown-question rejection, and body-size limits.",
+      "tags": [
+        "test",
+        "api-handler",
+        "validation",
+        "integration-test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:test/support/cli-child.ts",
+      "type": "file",
+      "name": "cli-child.ts",
+      "filePath": "test/support/cli-child.ts",
+      "summary": "Shared test harness for spawning the serve.ts CLI as a child process: creates temp quiz dirs from a fixture, captures stdout/stderr, and resolves a ready promise once the announced URL appears.",
+      "tags": [
+        "test",
+        "test-helper",
+        "process-management",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tools/stamp-build.ts",
+      "type": "file",
+      "name": "stamp-build.ts",
+      "filePath": "tools/stamp-build.ts",
+      "summary": "Post-build script that writes .buildinfo.json freshness stamps (source hash plus timestamp) for both app/dist and the server bundle, and chmods bin/any-quiz.mjs executable since esbuild does not set the bit.",
+      "tags": [
+        "build-system",
+        "script",
+        "tooling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:walk",
+      "type": "function",
+      "name": "walk",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        25,
+        38
+      ],
+      "summary": "Recursively collects source file paths under a directory in sorted order, skipping ignored entries and non-source files so hashing is deterministic.",
+      "tags": [
+        "utility",
+        "filesystem",
+        "recursion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:hashFiles",
+      "type": "function",
+      "name": "hashFiles",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        40,
+        49
+      ],
+      "summary": "Produces a single SHA-256 hex digest over a list of files, mixing in each file's relative path, size, and contents.",
+      "tags": [
+        "utility",
+        "hashing",
+        "crypto"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:readStamp",
+      "type": "function",
+      "name": "readStamp",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        51,
+        64
+      ],
+      "summary": "Reads and parses a .buildinfo.json stamp file, returning the recorded source hash or null when the stamp is missing or malformed.",
+      "tags": [
+        "utility",
+        "serialization",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:sourceHash",
+      "type": "function",
+      "name": "sourceHash",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        66,
+        68
+      ],
+      "summary": "Computes the current hash of the frontend app source tree by walking and hashing all source files.",
+      "tags": [
+        "utility",
+        "hashing",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:readStampedHash",
+      "type": "function",
+      "name": "readStampedHash",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        70,
+        72
+      ],
+      "summary": "Returns the source hash recorded in app/dist's build stamp, or null if the frontend has never been built.",
+      "tags": [
+        "utility",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:isDistFresh",
+      "type": "function",
+      "name": "isDistFresh",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        74,
+        77
+      ],
+      "summary": "Reports whether the committed app/dist bundle matches the current frontend sources by comparing the stamped hash with a freshly computed one.",
+      "tags": [
+        "build-system",
+        "freshness-check",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:serverSourceHash",
+      "type": "function",
+      "name": "serverSourceHash",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        82,
+        84
+      ],
+      "summary": "Computes the hash of the server-side sources (serve.ts plus lib) that feed the bin/any-quiz.mjs bundle.",
+      "tags": [
+        "utility",
+        "hashing",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:readBinStampedHash",
+      "type": "function",
+      "name": "readBinStampedHash",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        86,
+        88
+      ],
+      "summary": "Returns the source hash recorded in the server bundle's build stamp, or null if the bundle has never been built.",
+      "tags": [
+        "utility",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/buildinfo.ts:isBinFresh",
+      "type": "function",
+      "name": "isBinFresh",
+      "filePath": "lib/buildinfo.ts",
+      "lineRange": [
+        90,
+        93
+      ],
+      "summary": "Reports whether the committed bin/any-quiz.mjs server bundle matches the current serve.ts and lib sources.",
+      "tags": [
+        "build-system",
+        "freshness-check",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/open.ts:openBrowser",
+      "type": "function",
+      "name": "openBrowser",
+      "filePath": "lib/open.ts",
+      "lineRange": [
+        17,
+        28
+      ],
+      "summary": "Opens a URL in the default browser by choosing the per-platform launcher command and spawning it detached with ignored stdio so the CLI stays unblocked.",
+      "tags": [
+        "utility",
+        "browser",
+        "cross-platform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/server.ts:toErrorBag",
+      "type": "function",
+      "name": "toErrorBag",
+      "filePath": "lib/server.ts",
+      "lineRange": [
+        28,
+        40
+      ],
+      "summary": "Converts Zod validation issues into a field-keyed map of error message arrays suitable for the API's JSON error responses.",
+      "tags": [
+        "validation",
+        "serialization",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/server.ts:registerAnswers",
+      "type": "function",
+      "name": "registerAnswers",
+      "filePath": "lib/server.ts",
+      "lineRange": [
+        56,
+        87
+      ],
+      "summary": "Registers GET and PUT /api/answers routes: GET returns saved answers, PUT validates the body against the Zod schema with a body limit, rejects unknown question ids, merges incoming responses into the answers file, and persists them.",
+      "tags": [
+        "api-handler",
+        "validation",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/server.ts:registerSubmit",
+      "type": "function",
+      "name": "registerSubmit",
+      "filePath": "lib/server.ts",
+      "lineRange": [
+        92,
+        120
+      ],
+      "summary": "Registers POST /api/submit: rejects empty or already-submitted answer sets, stamps submittedAt, persists the final answers, scores the quiz, returns the results, and emits the 'submitted' event that lets the CLI shut down.",
+      "tags": [
+        "api-handler",
+        "scoring",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/server.ts:buildApp",
+      "type": "function",
+      "name": "buildApp",
+      "filePath": "lib/server.ts",
+      "lineRange": [
+        122,
+        132
+      ],
+      "summary": "Assembles the Hono app: public quiz endpoint, answers and submit routes, a 404 JSON fallback for unknown API paths, and static serving of the built UI.",
+      "tags": [
+        "api-handler",
+        "factory",
+        "routing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/server.ts:createServer",
+      "type": "function",
+      "name": "createServer",
+      "filePath": "lib/server.ts",
+      "lineRange": [
+        134,
+        156
+      ],
+      "summary": "Loads the full quiz from a directory, builds the shared route context (known question ids, submit emitter), and returns a Node adaptor server wrapping the Hono app along with quiz metadata.",
+      "tags": [
+        "factory",
+        "http-server",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:serve.ts:resolveOptions",
+      "type": "function",
+      "name": "resolveOptions",
+      "filePath": "serve.ts",
+      "lineRange": [
+        47,
+        56
+      ],
+      "summary": "Parses and validates CLI arguments, failing fast with usage errors for unknown flags or a non-integer port.",
+      "tags": [
+        "cli",
+        "validation",
+        "argument-parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:serve.ts:loadQuiz",
+      "type": "function",
+      "name": "loadQuiz",
+      "filePath": "serve.ts",
+      "lineRange": [
+        58,
+        83
+      ],
+      "summary": "Loads and validates the quiz directory, refuses to reopen an already-submitted quiz unless --retake is passed, and archives previous answers before a retake.",
+      "tags": [
+        "cli",
+        "validation",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:serve.ts:announce",
+      "type": "function",
+      "name": "announce",
+      "filePath": "serve.ts",
+      "lineRange": [
+        85,
+        96
+      ],
+      "summary": "Logs the bound server URL and question count to stderr and opens the browser unless --no-open was given.",
+      "tags": [
+        "cli",
+        "logging",
+        "browser"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:serve.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "serve.ts",
+      "lineRange": [
+        98,
+        142
+      ],
+      "summary": "Orchestrates the CLI run: resolves options, warns on a stale dist bundle, loads the quiz, starts the server, shuts down after submission (emitting a JSON result line on stdout) or SIGINT, and retries on port conflicts.",
+      "tags": [
+        "entry-point",
+        "lifecycle",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:serve.ts:invokedDirectly",
+      "type": "function",
+      "name": "invokedDirectly",
+      "filePath": "serve.ts",
+      "lineRange": [
+        150,
+        160
+      ],
+      "summary": "Detects whether serve.ts is the process entry script by comparing realpaths of import.meta.url and process.argv[1], making the module safe to import from tests.",
+      "tags": [
+        "cli",
+        "utility",
+        "module-guard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:serve.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "serve.ts",
+      "lineRange": [
+        180,
+        198
+      ],
+      "summary": "Pure argument parser mapping positional quiz dir and the --port, --no-open, and --retake flags into an options object, collecting unknown flags as errors.",
+      "tags": [
+        "cli",
+        "argument-parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/cli-bind.test.ts:lanAddress",
+      "type": "function",
+      "name": "lanAddress",
+      "filePath": "test/cli-bind.test.ts",
+      "lineRange": [
+        8,
+        17
+      ],
+      "summary": "Finds a non-internal IPv4 address on the host's network interfaces to use as the LAN reachability probe target.",
+      "tags": [
+        "test-helper",
+        "networking",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/cli-bind.test.ts:dial",
+      "type": "function",
+      "name": "dial",
+      "filePath": "test/cli-bind.test.ts",
+      "lineRange": [
+        21,
+        35
+      ],
+      "summary": "Attempts a raw TCP connection to a host and port with a timeout, resolving true on connect and false on error or timeout, to check whether the server is reachable on a given interface.",
+      "tags": [
+        "test-helper",
+        "networking",
+        "tcp"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/cli.test.ts:idleKeepAlive",
+      "type": "function",
+      "name": "idleKeepAlive",
+      "filePath": "test/cli.test.ts",
+      "lineRange": [
+        28,
+        37
+      ],
+      "summary": "Opens an HTTP keep-alive socket to the running server and leaves it idle, used to prove submission shutdown is not blocked by lingering connections.",
+      "tags": [
+        "test-helper",
+        "networking",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/server-submit.test.ts:startOwnServer",
+      "type": "function",
+      "name": "startOwnServer",
+      "filePath": "test/server-submit.test.ts",
+      "lineRange": [
+        21,
+        31
+      ],
+      "summary": "Boots a dedicated in-process quiz server on an ephemeral port from a fresh temp copy of the fixture quiz, returning the base URL, server handle, and quiz dir.",
+      "tags": [
+        "test-helper",
+        "http-server",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/support/cli-child.ts:freshQuizDir",
+      "type": "function",
+      "name": "freshQuizDir",
+      "filePath": "test/support/cli-child.ts",
+      "lineRange": [
+        24,
+        28
+      ],
+      "summary": "Creates a temp directory seeded with the all-types example quiz fixture so each test run starts from clean quiz state.",
+      "tags": [
+        "test-helper",
+        "fixture",
+        "filesystem"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/support/cli-child.ts:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "test/support/cli-child.ts",
+      "lineRange": [
+        33,
+        35
+      ],
+      "summary": "Convenience wrapper that spawns the default serve.ts entry with the given CLI arguments via startAt.",
+      "tags": [
+        "test-helper",
+        "process-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/support/cli-child.ts:startAt",
+      "type": "function",
+      "name": "startAt",
+      "filePath": "test/support/cli-child.ts",
+      "lineRange": [
+        39,
+        66
+      ],
+      "summary": "Spawns a given CLI entry as a child process, accumulates stdout/stderr, and exposes a ready promise that resolves with the announced server URL or rejects on early exit.",
+      "tags": [
+        "test-helper",
+        "process-management",
+        "async"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/ci.yml",
+      "type": "pipeline",
+      "name": "ci.yml",
+      "filePath": ".github/workflows/ci.yml",
+      "summary": "GitHub Actions CI workflow that runs on every pull request, installing dependencies with npm ci on Node 22 and gating merges on lint, typecheck, and test npm scripts.",
+      "tags": [
+        "ci-cd",
+        "infrastructure",
+        "build-system",
+        "quality-gate"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Single-job workflow using actions/setup-node's built-in npm cache to speed up dependency installation."
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Project overview for AnyQuiz covering installation across the three supported harnesses (Claude Code, Pi, Codex), the six question types, the shared-core/per-harness-adapter architecture, the on-disk quiz folder layout under ~/.any-quiz/, and the develop/build workflow.",
+      "tags": [
+        "documentation",
+        "entry-point",
+        "overview",
+        "installation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:biome.jsonc",
+      "type": "config",
+      "name": "biome.jsonc",
+      "filePath": "biome.jsonc",
+      "summary": "Biome formatter and linter configuration using the 'all' rules preset with heavily commented per-rule opt-outs (Qwik/Solid false positives, React className idiom) and path-scoped overrides for Vite configs, Node-side code, and test files.",
+      "tags": [
+        "configuration",
+        "lint",
+        "formatting",
+        "build-system"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses Biome 2.x path-scoped overrides so rules like noNodejsModules and noDefaultExport are disabled only where the runtime context (Node vs browser bundle) makes them false positives; every opt-out carries an inline justification comment."
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Package manifest for the any-quiz monorepo defining the build pipeline (Vite web bundle plus esbuild server bundle to bin/any-quiz.mjs with a build stamp), the lint/typecheck/test 'check' gate, dev servers, the Pi harness skill manifest under the 'pi' key, and a Hono/Zod runtime dependency set.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "dependencies",
+        "entry-point"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "The 'pi' key doubles as the Pi harness install manifest (pointing at ./pi-skills), so this file is both npm metadata and a harness adapter registration."
+    },
+    {
+      "id": "config:tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "tsconfig.json",
+      "summary": "TypeScript compiler configuration in strict noEmit (typecheck-only) mode targeting ES2023 with NodeNext resolution, react-jsx, and erasableSyntaxOnly, covering lib, app, test, tools, serve.ts, and the Vite/Vitest configs.",
+      "tags": [
+        "configuration",
+        "typescript",
+        "build-system",
+        "type-checking"
+      ],
+      "complexity": "simple",
+      "languageNotes": "erasableSyntaxOnly plus allowImportingTsExtensions and noEmit indicate TypeScript is run directly under Node's native type-stripping (Node 22+) rather than compiled, with tsc used purely as a type gate."
+    },
+    {
+      "id": "config:.claude-plugin/marketplace.json",
+      "type": "config",
+      "name": "marketplace.json",
+      "filePath": ".claude-plugin/marketplace.json",
+      "summary": "Claude Code plugin marketplace manifest that lists the any-quiz plugin with its name, description, and owner so the repo can be installed as a marketplace source.",
+      "tags": [
+        "configuration",
+        "plugin-manifest",
+        "claude-code",
+        "distribution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.claude-plugin/plugin.json",
+      "type": "config",
+      "name": "plugin.json",
+      "filePath": ".claude-plugin/plugin.json",
+      "summary": "Claude Code plugin manifest declaring the any-quiz plugin's name, version, author, and repository, which surfaces the skills/ directory to the Claude Code harness.",
+      "tags": [
+        "configuration",
+        "plugin-manifest",
+        "claude-code",
+        "versioning"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:.claude/skills/harness-ports/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md (harness-ports)",
+      "filePath": ".claude/skills/harness-ports/SKILL.md",
+      "summary": "Project-local meta-skill describing how to port any-quiz to a new coding-agent harness: what is shared (server, CLI, question schema) versus per-harness (skill adapter wording), with process steps and precedent from the Pi and Codex ports.",
+      "tags": [
+        "documentation",
+        "harness-port",
+        "process",
+        "meta-skill"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.gitattributes",
+      "type": "file",
+      "name": ".gitattributes",
+      "filePath": ".gitattributes",
+      "summary": "Git attributes marking the committed build artifacts (app/dist/ and bin/) as linguist-generated and diff-suppressed so they do not pollute diffs or language stats.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "generated-artifacts"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:.superpowers/sdd/2026-08-17-any-quiz/task-2-report.md",
+      "type": "document",
+      "name": "task-2-report.md",
+      "filePath": ".superpowers/sdd/2026-08-17-any-quiz/task-2-report.md",
+      "summary": "TDD execution report for Task 2 (the quiz type model): files created, red/green test steps, per-member type assertion fixes, Biome lint exclusions, and final verification results.",
+      "tags": [
+        "documentation",
+        "task-report",
+        "tdd",
+        "development"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "Ignore list for the understand-anything analysis tooling, excluding build artifacts, dependencies, and generated files from knowledge-graph scans.",
+      "tags": [
+        "configuration",
+        "tooling",
+        "ignore-rules"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "One-line configuration for the understand-anything tooling setting the output language for generated analysis content.",
+      "tags": [
+        "configuration",
+        "tooling",
+        "localization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "app/index.html",
+      "summary": "Minimal HTML shell for the quiz frontend: a root div plus the module script tag loading main.tsx, with an empty data-URI favicon to suppress /favicon.ico 404s from the route-less server.",
+      "tags": [
+        "entry-point",
+        "markup",
+        "frontend",
+        "vite"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/style.css",
+      "type": "file",
+      "name": "style.css",
+      "filePath": "app/style.css",
+      "summary": "Global stylesheet for the quiz-taking UI, styling the question cards, input controls for the six question types, progress indicators, and submit flow.",
+      "tags": [
+        "markup",
+        "styling",
+        "frontend",
+        "component"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:bin/.buildinfo.json",
+      "type": "config",
+      "name": ".buildinfo.json",
+      "filePath": "bin/.buildinfo.json",
+      "summary": "Build stamp recording the source hash and timestamp of the committed bin/any-quiz.mjs bundle, used by the staleness guard to detect when the bundle is out of date with src/.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "staleness-guard",
+        "generated-artifacts"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:bin/any-quiz.mjs",
+      "type": "file",
+      "name": "any-quiz.mjs",
+      "filePath": "bin/any-quiz.mjs",
+      "summary": "Committed esbuild-bundled build artifact of the quiz server CLI (src/serve.ts plus inlined dependencies such as Zod): serves the quiz UI, strips answer keys, persists answers, pre-scores deterministic questions, and includes the source-hash staleness guard. Not hand-edited; regenerate via the build script.",
+      "tags": [
+        "entry-point",
+        "cli",
+        "generated-artifacts",
+        "server",
+        "bundle"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Generated single-file ESM bundle (~19k lines) with vendored dependencies inlined; the staleness guard at the top hashes src/ files against bin/.buildinfo.json before running."
+    },
+    {
+      "id": "document:codex-skills/any-quiz/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md (codex)",
+      "filePath": "codex-skills/any-quiz/SKILL.md",
+      "summary": "Codex harness adapter for the any-quiz skill: instructs the agent to create a quiz folder, serve it with the bundled CLI, coach on results, and run follow-up quizzes, including the question schema, CLI flags, and exit codes.",
+      "tags": [
+        "documentation",
+        "skill-adapter",
+        "codex",
+        "harness-port"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "type": "document",
+      "name": "2026-08-17-any-quiz.md (plan)",
+      "filePath": "docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "summary": "Full 17-task implementation plan for any-quiz covering toolchain, type model, validation, persistence, scoring, server routes, CLI entry point, frontend components for all six question types, and the build/ship task, with pinned versions and global constraints.",
+      "tags": [
+        "documentation",
+        "implementation-plan",
+        "task-breakdown",
+        "development"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+      "type": "document",
+      "name": "2026-08-17-any-quiz-design.md (spec)",
+      "filePath": "docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+      "summary": "Design specification for any-quiz: purpose, architecture, data model (meta.json, questions.json, answers.json), server routes, answer-key stripping, deterministic pre-scoring, exit codes, frontend approach, and the rationale for committing built artifacts.",
+      "tags": [
+        "documentation",
+        "design-spec",
+        "architecture",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:examples/all-types/meta.json",
+      "type": "config",
+      "name": "meta.json",
+      "filePath": "examples/all-types/meta.json",
+      "summary": "Example quiz metadata fixture documenting the meta.json shape: id, slug, title, topic, createdAt, parentQuizId, and targets fields.",
+      "tags": [
+        "fixture",
+        "example",
+        "data-model",
+        "quiz-metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:examples/all-types/questions.json",
+      "type": "config",
+      "name": "questions.json",
+      "filePath": "examples/all-types/questions.json",
+      "summary": "Canonical example quiz fixture containing exactly one question of each of the six supported types (mcq, multi, blank, short, code, match), each with an answer and rationale; doubles as executable documentation of the question schema.",
+      "tags": [
+        "fixture",
+        "example",
+        "question-schema",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:pi-skills/any-quiz/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md (pi)",
+      "filePath": "pi-skills/any-quiz/SKILL.md",
+      "summary": "Pi harness adapter for the any-quiz skill, mirroring the Codex/Claude Code versions: quiz folder creation, serving via the bundled CLI, coaching, follow-up quizzes, question schema, flags, and exit codes.",
+      "tags": [
+        "documentation",
+        "skill-adapter",
+        "pi",
+        "harness-port"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/any-quiz/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md (claude-code)",
+      "filePath": "skills/any-quiz/SKILL.md",
+      "summary": "Primary Claude Code skill definition for any-quiz: the agent-facing procedure for writing a quiz mid-conversation, serving it in the browser via the bundled CLI, grading/coaching on the returned answers, and offering follow-up quizzes.",
+      "tags": [
+        "documentation",
+        "skill-adapter",
+        "claude-code",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/fixture.test.ts",
+      "type": "file",
+      "name": "fixture.test.ts",
+      "filePath": "test/fixture.test.ts",
+      "summary": "Vitest suite guarding the all-types example fixture: asserts the six question types appear exactly once in order, every question carries an answer and rationale, and meta.json matches the documented shape.",
+      "tags": [
+        "test",
+        "fixture",
+        "validation",
+        "vitest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/setup-dom.ts",
+      "type": "file",
+      "name": "setup-dom.ts",
+      "filePath": "test/setup-dom.ts",
+      "summary": "Vitest browser-project setup file that runs Testing Library's cleanup after each test to unmount rendered React components.",
+      "tags": [
+        "test",
+        "setup",
+        "testing-library",
+        "jsdom"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:vite.config.ts",
+      "type": "file",
+      "name": "vite.config.ts",
+      "filePath": "vite.config.ts",
+      "summary": "Vite build-only configuration rooted at app/ with the React plugin, stable (non-hashed) output filenames to avoid churning the committed dist bundle, and a dev proxy forwarding /api to the local quiz server on port 4711.",
+      "tags": [
+        "config",
+        "build-system",
+        "vite",
+        "frontend"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Content hashes are deliberately disabled because the server sends cache-control: no-store, so hashed filenames would only churn the committed bundle."
+    },
+    {
+      "id": "file:vitest.config.ts",
+      "type": "file",
+      "name": "vitest.config.ts",
+      "filePath": "vitest.config.ts",
+      "summary": "Vitest configuration defining two projects: a node environment for test/**/*.test.ts and a jsdom browser environment for app/**/*.test.tsx with the React plugin and DOM cleanup setup file.",
+      "tags": [
+        "config",
+        "test",
+        "vitest",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/quiz.ts:answersPath",
+      "type": "function",
+      "name": "answersPath",
+      "filePath": "lib/quiz.ts",
+      "lineRange": [
+        71,
+        73
+      ],
+      "summary": "Returns the answers.json file path inside a quiz directory; shared path helper used by readAnswers, writeAnswers, archiveAnswers, and serve.ts.",
+      "tags": [
+        "persistence",
+        "quiz-lifecycle",
+        "file-io"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:app/questions/Blank.tsx",
+      "target": "function:app/questions/Blank.tsx:Field",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Blank.tsx",
+      "target": "function:app/questions/Blank.tsx:Blank",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Code.tsx",
+      "target": "function:app/questions/Code.tsx:Code",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "function:app/questions/Match.tsx:paired",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "function:app/questions/Match.tsx:Row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "function:app/questions/Match.tsx:Match",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Mcq.tsx",
+      "target": "function:app/questions/Mcq.tsx:Option",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Mcq.tsx",
+      "target": "function:app/questions/Mcq.tsx:Mcq",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Multi.tsx",
+      "target": "function:app/questions/Multi.tsx:Box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Multi.tsx",
+      "target": "function:app/questions/Multi.tsx:Multi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "function:app/questions/QuestionView.tsx:QuestionView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Short.tsx",
+      "target": "function:app/questions/Short.tsx:Short",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/blank.test.tsx",
+      "target": "function:app/questions/blank.test.tsx:Harness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/code.test.tsx",
+      "target": "function:app/questions/code.test.tsx:Harness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/short.test.tsx",
+      "target": "function:app/questions/short.test.tsx:Harness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/questions/Blank.tsx",
+      "target": "function:app/questions/Blank.tsx:Blank",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Code.tsx",
+      "target": "function:app/questions/Code.tsx:Code",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "function:app/questions/Match.tsx:Match",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Mcq.tsx",
+      "target": "function:app/questions/Mcq.tsx:Mcq",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Multi.tsx",
+      "target": "function:app/questions/Multi.tsx:Multi",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "function:app/questions/QuestionView.tsx:QuestionView",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Short.tsx",
+      "target": "function:app/questions/Short.tsx:Short",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Blank.tsx",
+      "target": "file:app/lib/blanks.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Blank.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Code.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Mcq.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Mcq.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Multi.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Multi.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/lib/values.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/Blank.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/Code.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/Match.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/Mcq.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/Multi.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/Short.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/Short.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/blank.test.tsx",
+      "target": "file:app/questions/Blank.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/blank.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/code.test.tsx",
+      "target": "file:app/questions/Code.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/code.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/match.test.tsx",
+      "target": "file:app/questions/Match.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/match.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/mcq.test.tsx",
+      "target": "file:app/questions/Mcq.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/mcq.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/multi.test.tsx",
+      "target": "file:app/questions/Multi.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/multi.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/question-view.test.tsx",
+      "target": "file:app/questions/QuestionView.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/question-view.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/question-view.test.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/short.test.tsx",
+      "target": "file:app/questions/Short.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/short.test.tsx",
+      "target": "file:app/questions/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/questions/types.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:app/questions/Blank.tsx:Blank",
+      "target": "function:app/lib/blanks.ts:parseBlanks",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/lib/values.ts:asString",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/lib/values.ts:asList",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/lib/values.ts:asMap",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/questions/Blank.tsx:Blank",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/questions/Code.tsx:Code",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/questions/Match.tsx:Match",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/questions/Mcq.tsx:Mcq",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/questions/Multi.tsx:Multi",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/questions/QuestionView.tsx:QuestionView",
+      "target": "function:app/questions/Short.tsx:Short",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/questions/Blank.tsx",
+      "target": "file:app/questions/blank.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/questions/Code.tsx",
+      "target": "file:app/questions/code.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/questions/Match.tsx",
+      "target": "file:app/questions/match.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/questions/Mcq.tsx",
+      "target": "file:app/questions/mcq.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/questions/Multi.tsx",
+      "target": "file:app/questions/multi.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/questions/QuestionView.tsx",
+      "target": "file:app/questions/question-view.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/questions/Short.tsx",
+      "target": "file:app/questions/short.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "file:app/lib/progress.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "file:app/questions/QuestionView.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "file:app/useQuiz.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "file:app/lib/values.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/main.tsx",
+      "target": "file:app/Quiz.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/main.tsx",
+      "target": "file:app/style.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/quiz.test.tsx",
+      "target": "file:app/Quiz.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/quiz.test.tsx",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/question-schema.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "file:lib/question-schema.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/quiz.test.ts",
+      "target": "file:lib/quiz.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/score.test.ts",
+      "target": "file:lib/quiz.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/score.test.ts",
+      "target": "file:lib/score.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/score.test.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/types.test.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/web-lib.test.ts",
+      "target": "file:app/lib/blanks.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/web-lib.test.ts",
+      "target": "file:app/lib/progress.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/web-lib.test.ts",
+      "target": "file:lib/quiz.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/web-lib.test.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "function:app/Quiz.tsx:Quiz",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "function:app/Quiz.tsx:Card",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "function:app/Quiz.tsx:Footer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "function:app/Quiz.tsx:Confirmation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "function:app/Quiz.tsx:Alert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/lib/blanks.ts",
+      "target": "function:app/lib/blanks.ts:parseBlanks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "function:app/lib/progress.ts:isAnswered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "function:app/lib/progress.ts:summarize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "function:app/lib/values.ts:asString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "function:app/lib/values.ts:asList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "function:app/lib/values.ts:asMap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/quiz.test.tsx",
+      "target": "function:app/quiz.test.tsx:draft",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:useQuiz",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:useLoad",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:useAutosave",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:useEditor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:useSubmit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:putResponses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/question-schema.ts",
+      "target": "function:lib/question-schema.ts:validateQuestions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/question-schema.ts",
+      "target": "function:lib/question-schema.ts:validateQuestion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "class:lib/quiz.ts:QuizError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:readJson",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:loadFull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:loadPublic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:readAnswers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:writeAnswers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:archiveAnswers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "function:lib/score.ts:normalizeText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "function:lib/score.ts:scoreQuestion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "function:lib/score.ts:scoreQuiz",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "function:app/Quiz.tsx:Quiz",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/lib/blanks.ts",
+      "target": "function:app/lib/blanks.ts:parseBlanks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "function:app/lib/progress.ts:isAnswered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "function:app/lib/progress.ts:summarize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "function:app/lib/values.ts:asString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "function:app/lib/values.ts:asList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/lib/values.ts",
+      "target": "function:app/lib/values.ts:asMap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/useQuiz.ts",
+      "target": "function:app/useQuiz.ts:useQuiz",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/question-schema.ts",
+      "target": "function:lib/question-schema.ts:validateQuestions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "class:lib/quiz.ts:QuizError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:loadFull",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:loadPublic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:readAnswers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:writeAnswers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:archiveAnswers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "function:lib/score.ts:normalizeText",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "function:lib/score.ts:scoreQuestion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "function:lib/score.ts:scoreQuiz",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/Quiz.tsx:Quiz",
+      "target": "function:app/useQuiz.ts:useQuiz",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/Quiz.tsx:Quiz",
+      "target": "function:app/lib/progress.ts:summarize",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/Quiz.tsx:Card",
+      "target": "function:app/questions/QuestionView.tsx:QuestionView",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/lib/progress.ts:isAnswered",
+      "target": "function:app/lib/values.ts:asMap",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/quiz.ts:loadFull",
+      "target": "function:lib/question-schema.ts:validateQuestions",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/main.tsx",
+      "target": "function:app/Quiz.tsx:Quiz",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/Quiz.tsx",
+      "target": "file:app/quiz.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "file:test/quiz.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/score.ts",
+      "target": "file:test/score.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "file:test/score.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/types.ts",
+      "target": "file:test/types.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/lib/blanks.ts",
+      "target": "file:test/web-lib.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:app/lib/progress.ts",
+      "target": "file:test/web-lib.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "file:test/web-lib.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:walk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:hashFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:readStamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:sourceHash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:readStampedHash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:isDistFresh",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:serverSourceHash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:readBinStampedHash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:isBinFresh",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/open.ts",
+      "target": "function:lib/open.ts:openBrowser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "function:lib/server.ts:toErrorBag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "function:lib/server.ts:registerAnswers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "function:lib/server.ts:registerSubmit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "function:lib/server.ts:buildApp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "function:lib/server.ts:createServer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:resolveOptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:loadQuiz",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:announce",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:invokedDirectly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:parseArgs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/cli-bind.test.ts",
+      "target": "function:test/cli-bind.test.ts:lanAddress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/cli-bind.test.ts",
+      "target": "function:test/cli-bind.test.ts:dial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/cli.test.ts",
+      "target": "function:test/cli.test.ts:idleKeepAlive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/server-submit.test.ts",
+      "target": "function:test/server-submit.test.ts:startOwnServer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/support/cli-child.ts",
+      "target": "function:test/support/cli-child.ts:freshQuizDir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/support/cli-child.ts",
+      "target": "function:test/support/cli-child.ts:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/support/cli-child.ts",
+      "target": "function:test/support/cli-child.ts:startAt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:sourceHash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:readStampedHash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:isDistFresh",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:serverSourceHash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:readBinStampedHash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "function:lib/buildinfo.ts:isBinFresh",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/open.ts",
+      "target": "function:lib/open.ts:openBrowser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "function:lib/server.ts:createServer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "function:serve.ts:parseArgs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/support/cli-child.ts",
+      "target": "function:test/support/cli-child.ts:freshQuizDir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/support/cli-child.ts",
+      "target": "function:test/support/cli-child.ts:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/support/cli-child.ts",
+      "target": "function:test/support/cli-child.ts:startAt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:lib/answers-schema.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:lib/buildinfo.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:lib/quiz.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:lib/score.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:lib/buildinfo.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:lib/open.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:lib/quiz.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:lib/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/bin-bundle.test.ts",
+      "target": "file:lib/buildinfo.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/buildinfo.test.ts",
+      "target": "file:lib/buildinfo.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/cli-bind.test.ts",
+      "target": "file:test/support/cli-child.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/cli.test.ts",
+      "target": "file:lib/open.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/cli.test.ts",
+      "target": "file:serve.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/cli.test.ts",
+      "target": "file:test/support/cli-child.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/server-submit.test.ts",
+      "target": "file:lib/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/server-submit.test.ts",
+      "target": "file:lib/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test/server.test.ts",
+      "target": "file:lib/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tools/stamp-build.ts",
+      "target": "file:lib/buildinfo.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:lib/server.ts:registerAnswers",
+      "target": "function:lib/quiz.ts:readAnswers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/server.ts:registerAnswers",
+      "target": "function:lib/quiz.ts:writeAnswers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/server.ts:registerSubmit",
+      "target": "function:lib/quiz.ts:readAnswers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/server.ts:registerSubmit",
+      "target": "function:lib/quiz.ts:writeAnswers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/server.ts:registerSubmit",
+      "target": "function:lib/score.ts:scoreQuiz",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/server.ts:buildApp",
+      "target": "function:lib/quiz.ts:loadPublic",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/server.ts:createServer",
+      "target": "function:lib/quiz.ts:loadFull",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:loadQuiz",
+      "target": "function:lib/quiz.ts:loadFull",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:loadQuiz",
+      "target": "function:lib/quiz.ts:readAnswers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:loadQuiz",
+      "target": "function:lib/quiz.ts:archiveAnswers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:main",
+      "target": "function:lib/buildinfo.ts:isDistFresh",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:main",
+      "target": "function:lib/server.ts:createServer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:announce",
+      "target": "function:lib/open.ts:openBrowser",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:test/server-submit.test.ts:startOwnServer",
+      "target": "function:lib/server.ts:createServer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:tools/stamp-build.ts",
+      "target": "function:lib/buildinfo.ts:sourceHash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:tools/stamp-build.ts",
+      "target": "function:lib/buildinfo.ts:serverSourceHash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "file:test/buildinfo.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/buildinfo.ts",
+      "target": "file:test/bin-bundle.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:test/bin-bundle.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:test/server.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/server.ts",
+      "target": "file:test/server-submit.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:test/cli.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:serve.ts",
+      "target": "file:test/cli-bind.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:lib/open.ts",
+      "target": "file:test/cli.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "pipeline:.github/workflows/ci.yml",
+      "target": "config:package.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:serve.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:skills/any-quiz/SKILL.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:pi-skills/any-quiz/SKILL.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:codex-skills/any-quiz/SKILL.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:package.json",
+      "target": "file:serve.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:package.json",
+      "target": "file:vite.config.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:package.json",
+      "target": "file:vitest.config.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:package.json",
+      "target": "config:biome.jsonc",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:serve.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:vite.config.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:vitest.config.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:biome.jsonc",
+      "target": "file:serve.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:biome.jsonc",
+      "target": "file:vite.config.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:biome.jsonc",
+      "target": "file:vitest.config.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.claude-plugin/marketplace.json",
+      "target": "config:.claude-plugin/plugin.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.claude-plugin/plugin.json",
+      "target": "document:skills/any-quiz/SKILL.md",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:.claude/skills/harness-ports/SKILL.md",
+      "target": "document:skills/any-quiz/SKILL.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.claude/skills/harness-ports/SKILL.md",
+      "target": "document:pi-skills/any-quiz/SKILL.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.claude/skills/harness-ports/SKILL.md",
+      "target": "document:codex-skills/any-quiz/SKILL.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:.gitattributes",
+      "target": "file:bin/any-quiz.mjs",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:bin/.buildinfo.json",
+      "target": "file:bin/any-quiz.mjs",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:skills/any-quiz/SKILL.md",
+      "target": "file:bin/any-quiz.mjs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:pi-skills/any-quiz/SKILL.md",
+      "target": "file:bin/any-quiz.mjs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:codex-skills/any-quiz/SKILL.md",
+      "target": "file:bin/any-quiz.mjs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "target": "document:docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "target": "file:vite.config.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "target": "file:vitest.config.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "target": "file:test/fixture.test.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+      "target": "file:bin/any-quiz.mjs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:.superpowers/sdd/2026-08-17-any-quiz/task-2-report.md",
+      "target": "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:examples/all-types/meta.json",
+      "target": "config:examples/all-types/questions.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:vitest.config.ts",
+      "target": "file:test/setup-dom.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:vitest.config.ts",
+      "target": "file:test/fixture.test.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:vite.config.ts",
+      "target": "file:app/index.html",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app/index.html",
+      "target": "file:app/main.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:answersPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/quiz.ts",
+      "target": "function:lib/quiz.ts:answersPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:serve.ts:loadQuiz",
+      "target": "function:lib/quiz.ts:answersPath",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:ui",
+      "name": "Frontend Quiz UI",
+      "description": "React quiz-taking interface served in the browser: per-type question components (mcq, multi, blank, short, code, match), the QuestionView dispatcher, the Quiz orchestrator with its useQuiz state hook, browser-side helpers for blanks/progress/answer values, and the HTML/CSS shell bundled by Vite.",
+      "nodeIds": [
+        "file:app/questions/Blank.tsx",
+        "file:app/questions/Code.tsx",
+        "file:app/questions/Match.tsx",
+        "file:app/questions/Mcq.tsx",
+        "file:app/questions/Multi.tsx",
+        "file:app/questions/QuestionView.tsx",
+        "file:app/questions/Short.tsx",
+        "file:app/questions/types.ts",
+        "file:app/Quiz.tsx",
+        "file:app/lib/blanks.ts",
+        "file:app/lib/progress.ts",
+        "file:app/lib/values.ts",
+        "file:app/main.tsx",
+        "file:app/useQuiz.ts",
+        "file:app/index.html",
+        "file:app/style.css"
+      ]
+    },
+    {
+      "id": "layer:core",
+      "name": "Core Server & Domain",
+      "description": "Shared Node core under lib/ that every harness reuses: the discriminated Question type model, Zod schemas for questions and answer submissions, quiz persistence with answer-key stripping, auto-grading of closed question types, the Hono HTTP server, and build-freshness/browser-open utilities.",
+      "nodeIds": [
+        "file:lib/types.ts",
+        "file:lib/question-schema.ts",
+        "file:lib/answers-schema.ts",
+        "file:lib/quiz.ts",
+        "file:lib/score.ts",
+        "file:lib/server.ts",
+        "file:lib/buildinfo.ts",
+        "file:lib/open.ts"
+      ]
+    },
+    {
+      "id": "layer:cli",
+      "name": "CLI Entry & Bundle",
+      "description": "The command-line surface agents invoke: serve.ts parses flags, starts the loopback quiz server, opens the browser, and exits on submission; bin/any-quiz.mjs is the committed dependency-free esbuild bundle of it, guarded by its .buildinfo.json staleness stamp.",
+      "nodeIds": [
+        "file:serve.ts",
+        "file:bin/any-quiz.mjs",
+        "config:bin/.buildinfo.json"
+      ]
+    },
+    {
+      "id": "layer:skill-adapters",
+      "name": "Harness Skill Adapters",
+      "description": "Per-harness adapters that teach each coding agent how to drive the shared CLI: SKILL.md files for Claude Code, Pi, and Codex, the Claude Code plugin and marketplace manifests, and the harness-ports meta-skill documenting how to add new harness ports.",
+      "nodeIds": [
+        "document:skills/any-quiz/SKILL.md",
+        "document:pi-skills/any-quiz/SKILL.md",
+        "document:codex-skills/any-quiz/SKILL.md",
+        "config:.claude-plugin/plugin.json",
+        "config:.claude-plugin/marketplace.json",
+        "document:.claude/skills/harness-ports/SKILL.md"
+      ]
+    },
+    {
+      "id": "layer:test",
+      "name": "Test Suites",
+      "description": "Vitest coverage across both runtimes: jsdom component tests for every question type and the Quiz flow, node suites for validation, persistence, scoring, server routes, bundle freshness, and end-to-end CLI tests (including loopback-only binding) via the cli-child spawn harness.",
+      "nodeIds": [
+        "file:app/questions/blank.test.tsx",
+        "file:app/questions/code.test.tsx",
+        "file:app/questions/match.test.tsx",
+        "file:app/questions/mcq.test.tsx",
+        "file:app/questions/multi.test.tsx",
+        "file:app/questions/question-view.test.tsx",
+        "file:app/questions/short.test.tsx",
+        "file:app/quiz.test.tsx",
+        "file:test/quiz.test.ts",
+        "file:test/score.test.ts",
+        "file:test/types.test.ts",
+        "file:test/web-lib.test.ts",
+        "file:test/bin-bundle.test.ts",
+        "file:test/buildinfo.test.ts",
+        "file:test/cli-bind.test.ts",
+        "file:test/cli.test.ts",
+        "file:test/server-submit.test.ts",
+        "file:test/server.test.ts",
+        "file:test/support/cli-child.ts",
+        "file:test/fixture.test.ts",
+        "file:test/setup-dom.ts"
+      ]
+    },
+    {
+      "id": "layer:build-config",
+      "name": "Build, Config & CI",
+      "description": "Toolchain that produces and gates the committed bundles: package.json build/check scripts, Vite and Vitest configs, TypeScript and Biome settings, the stamp-build freshness script, git attributes for generated artifacts, the GitHub Actions CI gate, and analysis-tool config.",
+      "nodeIds": [
+        "config:package.json",
+        "config:tsconfig.json",
+        "config:biome.jsonc",
+        "file:vite.config.ts",
+        "file:vitest.config.ts",
+        "file:tools/stamp-build.ts",
+        "file:.gitattributes",
+        "pipeline:.github/workflows/ci.yml",
+        "file:.understand-anything/.understandignore",
+        "config:.understand-anything/config.json"
+      ]
+    },
+    {
+      "id": "layer:documentation",
+      "name": "Documentation & Examples",
+      "description": "Project knowledge and canonical fixtures: the README overview, the design spec and 17-task implementation plan under docs/superpowers, a TDD task report, and the all-types example quiz (meta.json plus questions.json) that doubles as executable schema documentation.",
+      "nodeIds": [
+        "document:README.md",
+        "document:docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+        "document:docs/superpowers/plans/2026-08-17-any-quiz.md",
+        "document:.superpowers/sdd/2026-08-17-any-quiz/task-2-report.md",
+        "config:examples/all-types/meta.json",
+        "config:examples/all-types/questions.json"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Project Overview",
+      "description": "Start with the README to understand what AnyQuiz is: an agent skill where the agent writes a quiz mid-conversation, you take it in the browser, and your answers flow back for grading and coaching. The README lays out the central architectural bet — one shared quiz core reused across three harnesses (Claude Code, Pi, Codex) with only thin adapters differing per harness. The design spec goes deeper on the data model, server routes, and why built artifacts are committed to the repo, giving you the rationale behind decisions you will see in code throughout this tour.",
+      "nodeIds": [
+        "document:README.md",
+        "document:docs/superpowers/specs/2026-08-17-any-quiz-design.md"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "CLI Entry Point",
+      "description": "serve.ts is the command agents actually run: it parses flags (--port, --no-open, --retake), loads and validates the quiz directory, starts a loopback HTTP server, prints the URL, opens your browser, and shuts down cleanly once you submit. Its dependency graph fans out to nearly the entire lib/ core, making it the natural spine for the rest of the tour — every module we visit next exists to serve this one command's lifecycle.",
+      "nodeIds": [
+        "file:serve.ts"
+      ],
+      "languageLesson": "A CLI that exits on an event (quiz submission) rather than a signal is a classic Node pattern: the server emits a 'submitted' event, and the entry point listens for it to resolve a promise and tear everything down. SIGINT handling gives the user a clean escape hatch."
+    },
+    {
+      "order": 3,
+      "title": "The Question Type Model",
+      "description": "lib/types.ts is the most depended-upon file in the project (20 incoming edges) — it defines the vocabulary everything else speaks. The discriminated Question union covers all six question types (mcq, multi, blank, short, code, match), and PublicQuestion is the same shape with answer keys stripped, which is how the server keeps answers out of the browser. Internalize these types now: the schemas, persistence, scoring, and every React component downstream are all expressed in terms of them.",
+      "nodeIds": [
+        "file:lib/types.ts"
+      ],
+      "languageLesson": "TypeScript discriminated unions use a shared literal field (here, 'type') so that switching on it narrows the whole object. A function handling a Question can switch on q.type and get exact per-type fields in each branch, with the compiler flagging any unhandled question type."
+    },
+    {
+      "order": 4,
+      "title": "Validation with Zod",
+      "description": "Because quizzes are written by an LLM at runtime, nothing can be trusted to be well-formed — these two schemas are the gate. question-schema.ts validates quiz documents with per-type Zod schemas plus cross-field checks (placeholder/blank consistency, duplicate ids), collecting human-readable errors so the agent can fix its own mistakes. answers-schema.ts validates the PUT /api/answers body coming back from the browser, where an answer value may be a string, string array, or string record depending on question type.",
+      "nodeIds": [
+        "file:lib/question-schema.ts",
+        "file:lib/answers-schema.ts"
+      ],
+      "languageLesson": "Zod flips the usual relationship between types and validation: you define a runtime schema, and TypeScript infers the static type from it (z.infer). That means untrusted JSON — like LLM-generated quiz files — gets both parsed and typed in one step, with cross-field rules expressed via .refine()."
+    },
+    {
+      "order": 5,
+      "title": "Quiz Persistence & Answer Stripping",
+      "description": "lib/quiz.ts is the persistence layer that turns a quiz folder on disk into a running quiz. It reads and validates quiz JSON (using Step 4's schemas), strips answer keys to produce the PublicQuestion payload from Step 3, and manages the answers.json lifecycle: skeleton creation, atomic writes during autosave, and timestamped archiving after submission so a retake never clobbers previous results. This file has the highest fan-out in the project — it is where the type model, schemas, and filesystem meet.",
+      "nodeIds": [
+        "file:lib/quiz.ts"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "The Example Quiz on Disk",
+      "description": "Before looking at the server, see the actual data format: examples/all-types contains one question of each of the six types, each with an answer key and rationale, alongside a meta.json documenting the quiz metadata shape (id, slug, topic, parentQuizId for follow-up quizzes). This fixture doubles as executable schema documentation — the tests validate it against Step 4's schemas, so it can never drift from the code. It is also the template agents copy when writing a new quiz.",
+      "nodeIds": [
+        "config:examples/all-types/questions.json",
+        "config:examples/all-types/meta.json"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "The Hono HTTP Server",
+      "description": "lib/server.ts assembles the Hono server that serve.ts starts: it serves the answer-stripped quiz JSON and the static browser UI, handles GET/PUT of in-progress answers with the Zod validation from Step 4 and a body-size limit, and scores POST /submit before emitting the 'submitted' event that tells the CLI to shut down. lib/open.ts is the small cross-platform companion that pops the URL in your default browser by spawning open, start, or xdg-open as a detached process.",
+      "nodeIds": [
+        "file:lib/server.ts",
+        "file:lib/open.ts"
+      ],
+      "languageLesson": "Hono is a minimal fetch-API-based web framework: routes are functions from Request context to Response, which makes them trivially unit-testable without binding a real port — you will see the server tests exploit exactly that."
+    },
+    {
+      "order": 8,
+      "title": "Auto-Grading Closed Questions",
+      "description": "lib/score.ts implements the split at the heart of the coaching loop: closed question types (mcq, multi, blank, match) are graded deterministically here — normalizing text and comparing against answer keys — while short-answer and code questions are marked needs-grading for the agent to judge. The result payload also carries the 'not sure' flags, so the agent knows which correct answers were lucky guesses worth coaching on anyway.",
+      "nodeIds": [
+        "file:lib/score.ts"
+      ]
+    },
+    {
+      "order": 9,
+      "title": "Browser App Boot & State",
+      "description": "Now switch runtimes: the browser app boots from index.html's module script into main.tsx, which mounts the Quiz component. Quiz.tsx orchestrates the whole taking experience — question cards, progress footer, submit confirmation, error alerts — but keeps no state of its own; that lives in useQuiz.ts, which loads the quiz from Step 7's server, debounces autosave PUTs at 500ms, and handles the submit POST. progress.ts computes the answered/unanswered/flagged counts using per-type completeness rules.",
+      "nodeIds": [
+        "file:app/index.html",
+        "file:app/main.tsx",
+        "file:app/Quiz.tsx",
+        "file:app/useQuiz.ts",
+        "file:app/lib/progress.ts"
+      ],
+      "languageLesson": "useQuiz composes smaller hooks (useLoad, useAutosave, useEditor, useSubmit) into one facade — the custom-hook equivalent of extracting functions. The component stays purely presentational while all fetch, debounce, and error logic lives in testable hook units."
+    },
+    {
+      "order": 10,
+      "title": "Question Components & Type-Safe Dispatch",
+      "description": "QuestionView.tsx is the dispatcher: it switches on the question type from Step 3 and renders the matching component, coercing the stored answer value to the right shape on the way in. The shared contract in questions/types.ts uses conditional types to tie each question type to its exact answer value — a string for mcq, a list for multi, a keyed record for blank and match. Mcq, Blank, and Match illustrate the three value shapes; Multi, Short, and Code follow the same pattern.",
+      "nodeIds": [
+        "file:app/questions/QuestionView.tsx",
+        "file:app/questions/types.ts",
+        "file:app/questions/Mcq.tsx",
+        "file:app/questions/Blank.tsx",
+        "file:app/questions/Match.tsx"
+      ],
+      "languageLesson": "The ValueFor<T> conditional type maps a question-type literal to its answer shape (ValueFor<'mcq'> = string, ValueFor<'match'> = Record<string, string>). Combined with a Narrow helper, each question component receives exactly its own question variant and value type — no casting inside components."
+    },
+    {
+      "order": 11,
+      "title": "The Committed Bundle & Freshness Guard",
+      "description": "Here is the project's most unusual decision, foreshadowed in Step 1's spec: bin/any-quiz.mjs is a committed, dependency-free esbuild bundle of serve.ts and the entire lib/ core, so harnesses can run the skill with plain Node and no npm install. The obvious risk is the bundle drifting from source, which is why lib/buildinfo.ts hashes the source trees with SHA-256 and compares against the .buildinfo.json stamp that tools/stamp-build.ts writes after every build — a stale bundle fails loudly instead of silently serving old code.",
+      "nodeIds": [
+        "file:bin/any-quiz.mjs",
+        "config:bin/.buildinfo.json",
+        "file:lib/buildinfo.ts",
+        "file:tools/stamp-build.ts"
+      ],
+      "languageLesson": "Committing build artifacts trades repo hygiene for zero-install distribution — viable only with an automated freshness guard. Content hashing (hash the inputs, stamp the output, verify at runtime and in CI) is the standard way to make a committed artifact self-policing."
+    },
+    {
+      "order": 12,
+      "title": "Harness Skill Adapters",
+      "description": "This is the 'shared core, thin adapters' architecture from the README made concrete: three SKILL.md files teach Claude Code, Pi, and Codex the same procedure — write a quiz folder, serve it with the bundled CLI from Step 11, coach on the returned answers, offer a follow-up quiz. They differ only where the harness forces it: path resolution and how a long-lived process is run. plugin.json is the Claude Code plugin manifest that surfaces the skills/ directory to that harness.",
+      "nodeIds": [
+        "document:skills/any-quiz/SKILL.md",
+        "document:pi-skills/any-quiz/SKILL.md",
+        "document:codex-skills/any-quiz/SKILL.md",
+        "config:.claude-plugin/plugin.json"
+      ]
+    },
+    {
+      "order": 13,
+      "title": "Testing Across Two Runtimes",
+      "description": "The test suite mirrors the two-runtime architecture. On the browser side, quiz.test.tsx exercises the full Quiz flow with mocked fetch and fake timers — including the 500ms autosave debounce from Step 9. On the Node side, cli-child.ts is a reusable harness that spawns serve.ts as a real child process against a temp quiz directory and waits for the announced URL, letting cli.test.ts verify end-to-end behavior like submit-triggered shutdown and retake archiving that unit tests cannot reach.",
+      "nodeIds": [
+        "file:test/support/cli-child.ts",
+        "file:test/cli.test.ts",
+        "file:app/quiz.test.tsx"
+      ],
+      "languageLesson": "Spawn-based CLI testing treats the program as a black box: launch the real process, parse stdout for a readiness signal, drive it over HTTP, and assert on exit codes. It is slower than unit tests but is the only honest test of lifecycle behavior like clean shutdown."
+    },
+    {
+      "order": 14,
+      "title": "Build Pipeline & CI Gate",
+      "description": "Finally, the toolchain that keeps it all consistent. package.json defines the dual build — Vite bundles the browser app while esbuild produces bin/any-quiz.mjs, followed by the stamp step from Step 11 — plus the lint/typecheck/test 'check' gate. vite.config.ts deliberately uses stable, non-hashed output filenames so the committed dist bundle does not churn on every build. The GitHub Actions workflow runs that same check gate on Node 22 for every pull request, which is what makes a stale committed bundle a merge-blocking failure rather than a runtime surprise.",
+      "nodeIds": [
+        "config:package.json",
+        "file:vite.config.ts",
+        "pipeline:.github/workflows/ci.yml"
+      ],
+      "languageLesson": "GitHub Actions workflows declare triggers under 'on' and sequential 'steps' per job. Reusing the exact npm scripts developers run locally (lint, typecheck, test) keeps CI and local checks from drifting apart — CI is just 'npm run check' with a green checkmark."
+    }
+  ]
+}
