@@ -1,0 +1,8578 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "aa3d0588045201446465f3ae28951f484149833c",
+  "generatedAt": "2026-08-21T15:38:16.030Z",
+  "files": {
+    ".claude-plugin/marketplace.json": {
+      "filePath": ".claude-plugin/marketplace.json",
+      "contentHash": "4765c2859f9c6cac368d528baf246249fe5d5443e4ebd815ed751a7c26cbe9e0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    ".claude-plugin/plugin.json": {
+      "filePath": ".claude-plugin/plugin.json",
+      "contentHash": "8e24d072e87041e3eaeb4e8955ba8ea4bb19c6019f6bb1b91abd192f14cf3740",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    ".claude/skills/harness-ports/SKILL.md": {
+      "filePath": ".claude/skills/harness-ports/SKILL.md",
+      "contentHash": "973e003a2659426728f1d25db81ae0bea33fd726b6226772579401d68aed91d9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    ".gitattributes": {
+      "filePath": ".gitattributes",
+      "contentHash": "b4689c7e076e74aebe539d7c79383a484f8ce2824d120e824420d2e11858ad2c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3,
+      "hasStructuralAnalysis": false
+    },
+    ".github/workflows/ci.yml": {
+      "filePath": ".github/workflows/ci.yml",
+      "contentHash": "bdb4c8e21c3f065325d8e4c8eb3532fb9a4a2c96bde2ee3d0ce2027da9e533dd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    ".superpowers/sdd/2026-08-17-any-quiz/task-2-report.md": {
+      "filePath": ".superpowers/sdd/2026-08-17-any-quiz/task-2-report.md",
+      "contentHash": "edf5f24e5d891f675b1e15bf9dee8a3624eba60851cb69016b1cdde6dd8373d5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 172,
+      "hasStructuralAnalysis": true
+    },
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "c835e08754a004076e264e1bc54faf040b58d64b964ca470734dab1ce9f04020",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/config.json": {
+      "filePath": ".understand-anything/config.json",
+      "contentHash": "e6e1895a8e3cb71f76daebccd84c4fc9877d8a88fb75e476ca22a320e69d4995",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "app/index.html": {
+      "filePath": "app/index.html",
+      "contentHash": "8c56ab017e11663ebaa25a69d2feaeadf16ee0b67d7a09cf71a2ff3a32fd22be",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "app/lib/blanks.ts": {
+      "filePath": "app/lib/blanks.ts",
+      "contentHash": "d313fd6e6bd2ddf3d4ad5d0b85e6a40c3c75772b0148f27decda8b847b38daef",
+      "functions": [
+        {
+          "name": "parseBlanks",
+          "params": [
+            "prompt"
+          ],
+          "returnType": "Segment[]",
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "parseBlanks"
+      ],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "app/lib/progress.ts": {
+      "filePath": "app/lib/progress.ts",
+      "contentHash": "ab3df7f17a9cd65b90b5b2804d888dccda0d05c2e52fd8eb4aa1a043336961b7",
+      "functions": [
+        {
+          "name": "filled",
+          "params": [
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "asRecord",
+          "params": [
+            "value"
+          ],
+          "returnType": "Record<string, string>",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "isAnswered",
+          "params": [
+            "question",
+            "value"
+          ],
+          "returnType": "boolean",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "summarize",
+          "params": [
+            "questions",
+            "responses"
+          ],
+          "returnType": "{ answered: number; total: number; flagged: number }",
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "AnswerValue",
+            "PublicQuestion",
+            "ResponseEntry"
+          ]
+        },
+        {
+          "source": "./values.ts",
+          "specifiers": [
+            "asMap"
+          ]
+        }
+      ],
+      "exports": [
+        "isAnswered",
+        "summarize"
+      ],
+      "totalLines": 56,
+      "hasStructuralAnalysis": true
+    },
+    "app/lib/values.ts": {
+      "filePath": "app/lib/values.ts",
+      "contentHash": "f68e44d20468fc951b6484de99fdaaee61126a2a56d7dec57df8b7d7411c6cad",
+      "functions": [
+        {
+          "name": "asString",
+          "params": [
+            "value"
+          ],
+          "returnType": "string | null",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "asList",
+          "params": [
+            "value"
+          ],
+          "returnType": "string[] | null",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "asMap",
+          "params": [
+            "value"
+          ],
+          "returnType": "Record<string, string> | null",
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "AnswerValue"
+          ]
+        }
+      ],
+      "exports": [
+        "asString",
+        "asList",
+        "asMap"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "app/main.tsx": {
+      "filePath": "app/main.tsx",
+      "contentHash": "5fbf02042834eeecda5c8a09ebe4bec7dc780509363cea9970e78f5308d25bb7",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "StrictMode"
+          ]
+        },
+        {
+          "source": "react-dom/client",
+          "specifiers": [
+            "createRoot"
+          ]
+        },
+        {
+          "source": "./Quiz.tsx",
+          "specifiers": [
+            "Quiz"
+          ]
+        },
+        {
+          "source": "./style.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/blank.test.tsx": {
+      "filePath": "app/questions/blank.test.tsx",
+      "contentHash": "7be5c00ec926ae2dc7400a61d2f4c551bb55db650c19bb9bd672b668c2194b1c",
+      "functions": [
+        {
+          "name": "Harness",
+          "params": [
+            "{ question, initial, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useCallback",
+            "useState"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "./Blank.tsx",
+          "specifiers": [
+            "Blank"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 111,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/Blank.tsx": {
+      "filePath": "app/questions/Blank.tsx",
+      "contentHash": "86d2668df88fe0806ca8914a7cf8429d0be26d1ba4eb2e582d7c7782271a7dd0",
+      "functions": [
+        {
+          "name": "labelFor",
+          "params": [
+            "id",
+            "hint"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "Field",
+          "params": [
+            "{ id, hint, value, onFill }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "Piece",
+          "params": [
+            "{ segment, hints, filled, onFill }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "Blank",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 25
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ChangeEvent",
+            "ReactElement",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../lib/blanks.ts",
+          "specifiers": [
+            "parseBlanks",
+            "Segment"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Props"
+          ]
+        }
+      ],
+      "exports": [
+        "Blank"
+      ],
+      "totalLines": 84,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/code.test.tsx": {
+      "filePath": "app/questions/code.test.tsx",
+      "contentHash": "72b9e10248de9eeb30bf10d5c21b74301a2992926a40c584e4491d2acf300e91",
+      "functions": [
+        {
+          "name": "Harness",
+          "params": [
+            "{ initial, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useCallback",
+            "useState"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "./Code.tsx",
+          "specifiers": [
+            "Code"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 116,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/Code.tsx": {
+      "filePath": "app/questions/Code.tsx",
+      "contentHash": "eaeb4f75c47571c665ebd1a217ec4d107dfe203d52e1ff319879cd1fe88fbc87",
+      "functions": [
+        {
+          "name": "Code",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 55
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ChangeEvent",
+            "KeyboardEvent",
+            "ReactElement",
+            "useCallback",
+            "useEffect",
+            "useRef"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Props"
+          ]
+        }
+      ],
+      "exports": [
+        "Code"
+      ],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/match.test.tsx": {
+      "filePath": "app/questions/match.test.tsx",
+      "contentHash": "bf3bfd18898a3504ac83624b2fd339d7ba9564dea2c0f7facdd8cab6f40665bf",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "./Match.tsx",
+          "specifiers": [
+            "Match"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 84,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/Match.tsx": {
+      "filePath": "app/questions/Match.tsx",
+      "contentHash": "48cec631fdf099fc9984c34a157fd88e866c3fec1abaed42bfdb6f982fd4e5bf",
+      "functions": [
+        {
+          "name": "paired",
+          "params": [
+            "current",
+            "leftId",
+            "rightId"
+          ],
+          "returnType": "Record<string, string>",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "Row",
+          "params": [
+            "{ left, options, chosen, onPair }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 23
+        },
+        {
+          "name": "Match",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ChangeEvent",
+            "ReactElement",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "Choice"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Props"
+          ]
+        }
+      ],
+      "exports": [
+        "Match"
+      ],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/mcq.test.tsx": {
+      "filePath": "app/questions/mcq.test.tsx",
+      "contentHash": "b8dc0f00e93c2ad13c6ff85558a93ed0b49bd84153b63efbc3081e1fc2e8264a",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "./Mcq.tsx",
+          "specifiers": [
+            "Mcq"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/Mcq.tsx": {
+      "filePath": "app/questions/Mcq.tsx",
+      "contentHash": "867c4fbb2195a58b3a63bf56e62a2e7b2b67546bac45285fe0f92738a42095fb",
+      "functions": [
+        {
+          "name": "Option",
+          "params": [
+            "{ choice, group, checked, onPick }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "Mcq",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "Choice"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Props"
+          ]
+        }
+      ],
+      "exports": [
+        "Mcq"
+      ],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/multi.test.tsx": {
+      "filePath": "app/questions/multi.test.tsx",
+      "contentHash": "758be0530da5c6be462c6c22b254d3b3d82c6254453ca1e65362f092d31101c1",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "./Multi.tsx",
+          "specifiers": [
+            "Multi"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 66,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/Multi.tsx": {
+      "filePath": "app/questions/Multi.tsx",
+      "contentHash": "f6d615e1c215de813a53ea6cf7c516d565720f6fe21d9cde3fe7f65149e22bd4",
+      "functions": [
+        {
+          "name": "toggled",
+          "params": [
+            "choices",
+            "selected",
+            "id"
+          ],
+          "returnType": "string[]",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "Box",
+          "params": [
+            "{ choice, checked, onToggle }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "Multi",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "Choice"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Props"
+          ]
+        }
+      ],
+      "exports": [
+        "Multi"
+      ],
+      "totalLines": 61,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/question-view.test.tsx": {
+      "filePath": "app/questions/question-view.test.tsx",
+      "contentHash": "eedeadbbe1aed1e57480984957b669b2b608fc512a66349d4567ea2ee2078874",
+      "functions": [
+        {
+          "name": "noop",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "Harness",
+          "params": [
+            "{ question }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useState"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "AnswerValue",
+            "PublicQuestion"
+          ]
+        },
+        {
+          "source": "./QuestionView.tsx",
+          "specifiers": [
+            "QuestionView"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 124,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/QuestionView.tsx": {
+      "filePath": "app/questions/QuestionView.tsx",
+      "contentHash": "536188a8f38cf50937c3ccb04f778a67d24288290966f7094ba5835ec59e50c8",
+      "functions": [
+        {
+          "name": "QuestionView",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement"
+          ]
+        },
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "AnswerValue",
+            "PublicQuestion"
+          ]
+        },
+        {
+          "source": "../lib/values.ts",
+          "specifiers": [
+            "asList",
+            "asMap",
+            "asString"
+          ]
+        },
+        {
+          "source": "./Blank.tsx",
+          "specifiers": [
+            "Blank"
+          ]
+        },
+        {
+          "source": "./Code.tsx",
+          "specifiers": [
+            "Code"
+          ]
+        },
+        {
+          "source": "./Match.tsx",
+          "specifiers": [
+            "Match"
+          ]
+        },
+        {
+          "source": "./Mcq.tsx",
+          "specifiers": [
+            "Mcq"
+          ]
+        },
+        {
+          "source": "./Multi.tsx",
+          "specifiers": [
+            "Multi"
+          ]
+        },
+        {
+          "source": "./Short.tsx",
+          "specifiers": [
+            "Short"
+          ]
+        }
+      ],
+      "exports": [
+        "QuestionView"
+      ],
+      "totalLines": 42,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/short.test.tsx": {
+      "filePath": "app/questions/short.test.tsx",
+      "contentHash": "da6498b6b804892f95726ffdb646ba7f474195331b05504079968107a61a6f8c",
+      "functions": [
+        {
+          "name": "Harness",
+          "params": [
+            "{ initial, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useCallback",
+            "useState"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "./Short.tsx",
+          "specifiers": [
+            "Short"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Narrow"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/Short.tsx": {
+      "filePath": "app/questions/Short.tsx",
+      "contentHash": "4d0e74fa45f1ffad9483d35b46c5c1e6686d4c6d9ed0f00cb63341f64c0bf4ed",
+      "functions": [
+        {
+          "name": "Short",
+          "params": [
+            "{ question, value, onChange }"
+          ],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ChangeEvent",
+            "ReactElement",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Props"
+          ]
+        }
+      ],
+      "exports": [
+        "Short"
+      ],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "app/questions/types.ts": {
+      "filePath": "app/questions/types.ts",
+      "contentHash": "ecaf95cd665ba1b6892a9947d2814e6642c6a5146ed6ab370d199a52dd881835",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../lib/types.ts",
+          "specifiers": [
+            "AnswerValue",
+            "PublicQuestion",
+            "QuestionType"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "app/quiz.test.tsx": {
+      "filePath": "app/quiz.test.tsx",
+      "contentHash": "d36ebfb684719ec56e04da7d979dbb8bb2876f5362b38a19cee4452251a7b291",
+      "functions": [
+        {
+          "name": "draft",
+          "params": [
+            "responses"
+          ],
+          "returnType": "Answers",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "reply",
+          "params": [
+            "status",
+            "body"
+          ],
+          "returnType": "unknown",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "typist",
+          "params": [],
+          "returnType": "ReturnType<typeof userEvent.setup>",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "settleAutosave",
+          "params": [],
+          "returnType": "Promise<void>",
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "act",
+            "fireEvent",
+            "render",
+            "screen",
+            "waitFor"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "afterEach",
+            "beforeEach",
+            "expect",
+            "test",
+            "vi"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "Answers",
+            "Meta",
+            "PublicQuestion",
+            "ResponseEntry"
+          ]
+        },
+        {
+          "source": "./Quiz.tsx",
+          "specifiers": [
+            "Quiz"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 246,
+      "hasStructuralAnalysis": true
+    },
+    "app/Quiz.tsx": {
+      "filePath": "app/Quiz.tsx",
+      "contentHash": "42d7e3a43cafe5aa7e27e9e93da0926910c9324ee945c1c79d1325e431bce503",
+      "functions": [
+        {
+          "name": "flagLabel",
+          "params": [
+            "flagged"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "progressLabel",
+          "params": [
+            "answered",
+            "total",
+            "flagged"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "doneLabel",
+          "params": [
+            "confirming",
+            "sending"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "Prompt",
+          "params": [
+            "{ question }"
+          ],
+          "returnType": "ReactElement | null",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "Alert",
+          "params": [
+            "{ message }"
+          ],
+          "returnType": "ReactElement | null",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "Confirmation",
+          "params": [
+            "{\n  unanswered,\n  onCancel,\n}"
+          ],
+          "returnType": "ReactElement | null",
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "Card",
+          "params": [
+            "{ question, index, total, entry, onValue, onFlag }"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 25
+        },
+        {
+          "name": "Footer",
+          "params": [
+            "props"
+          ],
+          "returnType": "ReactElement",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "Quiz",
+          "params": [],
+          "returnType": "ReactElement",
+          "exported": true,
+          "lineCount": 69
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "ReactElement",
+            "useCallback",
+            "useState"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "AnswerValue",
+            "PublicQuestion",
+            "ResponseEntry"
+          ]
+        },
+        {
+          "source": "./lib/progress.ts",
+          "specifiers": [
+            "summarize"
+          ]
+        },
+        {
+          "source": "./questions/QuestionView.tsx",
+          "specifiers": [
+            "QuestionView"
+          ]
+        },
+        {
+          "source": "./useQuiz.ts",
+          "specifiers": [
+            "useQuiz"
+          ]
+        }
+      ],
+      "exports": [
+        "Quiz"
+      ],
+      "totalLines": 219,
+      "hasStructuralAnalysis": true
+    },
+    "app/style.css": {
+      "filePath": "app/style.css",
+      "contentHash": "b9168d1977dc3c427e966647d11475e6a3d92fe782f55112570f528f34461a89",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 210,
+      "hasStructuralAnalysis": false
+    },
+    "app/useQuiz.ts": {
+      "filePath": "app/useQuiz.ts",
+      "contentHash": "eccd516d415bd5b7d16a6d65d67d0eaefacacb0c7a730fff07cdf492390a507c",
+      "functions": [
+        {
+          "name": "describe",
+          "params": [
+            "err"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "getJson",
+          "params": [
+            "url"
+          ],
+          "returnType": "Promise<T>",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "putResponses",
+          "params": [
+            "responses"
+          ],
+          "returnType": "Promise<void>",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "postSubmit",
+          "params": [],
+          "returnType": "Promise<void>",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "useLoad",
+          "params": [
+            "onLoad",
+            "onFail"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "useAutosave",
+          "params": [
+            "report"
+          ],
+          "returnType": "Autosave",
+          "exported": false,
+          "lineCount": 45
+        },
+        {
+          "name": "useEditor",
+          "params": [
+            "queue"
+          ],
+          "returnType": "Editor",
+          "exported": false,
+          "lineCount": 38
+        },
+        {
+          "name": "useSubmit",
+          "params": [
+            "{ latest, cancel, setStatus, setError }"
+          ],
+          "returnType": "() => void",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "useQuiz",
+          "params": [],
+          "returnType": "QuizState",
+          "exported": true,
+          "lineCount": 45
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "RefObject",
+            "useCallback",
+            "useEffect",
+            "useRef",
+            "useState"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "Answers",
+            "AnswerValue",
+            "Meta",
+            "PublicQuestion",
+            "ResponseEntry"
+          ]
+        }
+      ],
+      "exports": [
+        "useQuiz"
+      ],
+      "totalLines": 276,
+      "hasStructuralAnalysis": true
+    },
+    "bin/.buildinfo.json": {
+      "filePath": "bin/.buildinfo.json",
+      "contentHash": "6a0cffabf3668968690e13e5c7d3972cf4614d2c7867ab12c02ee9fe1820f14f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": true
+    },
+    "bin/any-quiz.mjs": {
+      "filePath": "bin/any-quiz.mjs",
+      "contentHash": "eaffee798f6e6095c05b6071bc881510cf1d9f401b8f376b0e097af4166dd52a",
+      "functions": [
+        {
+          "name": "__export",
+          "params": [
+            "target",
+            "all"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "isSource",
+          "params": [
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "walk",
+          "params": [
+            "dir"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "hashFiles",
+          "params": [
+            "paths"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "readStamp",
+          "params": [
+            "stampPath"
+          ],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "sourceHash",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "readStampedHash",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "isDistFresh",
+          "params": [],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "openBrowser",
+          "params": [
+            "url2"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "$constructor",
+          "params": [
+            "name",
+            "initializer3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 51
+        },
+        {
+          "name": "config",
+          "params": [
+            "newConfig"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "assertEqual",
+          "params": [
+            "val"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "assertNotEqual",
+          "params": [
+            "val"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "assertIs",
+          "params": [
+            "_arg"
+          ],
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "assertNever",
+          "params": [
+            "_x"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "assert",
+          "params": [
+            "_"
+          ],
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "getEnumValues",
+          "params": [
+            "entries"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "joinValues",
+          "params": [
+            "array2"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "jsonStringifyReplacer",
+          "params": [
+            "_",
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "cached",
+          "params": [
+            "getter"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "nullish",
+          "params": [
+            "input"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "cleanRegex",
+          "params": [
+            "source"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "floatSafeRemainder",
+          "params": [
+            "val",
+            "step"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "defineLazy",
+          "params": [
+            "object2",
+            "key",
+            "getter"
+          ],
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "objectClone",
+          "params": [
+            "obj"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "assignProp",
+          "params": [
+            "target",
+            "prop",
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "mergeDefs",
+          "params": [
+            "...defs"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "cloneDef",
+          "params": [
+            "schema"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "getElementAtPath",
+          "params": [
+            "obj",
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "promiseAllObject",
+          "params": [
+            "promisesObj"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "randomString",
+          "params": [],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "esc",
+          "params": [
+            "str"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "slugify",
+          "params": [
+            "input"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "isObject",
+          "params": [
+            "data"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "isPlainObject",
+          "params": [
+            "o"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "shallowClone",
+          "params": [
+            "o"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "numKeys",
+          "params": [
+            "data"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "getParsedType",
+          "params": [
+            "data"
+          ],
+          "exported": false,
+          "lineCount": 44
+        },
+        {
+          "name": "escapeRegex",
+          "params": [
+            "str"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "clone",
+          "params": [
+            "inst",
+            "def",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "normalizeParams",
+          "params": [
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "createTransparentProxy",
+          "params": [
+            "getter"
+          ],
+          "exported": false,
+          "lineCount": 33
+        },
+        {
+          "name": "stringifyPrimitive",
+          "params": [
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "optionalKeys",
+          "params": [
+            "shape"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "pick",
+          "params": [
+            "schema",
+            "mask"
+          ],
+          "exported": false,
+          "lineCount": 25
+        },
+        {
+          "name": "omit",
+          "params": [
+            "schema",
+            "mask"
+          ],
+          "exported": false,
+          "lineCount": 25
+        },
+        {
+          "name": "extend",
+          "params": [
+            "schema",
+            "shape"
+          ],
+          "exported": false,
+          "lineCount": 23
+        },
+        {
+          "name": "safeExtend",
+          "params": [
+            "schema",
+            "shape"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "merge",
+          "params": [
+            "a",
+            "b"
+          ],
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "partial",
+          "params": [
+            "Class2",
+            "schema",
+            "mask"
+          ],
+          "exported": false,
+          "lineCount": 38
+        },
+        {
+          "name": "required",
+          "params": [
+            "Class2",
+            "schema",
+            "mask"
+          ],
+          "exported": false,
+          "lineCount": 31
+        },
+        {
+          "name": "aborted",
+          "params": [
+            "x"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "explicitlyAborted",
+          "params": [
+            "x"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "prefixIssues",
+          "params": [
+            "path",
+            "issues"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "unwrapMessage",
+          "params": [
+            "message"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "finalizeIssue",
+          "params": [
+            "iss",
+            "ctx",
+            "config2"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "getSizableOrigin",
+          "params": [
+            "input"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "getLengthableOrigin",
+          "params": [
+            "input"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "parsedType",
+          "params": [
+            "data"
+          ],
+          "exported": false,
+          "lineCount": 21
+        },
+        {
+          "name": "issue",
+          "params": [
+            "...args"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "cleanEnum",
+          "params": [
+            "obj"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "base64ToUint8Array",
+          "params": [
+            "base643"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "uint8ArrayToBase64",
+          "params": [
+            "bytes"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "base64urlToUint8Array",
+          "params": [
+            "base64url3"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "uint8ArrayToBase64url",
+          "params": [
+            "bytes"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "hexToUint8Array",
+          "params": [
+            "hex3"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "uint8ArrayToHex",
+          "params": [
+            "bytes"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "initializer",
+          "params": [
+            "inst",
+            "def"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "flattenError",
+          "params": [
+            "error51"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "formatError",
+          "params": [
+            "error51"
+          ],
+          "exported": false,
+          "lineCount": 36
+        },
+        {
+          "name": "treeifyError",
+          "params": [
+            "error51"
+          ],
+          "exported": false,
+          "lineCount": 42
+        },
+        {
+          "name": "toDotPath",
+          "params": [
+            "_path"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "prettifyError",
+          "params": [
+            "error51"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "_parse",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "_parseAsync",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "_safeParse",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "_safeParseAsync",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "_encode",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "_decode",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_encodeAsync",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "_decodeAsync",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_safeEncode",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "_safeDecode",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_safeEncodeAsync",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "_safeDecodeAsync",
+          "params": [
+            "_Err"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uuid",
+          "params": [
+            "version2"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "emoji",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "mac",
+          "params": [
+            "delimiter"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "timeSource",
+          "params": [
+            "args"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "time",
+          "params": [
+            "args"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "datetime",
+          "params": [
+            "args"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "string",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "fixedBase64",
+          "params": [
+            "bodyLength",
+            "padding"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "fixedBase64url",
+          "params": [
+            "length"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "handleCheckPropertyResult",
+          "params": [
+            "result",
+            "payload",
+            "property"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "isValidBase64",
+          "params": [
+            "data"
+          ],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "isValidBase64URL",
+          "params": [
+            "data"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "isValidJWT",
+          "params": [
+            "token"
+          ],
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "handleArrayResult",
+          "params": [
+            "result",
+            "final",
+            "index"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "handlePropertyResult",
+          "params": [
+            "result",
+            "final",
+            "key",
+            "input",
+            "isOptionalIn",
+            "isOptionalOut"
+          ],
+          "exported": false,
+          "lineCount": 27
+        },
+        {
+          "name": "normalizeDef",
+          "params": [
+            "def"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "handleCatchall",
+          "params": [
+            "proms",
+            "input",
+            "payload",
+            "ctx",
+            "def",
+            "inst"
+          ],
+          "exported": false,
+          "lineCount": 37
+        },
+        {
+          "name": "handleUnionResults",
+          "params": [
+            "results",
+            "final",
+            "inst",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "handleExclusiveUnionResults",
+          "params": [
+            "results",
+            "final",
+            "inst",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "mergeValues",
+          "params": [
+            "a",
+            "b"
+          ],
+          "exported": false,
+          "lineCount": 44
+        },
+        {
+          "name": "handleIntersectionResults",
+          "params": [
+            "result",
+            "left",
+            "right"
+          ],
+          "exported": false,
+          "lineCount": 39
+        },
+        {
+          "name": "getTupleOptStart",
+          "params": [
+            "items",
+            "key"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "handleTupleResult",
+          "params": [
+            "result",
+            "final",
+            "index"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "handleTupleResults",
+          "params": [
+            "itemResults",
+            "final",
+            "items",
+            "input",
+            "optoutStart"
+          ],
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "handleMapResult",
+          "params": [
+            "keyResult",
+            "valueResult",
+            "final",
+            "key",
+            "input",
+            "inst",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 30
+        },
+        {
+          "name": "handleSetResult",
+          "params": [
+            "result",
+            "final"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "handleOptionalResult",
+          "params": [
+            "result",
+            "input"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "handleDefaultResult",
+          "params": [
+            "payload",
+            "def"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "handleNonOptionalResult",
+          "params": [
+            "payload",
+            "inst"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "handlePipeResult",
+          "params": [
+            "left",
+            "next",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "handleCodecAResult",
+          "params": [
+            "result",
+            "def",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "handleCodecTxResult",
+          "params": [
+            "left",
+            "value",
+            "nextSchema",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "handleReadonlyResult",
+          "params": [
+            "payload"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "handleRefineResult",
+          "params": [
+            "result",
+            "payload",
+            "input",
+            "inst"
+          ],
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "error",
+          "params": [],
+          "exported": false,
+          "lineCount": 100
+        },
+        {
+          "name": "ar_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error2",
+          "params": [],
+          "exported": false,
+          "lineCount": 99
+        },
+        {
+          "name": "az_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "getBelarusianPlural",
+          "params": [
+            "count",
+            "one",
+            "few",
+            "many"
+          ],
+          "exported": false,
+          "lineCount": 15
+        },
+        {
+          "name": "error3",
+          "params": [],
+          "exported": false,
+          "lineCount": 135
+        },
+        {
+          "name": "be_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error4",
+          "params": [],
+          "exported": false,
+          "lineCount": 114
+        },
+        {
+          "name": "bg_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error5",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "ca_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error6",
+          "params": [],
+          "exported": false,
+          "lineCount": 105
+        },
+        {
+          "name": "cs_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error7",
+          "params": [],
+          "exported": false,
+          "lineCount": 109
+        },
+        {
+          "name": "da_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error8",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "de_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error9",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "el_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error10",
+          "params": [],
+          "exported": false,
+          "lineCount": 106
+        },
+        {
+          "name": "en_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error11",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "eo_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error12",
+          "params": [],
+          "exported": false,
+          "lineCount": 126
+        },
+        {
+          "name": "es_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error13",
+          "params": [],
+          "exported": false,
+          "lineCount": 108
+        },
+        {
+          "name": "fa_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error14",
+          "params": [],
+          "exported": false,
+          "lineCount": 106
+        },
+        {
+          "name": "fi_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error15",
+          "params": [],
+          "exported": false,
+          "lineCount": 119
+        },
+        {
+          "name": "fr_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error16",
+          "params": [],
+          "exported": false,
+          "lineCount": 101
+        },
+        {
+          "name": "fr_CA_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error17",
+          "params": [],
+          "exported": false,
+          "lineCount": 188
+        },
+        {
+          "name": "he_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error18",
+          "params": [],
+          "exported": false,
+          "lineCount": 116
+        },
+        {
+          "name": "hr_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error19",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "hu_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "getArmenianPlural",
+          "params": [
+            "count",
+            "one",
+            "many"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "withDefiniteArticle",
+          "params": [
+            "word"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "error20",
+          "params": [],
+          "exported": false,
+          "lineCount": 131
+        },
+        {
+          "name": "hy_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error21",
+          "params": [],
+          "exported": false,
+          "lineCount": 100
+        },
+        {
+          "name": "id_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error22",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "is_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error23",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "it_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error24",
+          "params": [],
+          "exported": false,
+          "lineCount": 101
+        },
+        {
+          "name": "ja_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error25",
+          "params": [],
+          "exported": false,
+          "lineCount": 106
+        },
+        {
+          "name": "ka_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error26",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "km_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "kh_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "error27",
+          "params": [],
+          "exported": false,
+          "lineCount": 105
+        },
+        {
+          "name": "ko_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "capitalizeFirstCharacter",
+          "params": [
+            "text"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "getUnitTypeFromNumber",
+          "params": [
+            "number4"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "error28",
+          "params": [],
+          "exported": false,
+          "lineCount": 184
+        },
+        {
+          "name": "lt_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error29",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "mk_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error30",
+          "params": [],
+          "exported": false,
+          "lineCount": 101
+        },
+        {
+          "name": "ms_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error31",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "nl_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error32",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "no_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error33",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "ota_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error34",
+          "params": [],
+          "exported": false,
+          "lineCount": 108
+        },
+        {
+          "name": "ps_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error35",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "pl_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error36",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "pt_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error37",
+          "params": [],
+          "exported": false,
+          "lineCount": 113
+        },
+        {
+          "name": "ro_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "getRussianPlural",
+          "params": [
+            "count",
+            "one",
+            "few",
+            "many"
+          ],
+          "exported": false,
+          "lineCount": 15
+        },
+        {
+          "name": "error38",
+          "params": [],
+          "exported": false,
+          "lineCount": 135
+        },
+        {
+          "name": "ru_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error39",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "sl_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error40",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "sv_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error41",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "ta_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error42",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "th_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error43",
+          "params": [],
+          "exported": false,
+          "lineCount": 99
+        },
+        {
+          "name": "tr_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error44",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "uk_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "ua_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "error45",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "ur_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error46",
+          "params": [],
+          "exported": false,
+          "lineCount": 104
+        },
+        {
+          "name": "uz_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error47",
+          "params": [],
+          "exported": false,
+          "lineCount": 102
+        },
+        {
+          "name": "vi_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error48",
+          "params": [],
+          "exported": false,
+          "lineCount": 103
+        },
+        {
+          "name": "zh_CN_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error49",
+          "params": [],
+          "exported": false,
+          "lineCount": 101
+        },
+        {
+          "name": "zh_TW_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "error50",
+          "params": [],
+          "exported": false,
+          "lineCount": 101
+        },
+        {
+          "name": "yo_default",
+          "params": [],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "registry",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_string",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_coercedString",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_email",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_guid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_uuid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_uuidv4",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "_uuidv6",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "_uuidv7",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "_url",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_emoji2",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_nanoid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_cuid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_cuid2",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_ulid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_xid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_ksuid",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_ipv4",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_ipv6",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_mac",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_cidrv4",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_cidrv6",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_base64",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_base64url",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_e164",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_jwt",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_isoDateTime",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "_isoDate",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_isoTime",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_isoDuration",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_number",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_coercedNumber",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_int",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_float32",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_float64",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_int32",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_uint32",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_boolean",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_coercedBoolean",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_bigint",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_coercedBigint",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_int64",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_uint64",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_symbol",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_undefined2",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_null2",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_any",
+          "params": [
+            "Class2"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "_unknown",
+          "params": [
+            "Class2"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "_never",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_void",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_date",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_coercedDate",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_nan",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_lt",
+          "params": [
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_lte",
+          "params": [
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_gt",
+          "params": [
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_gte",
+          "params": [
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_positive",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_negative",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_nonpositive",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_nonnegative",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_multipleOf",
+          "params": [
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_maxSize",
+          "params": [
+            "maximum",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_minSize",
+          "params": [
+            "minimum",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_size",
+          "params": [
+            "size",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_maxLength",
+          "params": [
+            "maximum",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_minLength",
+          "params": [
+            "minimum",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_length",
+          "params": [
+            "length",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_regex",
+          "params": [
+            "pattern",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_lowercase",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_uppercase",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_includes",
+          "params": [
+            "includes",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_startsWith",
+          "params": [
+            "prefix",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_endsWith",
+          "params": [
+            "suffix",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_property",
+          "params": [
+            "property",
+            "schema",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_mime",
+          "params": [
+            "types",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_overwrite",
+          "params": [
+            "tx"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_normalize",
+          "params": [
+            "form"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_trim",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_toLowerCase",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_toUpperCase",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_slugify",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_array",
+          "params": [
+            "Class2",
+            "element",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "_union",
+          "params": [
+            "Class2",
+            "options",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_xor",
+          "params": [
+            "Class2",
+            "options",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_discriminatedUnion",
+          "params": [
+            "Class2",
+            "discriminator",
+            "options",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_intersection",
+          "params": [
+            "Class2",
+            "left",
+            "right"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_tuple",
+          "params": [
+            "Class2",
+            "items",
+            "_paramsOrRest",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "_record",
+          "params": [
+            "Class2",
+            "keyType",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_map",
+          "params": [
+            "Class2",
+            "keyType",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_set",
+          "params": [
+            "Class2",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_enum",
+          "params": [
+            "Class2",
+            "values",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "_nativeEnum",
+          "params": [
+            "Class2",
+            "entries",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_literal",
+          "params": [
+            "Class2",
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_file",
+          "params": [
+            "Class2",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_transform",
+          "params": [
+            "Class2",
+            "fn"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_optional",
+          "params": [
+            "Class2",
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_nullable",
+          "params": [
+            "Class2",
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_default",
+          "params": [
+            "Class2",
+            "innerType",
+            "defaultValue"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_nonoptional",
+          "params": [
+            "Class2",
+            "innerType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_success",
+          "params": [
+            "Class2",
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_catch",
+          "params": [
+            "Class2",
+            "innerType",
+            "catchValue"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_pipe",
+          "params": [
+            "Class2",
+            "in_",
+            "out"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_readonly",
+          "params": [
+            "Class2",
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_templateLiteral",
+          "params": [
+            "Class2",
+            "parts",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_lazy",
+          "params": [
+            "Class2",
+            "getter"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_promise",
+          "params": [
+            "Class2",
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_custom",
+          "params": [
+            "Class2",
+            "fn",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "_refine",
+          "params": [
+            "Class2",
+            "fn",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "_superRefine",
+          "params": [
+            "fn",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "_check",
+          "params": [
+            "fn",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "describe",
+          "params": [
+            "description"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "meta",
+          "params": [
+            "metadata"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "_stringbool",
+          "params": [
+            "Classes",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 50
+        },
+        {
+          "name": "_stringFormat",
+          "params": [
+            "Class2",
+            "format",
+            "fnOrRegex"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "initializeContext",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 21
+        },
+        {
+          "name": "process2",
+          "params": [
+            "schema",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 54
+        },
+        {
+          "name": "extractDefs",
+          "params": [
+            "ctx",
+            "schema"
+          ],
+          "exported": false,
+          "lineCount": 90
+        },
+        {
+          "name": "finalize",
+          "params": [
+            "ctx",
+            "schema"
+          ],
+          "exported": false,
+          "lineCount": 126
+        },
+        {
+          "name": "isTransforming",
+          "params": [
+            "_schema",
+            "_ctx"
+          ],
+          "exported": false,
+          "lineCount": 53
+        },
+        {
+          "name": "createToJSONSchemaMethod",
+          "params": [
+            "schema"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "createStandardJSONSchemaMethod",
+          "params": [
+            "schema",
+            "io"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "stringProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 32
+        },
+        {
+          "name": "numberProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 33
+        },
+        {
+          "name": "booleanProcessor",
+          "params": [
+            "_schema",
+            "_ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "bigintProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "symbolProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "nullProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "undefinedProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "voidProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "neverProcessor",
+          "params": [
+            "_schema",
+            "_ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "anyProcessor",
+          "params": [
+            "_schema",
+            "_ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "unknownProcessor",
+          "params": [
+            "_schema",
+            "_ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "dateProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "enumProcessor",
+          "params": [
+            "schema",
+            "_ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "literalProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 40
+        },
+        {
+          "name": "nanProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "templateLiteralProcessor",
+          "params": [
+            "schema",
+            "_ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "fileProcessor",
+          "params": [
+            "schema",
+            "_ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "successProcessor",
+          "params": [
+            "_schema",
+            "_ctx",
+            "json3",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "customProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "functionProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "transformProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "mapProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "setProcessor",
+          "params": [
+            "_schema",
+            "ctx",
+            "_json",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "arrayProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "objectProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 36
+        },
+        {
+          "name": "unionProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "intersectionProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "tupleProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 42
+        },
+        {
+          "name": "recordProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 36
+        },
+        {
+          "name": "nullableProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "nonoptionalProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "defaultProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "prefaultProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "catchProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "pipeProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "readonlyProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "json3",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "promiseProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "optionalProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "lazyProcessor",
+          "params": [
+            "schema",
+            "ctx",
+            "_json",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "toJSONSchema",
+          "params": [
+            "input",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 34
+        },
+        {
+          "name": "datetime2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "date2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "time2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "duration2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "initializer2",
+          "params": [
+            "inst",
+            "issues"
+          ],
+          "exported": false,
+          "lineCount": 34
+        },
+        {
+          "name": "_installLazyMethods",
+          "params": [
+            "inst",
+            "group",
+            "methods"
+          ],
+          "exported": false,
+          "lineCount": 36
+        },
+        {
+          "name": "string2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "email2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "guid2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uuid2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uuidv4",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uuidv6",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uuidv7",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "url",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "httpUrl",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "emoji2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "nanoid2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "cuid3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "cuid22",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "ulid2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "xid2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "ksuid2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "ipv42",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "mac2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "ipv62",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "cidrv42",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "cidrv62",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "base642",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "base64url2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "e1642",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "jwt",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "stringFormat",
+          "params": [
+            "format",
+            "fnOrRegex"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "hostname2",
+          "params": [
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "hex2",
+          "params": [
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "hash",
+          "params": [
+            "alg",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "number2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "int",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "float32",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "float64",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "int32",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uint32",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "boolean2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "bigint2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "int64",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "uint64",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "symbol",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_undefined3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_null3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "any",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "unknown",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "never",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_void2",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "date3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "array",
+          "params": [
+            "element",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "keyof",
+          "params": [
+            "schema"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "object",
+          "params": [
+            "shape",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "strictObject",
+          "params": [
+            "shape",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "looseObject",
+          "params": [
+            "shape",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "union",
+          "params": [
+            "options",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "xor",
+          "params": [
+            "options",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "discriminatedUnion",
+          "params": [
+            "discriminator",
+            "options",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "intersection",
+          "params": [
+            "left",
+            "right"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "tuple",
+          "params": [
+            "items",
+            "_paramsOrRest",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "record",
+          "params": [
+            "keyType",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "partialRecord",
+          "params": [
+            "keyType",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "looseRecord",
+          "params": [
+            "keyType",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "map",
+          "params": [
+            "keyType",
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "set",
+          "params": [
+            "valueType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "_enum2",
+          "params": [
+            "values",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "nativeEnum",
+          "params": [
+            "entries",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "literal",
+          "params": [
+            "value",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "file",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "transform",
+          "params": [
+            "fn"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "optional",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "exactOptional",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "nullable",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "nullish2",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_default2",
+          "params": [
+            "innerType",
+            "defaultValue"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "prefault",
+          "params": [
+            "innerType",
+            "defaultValue"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "nonoptional",
+          "params": [
+            "innerType",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "success",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_catch2",
+          "params": [
+            "innerType",
+            "catchValue"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "nan",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "pipe",
+          "params": [
+            "in_",
+            "out"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "codec",
+          "params": [
+            "in_",
+            "out",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "invertCodec",
+          "params": [
+            "codec2"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "readonly",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "templateLiteral",
+          "params": [
+            "parts",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "lazy",
+          "params": [
+            "getter"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "promise",
+          "params": [
+            "innerType"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_function",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "check",
+          "params": [
+            "fn"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "custom",
+          "params": [
+            "fn",
+            "_params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "refine",
+          "params": [
+            "fn"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "superRefine",
+          "params": [
+            "fn",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "_instanceof",
+          "params": [
+            "cls"
+          ],
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "stringbool",
+          "params": [
+            "...args"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "json",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "preprocess",
+          "params": [
+            "fn",
+            "schema"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "setErrorMap",
+          "params": [
+            "map2"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "getErrorMap",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "detectVersion",
+          "params": [
+            "schema",
+            "defaultTarget"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "resolveRef",
+          "params": [
+            "ref",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "convertBaseSchema",
+          "params": [
+            "schema",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 286
+        },
+        {
+          "name": "convertSchema",
+          "params": [
+            "schema",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 63
+        },
+        {
+          "name": "fromJSONSchema",
+          "params": [
+            "schema",
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "string3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "number3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "boolean3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "bigint3",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "date4",
+          "params": [
+            "params"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "placeholders",
+          "params": [
+            "prompt"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "sameSet",
+          "params": [
+            "a",
+            "b"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "firstIssue",
+          "params": [
+            "result"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "requiredString",
+          "params": [
+            "message"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "choiceListSchema",
+          "params": [
+            "field"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "isAcceptList",
+          "params": [
+            "accept"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "validateQuestion",
+          "params": [
+            "raw2",
+            "index",
+            "seen",
+            "out"
+          ],
+          "exported": false,
+          "lineCount": 33
+        },
+        {
+          "name": "validateQuestions",
+          "params": [
+            "doc"
+          ],
+          "exported": false,
+          "lineCount": 25
+        },
+        {
+          "name": "skeleton",
+          "params": [
+            "quizId",
+            "questionIds"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "readJson",
+          "params": [
+            "path",
+            "label"
+          ],
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "loadFull",
+          "params": [
+            "dir"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "loadPublic",
+          "params": [
+            "dir"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "answersPath",
+          "params": [
+            "dir"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "readAnswers",
+          "params": [
+            "dir",
+            "quizId",
+            "questionIds"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "writeAnswers",
+          "params": [
+            "dir",
+            "answers"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "archiveAnswers",
+          "params": [
+            "dir"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "defineWebSocketHelper",
+          "params": [
+            "handler"
+          ],
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "isHttpWhitespace",
+          "params": [
+            "code"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "normalizeHeaderValue",
+          "params": [
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "materializeHeaders",
+          "params": [
+            "rawHeaders"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "newHeadersFromIncoming",
+          "params": [
+            "incoming"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "buildUrl",
+          "params": [
+            "scheme",
+            "host",
+            "incomingUrl"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "toRequestError",
+          "params": [
+            "e"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "isByteExactEncoding",
+          "params": [
+            "encoding"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "toBufferChunk",
+          "params": [
+            "chunk",
+            "encoding"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "isRecoverableDisconnectedIncoming",
+          "params": [
+            "incoming"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "recordBodyBufferedBeforeDisconnect",
+          "params": [
+            "incoming"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "readBodyBufferedBeforeDisconnect",
+          "params": [
+            "incoming",
+            "chunks"
+          ],
+          "exported": false,
+          "lineCount": 23
+        },
+        {
+          "name": "enqueueBufferedBody",
+          "params": [
+            "controller",
+            "buffered"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "newRequestFromIncoming",
+          "params": [
+            "method",
+            "url2",
+            "headers",
+            "incoming",
+            "abortController"
+          ],
+          "exported": false,
+          "lineCount": 46
+        },
+        {
+          "name": "newBodyUnusableError",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "rejectBodyUnusable",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "consumeBodyDirectOnce",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "toArrayBuffer",
+          "params": [
+            "buf"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "contentType",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "normalizeIncomingMethod",
+          "params": [
+            "method"
+          ],
+          "exported": false,
+          "lineCount": 26
+        },
+        {
+          "name": "validateDirectReadMethod",
+          "params": [
+            "method"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "readBodyWithFastPath",
+          "params": [
+            "request",
+            "method",
+            "fromBuffer"
+          ],
+          "exported": false,
+          "lineCount": 23
+        },
+        {
+          "name": "readRawBodyIfAvailable",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "normalizeAbortError",
+          "params": [
+            "request",
+            "incoming"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "readBodyDirect",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 81
+        },
+        {
+          "name": "newRequest",
+          "params": [
+            "incoming",
+            "defaultHostname"
+          ],
+          "exported": false,
+          "lineCount": 29
+        },
+        {
+          "name": "parseRedirectUrl",
+          "params": [
+            "url2"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "readWithoutBlocking",
+          "params": [
+            "readPromise"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "writeFromReadableStreamDefaultReader",
+          "params": [
+            "reader",
+            "writable",
+            "currentReadPromise"
+          ],
+          "exported": false,
+          "lineCount": 28
+        },
+        {
+          "name": "writeFromReadableStream",
+          "params": [
+            "stream",
+            "writable"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "buildOutgoingHttpHeaders",
+          "params": [
+            "headers",
+            "defaultContentType2"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "drainIncoming",
+          "params": [
+            "incoming"
+          ],
+          "exported": false,
+          "lineCount": 37
+        },
+        {
+          "name": "makeCloseHandler",
+          "params": [
+            "req",
+            "incoming",
+            "outgoing",
+            "needsBodyCleanup"
+          ],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "isImmediateCacheableResponse",
+          "params": [
+            "res"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "handleRequestError",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "handleFetchError",
+          "params": [
+            "e"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "handleResponseError",
+          "params": [
+            "e",
+            "outgoing"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "flushHeaders",
+          "params": [
+            "outgoing"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "responseViaCache",
+          "params": [
+            "res",
+            "outgoing"
+          ],
+          "exported": false,
+          "lineCount": 59
+        },
+        {
+          "name": "isPromise",
+          "params": [
+            "res"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "responseViaResponseObject",
+          "params": [
+            "res",
+            "outgoing"
+          ],
+          "exported": false,
+          "lineCount": 57
+        },
+        {
+          "name": "getRequestListener",
+          "params": [
+            "fetchCallback"
+          ],
+          "exported": false,
+          "lineCount": 56
+        },
+        {
+          "name": "generateConnectionSymbol",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "appendResponseHeaders",
+          "params": [
+            "headers",
+            "responseHeaders"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "rejectUpgradeRequest",
+          "params": [
+            "socket",
+            "status",
+            "responseHeaders"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "createUpgradeRequest",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "setupWebSocket",
+          "params": [
+            "options"
+          ],
+          "exported": false,
+          "lineCount": 71
+        },
+        {
+          "name": "createAdaptorServer",
+          "params": [
+            "options"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "pr54206Applied",
+          "params": [],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "createStreamBody",
+          "params": [
+            "stream"
+          ],
+          "exported": false,
+          "lineCount": 53
+        },
+        {
+          "name": "getMimeType",
+          "params": [
+            "filename"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "getStats",
+          "params": [
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "parseByteRange",
+          "params": [
+            "range"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "resolveByteRange",
+          "params": [
+            "spec",
+            "size"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "tryDecode",
+          "params": [
+            "str",
+            "decoder"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "tryDecodeURI",
+          "params": [
+            "str"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "serveStatic",
+          "params": [],
+          "exported": false,
+          "lineCount": 78
+        },
+        {
+          "name": "splitPath",
+          "params": [
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "splitRoutingPath",
+          "params": [
+            "routePath"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "extractGroupsFromPath",
+          "params": [
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "replaceGroupMarks",
+          "params": [
+            "paths",
+            "groups"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "getPattern",
+          "params": [
+            "label",
+            "next"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "tryDecode2",
+          "params": [
+            "str",
+            "decoder"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "tryDecodeURI2",
+          "params": [
+            "str"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "getPath",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "getPathNoStrict",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "mergePath",
+          "params": [
+            "base",
+            "sub",
+            "...rest"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "checkOptionalParameter",
+          "params": [
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 27
+        },
+        {
+          "name": "tryDecodeURIComponent",
+          "params": [
+            "str"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "_decodeURI",
+          "params": [
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "_getQueryParam",
+          "params": [
+            "url2",
+            "key",
+            "multiple"
+          ],
+          "exported": false,
+          "lineCount": 67
+        },
+        {
+          "name": "getQueryParams",
+          "params": [
+            "url2",
+            "key"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "trimCookieWhitespace",
+          "params": [
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "parse3",
+          "params": [
+            "cookie",
+            "name"
+          ],
+          "exported": false,
+          "lineCount": 28
+        },
+        {
+          "name": "getCookie",
+          "params": [
+            "c",
+            "key",
+            "prefix"
+          ],
+          "exported": false,
+          "lineCount": 21
+        },
+        {
+          "name": "bufferToFormData",
+          "params": [
+            "arrayBuffer",
+            "contentType2"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "validator",
+          "params": [
+            "target",
+            "validationFunc"
+          ],
+          "exported": false,
+          "lineCount": 76
+        },
+        {
+          "name": "zValidatorFunction",
+          "params": [
+            "target",
+            "schema",
+            "hook",
+            "options"
+          ],
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "compose",
+          "params": [
+            "middleware",
+            "onError",
+            "onNotFound"
+          ],
+          "exported": false,
+          "lineCount": 42
+        },
+        {
+          "name": "isRawRequest",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "parseBody",
+          "params": [
+            "request"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "parseFormData",
+          "params": [
+            "request",
+            "options"
+          ],
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "convertFormDataToBodyData",
+          "params": [
+            "formData",
+            "options"
+          ],
+          "exported": false,
+          "lineCount": 21
+        },
+        {
+          "name": "handleParsingAllValues",
+          "params": [
+            "form",
+            "key",
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "handleParsingNestedValues",
+          "params": [
+            "form",
+            "key",
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "raw",
+          "params": [
+            "value",
+            "callbacks"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "resolveCallback",
+          "params": [
+            "str",
+            "phase",
+            "preserveCallbacks",
+            "context",
+            "buffer"
+          ],
+          "exported": false,
+          "lineCount": 29
+        },
+        {
+          "name": "setDefaultContentType",
+          "params": [
+            "contentType2",
+            "headers"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "createResponseInstance",
+          "params": [
+            "body",
+            "init"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "notFoundHandler",
+          "params": [
+            "c"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "errorHandler",
+          "params": [
+            "err",
+            "c"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "match",
+          "params": [
+            "method",
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "compareKey",
+          "params": [
+            "a",
+            "b"
+          ],
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "buildWildcardRegExp",
+          "params": [
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "clearWildcardRegExpCache",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "findMiddleware",
+          "params": [
+            "middleware",
+            "path"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "bodyLimit",
+          "params": [
+            "options"
+          ],
+          "exported": false,
+          "lineCount": 47
+        },
+        {
+          "name": "normalizeText",
+          "params": [
+            "s"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "asStrings",
+          "params": [
+            "v"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "asRecord",
+          "params": [
+            "v"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "scoreQuestion",
+          "params": [
+            "question",
+            "value"
+          ],
+          "exported": false,
+          "lineCount": 29
+        },
+        {
+          "name": "scoreQuiz",
+          "params": [
+            "questions",
+            "responses"
+          ],
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "toErrorBag",
+          "params": [
+            "issues"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "registerAnswers",
+          "params": [
+            "app",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 31
+        },
+        {
+          "name": "registerSubmit",
+          "params": [
+            "app",
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "buildApp",
+          "params": [
+            "ctx"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "createServer2",
+          "params": [],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "log",
+          "params": [
+            "msg"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "fail",
+          "params": [
+            "message"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "shutdown",
+          "params": [
+            "server",
+            "code"
+          ],
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "resolveOptions",
+          "params": [
+            "argv"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "loadQuiz",
+          "params": [
+            "dir",
+            "retake"
+          ],
+          "exported": false,
+          "lineCount": 23
+        },
+        {
+          "name": "announce",
+          "params": [
+            "server",
+            "meta3",
+            "questionCount",
+            "open"
+          ],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 33
+        },
+        {
+          "name": "invokedDirectly",
+          "params": [],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "parseArgs",
+          "params": [
+            "argv"
+          ],
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync4",
+            "realpathSync"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process3"
+          ]
+        },
+        {
+          "source": "node:crypto",
+          "specifiers": [
+            "createHash"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "readdirSync",
+            "readFileSync",
+            "statSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join",
+            "relative"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawn"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync2",
+            "readFileSync2",
+            "renameSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join2"
+          ]
+        },
+        {
+          "source": "node:http",
+          "specifiers": [
+            "STATUS_CODES",
+            "createServer"
+          ]
+        },
+        {
+          "source": "node:http2",
+          "specifiers": [
+            "Http2ServerRequest",
+            "constants"
+          ]
+        },
+        {
+          "source": "node:stream",
+          "specifiers": [
+            "Readable"
+          ]
+        },
+        {
+          "source": "node:stream",
+          "specifiers": [
+            "Readable2"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "versions"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "createReadStream",
+            "existsSync3",
+            "statSync2"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join3"
+          ]
+        }
+      ],
+      "exports": [
+        "parseArgs"
+      ],
+      "totalLines": 19124,
+      "hasStructuralAnalysis": true
+    },
+    "biome.jsonc": {
+      "filePath": "biome.jsonc",
+      "contentHash": "1c8f51632822c607597095c75e54c8b07800d33252ad8d7b093e8467b3e68aa3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 106,
+      "hasStructuralAnalysis": true
+    },
+    "codex-skills/any-quiz/SKILL.md": {
+      "filePath": "codex-skills/any-quiz/SKILL.md",
+      "contentHash": "56559550bdc719a07fa3ef2626d7a529f061cc1909e11a115482cf5961302ecf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 133,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/plans/2026-08-17-any-quiz.md": {
+      "filePath": "docs/superpowers/plans/2026-08-17-any-quiz.md",
+      "contentHash": "6ba42891bcbacf223c00291071353e310d70727d5e43b467e39410aff0a82fb6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3665,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/specs/2026-08-17-any-quiz-design.md": {
+      "filePath": "docs/superpowers/specs/2026-08-17-any-quiz-design.md",
+      "contentHash": "5e9d2491ecbbf3181bd81dae1b5eb5b8dd57d89424e90d8c6ba3c1a293e13165",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 400,
+      "hasStructuralAnalysis": true
+    },
+    "examples/all-types/meta.json": {
+      "filePath": "examples/all-types/meta.json",
+      "contentHash": "9716a494183631667b9cd992213753dd99fb0491f39eb2e105bbb46d365d2016",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "examples/all-types/questions.json": {
+      "filePath": "examples/all-types/questions.json",
+      "contentHash": "7bff3a31e52c9058d43ce09e8f462a653232ae4b53cf9dbed7c056fd17d50627",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 77,
+      "hasStructuralAnalysis": true
+    },
+    "lib/answers-schema.ts": {
+      "filePath": "lib/answers-schema.ts",
+      "contentHash": "3d48529f3935f8b700b4fd5d1cfabbb010cb9542074e35e9119b539d0774e5ff",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "zod",
+          "specifiers": [
+            "z"
+          ]
+        }
+      ],
+      "exports": [
+        "PutAnswersBodySchema"
+      ],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "lib/buildinfo.ts": {
+      "filePath": "lib/buildinfo.ts",
+      "contentHash": "539dc2da1bbb770829659fd3a14caf56dc0405e793c9a0360fd75109bd129a73",
+      "functions": [
+        {
+          "name": "isSource",
+          "params": [
+            "path"
+          ],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "walk",
+          "params": [
+            "dir",
+            "out"
+          ],
+          "returnType": "string[]",
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "hashFiles",
+          "params": [
+            "paths"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "readStamp",
+          "params": [
+            "stampPath"
+          ],
+          "returnType": "string | null",
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "sourceHash",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "readStampedHash",
+          "params": [],
+          "returnType": "string | null",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "isDistFresh",
+          "params": [],
+          "returnType": "boolean",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "serverSourceHash",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "readBinStampedHash",
+          "params": [],
+          "returnType": "string | null",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "isBinFresh",
+          "params": [],
+          "returnType": "boolean",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:crypto",
+          "specifiers": [
+            "createHash"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "readdirSync",
+            "readFileSync",
+            "statSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join",
+            "relative"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        }
+      ],
+      "exports": [
+        "sourceHash",
+        "readStampedHash",
+        "isDistFresh",
+        "serverSourceHash",
+        "readBinStampedHash",
+        "isBinFresh",
+        "DIST_DIR",
+        "BIN_FILE"
+      ],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "lib/open.ts": {
+      "filePath": "lib/open.ts",
+      "contentHash": "cc3f9ed1df47f247c6c7ece33bc852ad91e658ed5106498dcbf877e0c713a9c9",
+      "functions": [
+        {
+          "name": "openBrowser",
+          "params": [
+            "url",
+            "platform"
+          ],
+          "returnType": "boolean",
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawn"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process"
+          ]
+        }
+      ],
+      "exports": [
+        "openBrowser"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "lib/question-schema.ts": {
+      "filePath": "lib/question-schema.ts",
+      "contentHash": "cf9c3c9cbeb79edb6c81eec2d38572c2d4012d3845178f602e99619a560ff396",
+      "functions": [
+        {
+          "name": "placeholders",
+          "params": [
+            "prompt"
+          ],
+          "returnType": "string[]",
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "sameSet",
+          "params": [
+            "a",
+            "b"
+          ],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "firstIssue",
+          "params": [
+            "result"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "requiredString",
+          "params": [
+            "message"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "choiceListSchema",
+          "params": [
+            "field"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "isAcceptList",
+          "params": [
+            "accept"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "validateQuestion",
+          "params": [
+            "raw",
+            "index",
+            "seen",
+            "out"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 38
+        },
+        {
+          "name": "validateQuestions",
+          "params": [
+            "doc"
+          ],
+          "returnType": "string[]",
+          "exported": true,
+          "lineCount": 33
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "zod",
+          "specifiers": [
+            "z"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "QuestionType"
+          ]
+        }
+      ],
+      "exports": [
+        "TYPES",
+        "validateQuestions"
+      ],
+      "totalLines": 246,
+      "hasStructuralAnalysis": true
+    },
+    "lib/quiz.ts": {
+      "filePath": "lib/quiz.ts",
+      "contentHash": "6c18a95be23fc57b841df14ee2c464fb1aa812fe3dc9a639b09c3b8ce8587312",
+      "functions": [
+        {
+          "name": "skeleton",
+          "params": [
+            "quizId",
+            "questionIds"
+          ],
+          "returnType": "Answers",
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "readJson",
+          "params": [
+            "path",
+            "label"
+          ],
+          "returnType": "unknown",
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "loadFull",
+          "params": [
+            "dir"
+          ],
+          "returnType": "{ meta: Meta; questions: Question[] }",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "loadPublic",
+          "params": [
+            "dir"
+          ],
+          "returnType": "{ meta: Meta; questions: PublicQuestion[] }",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "answersPath",
+          "params": [
+            "dir"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "readAnswers",
+          "params": [
+            "dir",
+            "quizId",
+            "questionIds"
+          ],
+          "returnType": "Answers",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "writeAnswers",
+          "params": [
+            "dir",
+            "answers"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "archiveAnswers",
+          "params": [
+            "dir"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [
+        {
+          "name": "QuizError",
+          "methods": [
+            "constructor"
+          ],
+          "properties": [
+            "errors"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "readFileSync",
+            "renameSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "./question-schema.ts",
+          "specifiers": [
+            "validateQuestions"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Answers",
+            "Meta",
+            "PublicQuestion",
+            "Question",
+            "QuestionsDoc",
+            "ResponseEntry"
+          ]
+        }
+      ],
+      "exports": [
+        "loadFull",
+        "loadPublic",
+        "answersPath",
+        "readAnswers",
+        "writeAnswers",
+        "archiveAnswers",
+        "TYPES",
+        "validateQuestions",
+        "QuizError"
+      ],
+      "totalLines": 110,
+      "hasStructuralAnalysis": true
+    },
+    "lib/score.ts": {
+      "filePath": "lib/score.ts",
+      "contentHash": "733279241089c31166ab09b4816e13c6e37b3f2dc6c28dd1d817d5e46c03e17b",
+      "functions": [
+        {
+          "name": "normalizeText",
+          "params": [
+            "s"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "asStrings",
+          "params": [
+            "v"
+          ],
+          "returnType": "string[]",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "asRecord",
+          "params": [
+            "v"
+          ],
+          "returnType": "Record<string, string>",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "scoreQuestion",
+          "params": [
+            "question",
+            "value"
+          ],
+          "returnType": "boolean",
+          "exported": true,
+          "lineCount": 34
+        },
+        {
+          "name": "scoreQuiz",
+          "params": [
+            "questions",
+            "responses"
+          ],
+          "returnType": "Pick<ResultPayload, 'auto' | 'needsGrading' | 'flagged'>",
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "AnswerValue",
+            "Question",
+            "QuestionType",
+            "ResponseEntry",
+            "ResultPayload"
+          ]
+        }
+      ],
+      "exports": [
+        "CLOSED_TYPES",
+        "normalizeText",
+        "scoreQuestion",
+        "scoreQuiz"
+      ],
+      "totalLines": 94,
+      "hasStructuralAnalysis": true
+    },
+    "lib/server.ts": {
+      "filePath": "lib/server.ts",
+      "contentHash": "a2b7ff307b3a66d2d12312d3c06e20d7dd8774a6745bc840c6c21d9f81580216",
+      "functions": [
+        {
+          "name": "toErrorBag",
+          "params": [
+            "issues"
+          ],
+          "returnType": "Record<string, string[]>",
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "registerAnswers",
+          "params": [
+            "app",
+            "ctx"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 32
+        },
+        {
+          "name": "registerSubmit",
+          "params": [
+            "app",
+            "ctx"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 29
+        },
+        {
+          "name": "buildApp",
+          "params": [
+            "ctx"
+          ],
+          "returnType": "Hono",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "createServer",
+          "params": [
+            "{ dir }"
+          ],
+          "returnType": "Server",
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:http",
+          "specifiers": [
+            "Server"
+          ]
+        },
+        {
+          "source": "@hono/node-server",
+          "specifiers": [
+            "createAdaptorServer"
+          ]
+        },
+        {
+          "source": "@hono/node-server/serve-static",
+          "specifiers": [
+            "serveStatic"
+          ]
+        },
+        {
+          "source": "@hono/zod-validator",
+          "specifiers": [
+            "zValidator"
+          ]
+        },
+        {
+          "source": "hono",
+          "specifiers": [
+            "Hono"
+          ]
+        },
+        {
+          "source": "hono/body-limit",
+          "specifiers": [
+            "bodyLimit"
+          ]
+        },
+        {
+          "source": "./answers-schema.ts",
+          "specifiers": [
+            "PutAnswersBodySchema"
+          ]
+        },
+        {
+          "source": "./buildinfo.ts",
+          "specifiers": [
+            "DIST_DIR"
+          ]
+        },
+        {
+          "source": "./quiz.ts",
+          "specifiers": [
+            "loadFull",
+            "loadPublic",
+            "readAnswers",
+            "writeAnswers"
+          ]
+        },
+        {
+          "source": "./score.ts",
+          "specifiers": [
+            "scoreQuiz"
+          ]
+        },
+        {
+          "source": "./types.ts",
+          "specifiers": [
+            "Meta",
+            "Question",
+            "ResultPayload"
+          ]
+        }
+      ],
+      "exports": [
+        "createServer"
+      ],
+      "totalLines": 157,
+      "hasStructuralAnalysis": true
+    },
+    "lib/types.ts": {
+      "filePath": "lib/types.ts",
+      "contentHash": "031d0e6cb57356d78c80d0f3e7f824c0ac455358ccfcf4a67142959c96f76693",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "package.json": {
+      "filePath": "package.json",
+      "contentHash": "fd3e3975cc0f5362683a9bbada92b219e396da85e2324b2bcea770f6e185df73",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": true
+    },
+    "pi-skills/any-quiz/SKILL.md": {
+      "filePath": "pi-skills/any-quiz/SKILL.md",
+      "contentHash": "548b879eb6d45c6b263b57a4fa947f4a6d88263e11495634eef3cb4c0e56a08a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 133,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "4e63a6b05b6c683f83707ba251e4b5c485226d440d10d97c590534dcc81237d9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 90,
+      "hasStructuralAnalysis": true
+    },
+    "serve.ts": {
+      "filePath": "serve.ts",
+      "contentHash": "8d919054673af2a471b1108869575e3f23f219b9b33d18070aee2a395edf6df9",
+      "functions": [
+        {
+          "name": "log",
+          "params": [
+            "msg"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "fail",
+          "params": [
+            "message",
+            "errors"
+          ],
+          "returnType": "never",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "shutdown",
+          "params": [
+            "server",
+            "code"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "resolveOptions",
+          "params": [
+            "argv"
+          ],
+          "returnType": "Options & { dir: string }",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "loadQuiz",
+          "params": [
+            "dir",
+            "retake"
+          ],
+          "returnType": "{ meta: Meta; questions: Question[] }",
+          "exported": false,
+          "lineCount": 26
+        },
+        {
+          "name": "announce",
+          "params": [
+            "server",
+            "meta",
+            "questionCount",
+            "open"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 45
+        },
+        {
+          "name": "invokedDirectly",
+          "params": [],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "parseArgs",
+          "params": [
+            "argv"
+          ],
+          "returnType": "Options",
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "realpathSync"
+          ]
+        },
+        {
+          "source": "node:http",
+          "specifiers": [
+            "Server"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process"
+          ]
+        },
+        {
+          "source": "./lib/buildinfo.ts",
+          "specifiers": [
+            "DIST_DIR",
+            "isDistFresh"
+          ]
+        },
+        {
+          "source": "./lib/open.ts",
+          "specifiers": [
+            "openBrowser"
+          ]
+        },
+        {
+          "source": "./lib/quiz.ts",
+          "specifiers": [
+            "answersPath",
+            "archiveAnswers",
+            "loadFull",
+            "QuizError",
+            "readAnswers"
+          ]
+        },
+        {
+          "source": "./lib/server.ts",
+          "specifiers": [
+            "createServer"
+          ]
+        },
+        {
+          "source": "./lib/types.ts",
+          "specifiers": [
+            "Meta",
+            "Question",
+            "ResultPayload"
+          ]
+        }
+      ],
+      "exports": [
+        "parseArgs"
+      ],
+      "totalLines": 199,
+      "hasStructuralAnalysis": true
+    },
+    "skills/any-quiz/SKILL.md": {
+      "filePath": "skills/any-quiz/SKILL.md",
+      "contentHash": "81a7c2f8fb0899d993bd6c9127586cadafa68b5a35752ca627e9626ca70ec6ec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 127,
+      "hasStructuralAnalysis": true
+    },
+    "test/bin-bundle.test.ts": {
+      "filePath": "test/bin-bundle.test.ts",
+      "contentHash": "566541315815c02ffa4c33c6356708c85b905bce22d5406320495aefc25ffe76",
+      "functions": [
+        {
+          "name": "isolatedBundle",
+          "params": [],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "freshQuizDir",
+          "params": [],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawn"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "cpSync",
+            "existsSync",
+            "mkdirSync",
+            "mkdtempSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/buildinfo.ts",
+          "specifiers": [
+            "BIN_FILE",
+            "DIST_DIR"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 63,
+      "hasStructuralAnalysis": true
+    },
+    "test/buildinfo.test.ts": {
+      "filePath": "test/buildinfo.test.ts",
+      "contentHash": "e06d6310a01726c761c8c429729d3d7d2b3c205f4d78b4cc8b3d1c7e840204d3",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/buildinfo.ts",
+          "specifiers": [
+            "BIN_FILE",
+            "DIST_DIR",
+            "isBinFresh",
+            "isDistFresh",
+            "readBinStampedHash",
+            "readStampedHash",
+            "sourceHash"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 59,
+      "hasStructuralAnalysis": true
+    },
+    "test/cli-bind.test.ts": {
+      "filePath": "test/cli-bind.test.ts",
+      "contentHash": "28ba5ec85d615c21c4c35008a4a5175bf8ae08fe0b8f23f34856433e22088bc1",
+      "functions": [
+        {
+          "name": "lanAddress",
+          "params": [],
+          "returnType": "string | null",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "dial",
+          "params": [
+            "host",
+            "port"
+          ],
+          "returnType": "Promise<string>",
+          "exported": false,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:net",
+          "specifiers": [
+            "connect"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "networkInterfaces"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "./support/cli-child.ts",
+          "specifiers": [
+            "freshQuizDir",
+            "start"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 58,
+      "hasStructuralAnalysis": true
+    },
+    "test/cli.test.ts": {
+      "filePath": "test/cli.test.ts",
+      "contentHash": "396e4c30e04566b1f292642f4513973589c9f4226278052b5f32a45f60a0efac",
+      "functions": [
+        {
+          "name": "idleKeepAlive",
+          "params": [
+            "base"
+          ],
+          "returnType": "Promise<Socket>",
+          "exported": false,
+          "lineCount": 10
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "mkdtempSync",
+            "readdirSync",
+            "symlinkSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "node:net",
+          "specifiers": [
+            "connect",
+            "netCreateServer",
+            "Socket"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/open.ts",
+          "specifiers": [
+            "openBrowser"
+          ]
+        },
+        {
+          "source": "../serve.ts",
+          "specifiers": [
+            "parseArgs"
+          ]
+        },
+        {
+          "source": "./support/cli-child.ts",
+          "specifiers": [
+            "freshQuizDir",
+            "SERVE",
+            "start",
+            "startAt",
+            "URL_RE"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 221,
+      "hasStructuralAnalysis": true
+    },
+    "test/fixture.test.ts": {
+      "filePath": "test/fixture.test.ts",
+      "contentHash": "2ee9bf3d7cc508ba6f6a35f28d1a7d5385fbb4ec51c6ad642251b4283089f47d",
+      "functions": [
+        {
+          "name": "read",
+          "params": [
+            "name"
+          ],
+          "exported": false,
+          "lineCount": 2
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "readFileSync"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "test/quiz.test.ts": {
+      "filePath": "test/quiz.test.ts",
+      "contentHash": "263d70884e7e15e571a38a4ac8e91824eed7b7eb3700301c307412641df80202",
+      "functions": [
+        {
+          "name": "fixture",
+          "params": [],
+          "returnType": "any",
+          "exported": false,
+          "lineCount": 2
+        },
+        {
+          "name": "tmp",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "mkdtempSync",
+            "readdirSync",
+            "readFileSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/quiz.ts",
+          "specifiers": [
+            "answersPath",
+            "archiveAnswers",
+            "loadFull",
+            "loadPublic",
+            "QuizError",
+            "readAnswers",
+            "validateQuestions",
+            "writeAnswers"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 213,
+      "hasStructuralAnalysis": true
+    },
+    "test/score.test.ts": {
+      "filePath": "test/score.test.ts",
+      "contentHash": "b99b1bbc44c6cf9664c7d4cc734a28bbecc759cad7cde579c169d3fca295dc12",
+      "functions": [
+        {
+          "name": "q",
+          "params": [
+            "id"
+          ],
+          "returnType": "Question",
+          "exported": false,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/quiz.ts",
+          "specifiers": [
+            "loadFull"
+          ]
+        },
+        {
+          "source": "../lib/score.ts",
+          "specifiers": [
+            "CLOSED_TYPES",
+            "normalizeText",
+            "scoreQuestion",
+            "scoreQuiz"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "Question",
+            "ResponseEntry"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "test/server-submit.test.ts": {
+      "filePath": "test/server-submit.test.ts",
+      "contentHash": "05fcaf4e43d323ac6389dd601f01798bbacdbe21d047f3349b24d9527f95928a",
+      "functions": [
+        {
+          "name": "startOwnServer",
+          "params": [],
+          "returnType": "Promise<{ srv: Server; url: string; dir: string }>",
+          "exported": false,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:events",
+          "specifiers": [
+            "once"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "cpSync",
+            "mkdtempSync",
+            "readFileSync"
+          ]
+        },
+        {
+          "source": "node:http",
+          "specifiers": [
+            "Server"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/server.ts",
+          "specifiers": [
+            "createServer"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "Answers",
+            "ResultPayload"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 112,
+      "hasStructuralAnalysis": true
+    },
+    "test/server.test.ts": {
+      "filePath": "test/server.test.ts",
+      "contentHash": "8e60dc4439427ded262ba669e4f9c9daf58269583a146f259e7686205adefadd",
+      "functions": [
+        {
+          "name": "freshQuizDir",
+          "params": [],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "putAnswers",
+          "params": [
+            "body"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "oversizedBody",
+          "params": [
+            "byteLength"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "cpSync",
+            "mkdtempSync"
+          ]
+        },
+        {
+          "source": "node:http",
+          "specifiers": [
+            "httpRequest",
+            "Server"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "afterAll",
+            "beforeAll",
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/server.ts",
+          "specifiers": [
+            "createServer"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 208,
+      "hasStructuralAnalysis": true
+    },
+    "test/setup-dom.ts": {
+      "filePath": "test/setup-dom.ts",
+      "contentHash": "f17adc98b5f1277fedf47530bc9ea70c108efce3aadd010d96a3ed33555e2673",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "cleanup"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "afterEach"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": true
+    },
+    "test/support/cli-child.ts": {
+      "filePath": "test/support/cli-child.ts",
+      "contentHash": "9f697ca06979513b34a875f5df0ad73d29f115fb7ce62b821eb1118971a9497f",
+      "functions": [
+        {
+          "name": "freshQuizDir",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "start",
+          "params": [
+            "args"
+          ],
+          "returnType": "Child",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "startAt",
+          "params": [
+            "entry",
+            "args"
+          ],
+          "returnType": "Child",
+          "exported": true,
+          "lineCount": 28
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawn"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "cpSync",
+            "mkdtempSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        }
+      ],
+      "exports": [
+        "URL_RE",
+        "freshQuizDir",
+        "start",
+        "startAt",
+        "SERVE"
+      ],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "test/types.test.ts": {
+      "filePath": "test/types.test.ts",
+      "contentHash": "54723b29f3bff3bfd6ca078be836c29fa26462c3ffd2c155df4020e4d6f7cd3b",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expectTypeOf",
+            "test"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "PublicQuestion",
+            "Question",
+            "QuestionType"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 49,
+      "hasStructuralAnalysis": true
+    },
+    "test/web-lib.test.ts": {
+      "filePath": "test/web-lib.test.ts",
+      "contentHash": "fb4464e53a68c601b4e8b44194bc3baa916227ccd7b97e817ddfdbd907ab5d20",
+      "functions": [
+        {
+          "name": "q",
+          "params": [
+            "id"
+          ],
+          "returnType": "PublicQuestion",
+          "exported": false,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "vitest",
+          "specifiers": [
+            "expect",
+            "test"
+          ]
+        },
+        {
+          "source": "../app/lib/blanks.ts",
+          "specifiers": [
+            "parseBlanks"
+          ]
+        },
+        {
+          "source": "../app/lib/progress.ts",
+          "specifiers": [
+            "isAnswered",
+            "summarize"
+          ]
+        },
+        {
+          "source": "../lib/quiz.ts",
+          "specifiers": [
+            "loadPublic"
+          ]
+        },
+        {
+          "source": "../lib/types.ts",
+          "specifiers": [
+            "PublicQuestion",
+            "ResponseEntry"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 143,
+      "hasStructuralAnalysis": true
+    },
+    "tools/stamp-build.ts": {
+      "filePath": "tools/stamp-build.ts",
+      "contentHash": "0f23f430c38b0e5041ec90cb013dea068f2cb4ec7d49fe74a360d32d417f21be",
+      "functions": [
+        {
+          "name": "stamp",
+          "params": [
+            "dir",
+            "hash",
+            "label"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "chmodSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "dirname",
+            "join"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "process"
+          ]
+        },
+        {
+          "source": "../lib/buildinfo.ts",
+          "specifiers": [
+            "BIN_FILE",
+            "DIST_DIR",
+            "serverSourceHash",
+            "sourceHash"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "tsconfig.json": {
+      "filePath": "tsconfig.json",
+      "contentHash": "fb6553a6e2234ca049083c5b3f1c0f132cf8dbb1e18edff244482f86ca547baf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "vite.config.ts": {
+      "filePath": "vite.config.ts",
+      "contentHash": "933187c7b53ac8f29dc7a8acf72bbf6bb45ec4c7a7153c6ac74e807db82f7079",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@vitejs/plugin-react",
+          "specifiers": [
+            "react"
+          ]
+        },
+        {
+          "source": "vite",
+          "specifiers": [
+            "defineConfig"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "vitest.config.ts": {
+      "filePath": "vitest.config.ts",
+      "contentHash": "7f758f6282708f734a71a48f8c2d2582af086808e1b1bc4ff2b21d4722213a6b",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@vitejs/plugin-react",
+          "specifiers": [
+            "react"
+          ]
+        },
+        {
+          "source": "vitest/config",
+          "specifiers": [
+            "defineConfig"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

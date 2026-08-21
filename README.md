@@ -35,6 +35,20 @@ Supported harnesses:
 
 Then ask your agent to quiz you on something.
 
+### Local models (Ollama / LM Studio)
+
+The quiz logic never calls an LLM itself — authoring and grading are done by whatever model drives the harness — so running against a local model is a harness choice, not a code change. Codex's OSS mode is a verified path:
+
+```
+codex --oss --local-provider=ollama -m <model>     # or --local-provider=lmstudio
+```
+
+(Plain `--oss` without a provider errors on current Codex; alternatively set `oss_provider = "ollama"` in `~/.codex/config.toml`.)
+
+Two things to know:
+
+- **Sandbox.** The skill writes quiz folders to `~/.any-quiz/` and binds a localhost port, both outside Codex's default sandbox. Interactively, approve the prompts when asked; non-interactively, use a `workspace-write` profile with network access enabled and `~/.any-quiz` in `writable_roots`.
+- **Model size.** Authoring means producing JSON the validator accepts and then following a multi-step procedure. Verified end-to-end with a 27B model (authored a valid quiz first try, graded and coached correctly); models much smaller than that may trip the validator or skip procedure steps.
 
 ## Question types
 
