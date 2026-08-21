@@ -6,29 +6,46 @@ An agent skill for ad-hoc interactive quizzes to let your agent coach you throug
 
 Anything in the agent's context can be used to create a quiz.
 
-Ships as a Claude Code plugin and a [Pi](https://pi.dev) package. Requires Node 22.
+Ships as an agent skill across multiple harnesses. Requires Node 22.
 
 ## Install
 
-**Claude Code**
+Supported harnesses:
 
-```
-claude plugin marketplace add christopherarter/any-quiz
-claude plugin install any-quiz@any-quiz
-```
+- **Claude Code**
 
-**Pi**
+  ```
+  claude plugin marketplace add christopherarter/any-quiz
+  claude plugin install any-quiz@any-quiz
+  ```
 
-```
-pi install git:github.com/christopherarter/any-quiz
-```
+- **[Pi](https://pi.dev)**
+
+  ```
+  pi install git:github.com/christopherarter/any-quiz
+  ```
+
+- **[Codex](https://developers.openai.com/codex)** — no package installer for skills; it scans `.agents/skills` (repo or `~/.agents/skills`) and follows symlinks:
+
+  ```
+  git clone https://github.com/christopherarter/any-quiz /path/to/any-quiz
+  mkdir -p ~/.agents/skills
+  ln -s /path/to/any-quiz/codex-skills/any-quiz ~/.agents/skills/any-quiz
+  ```
 
 Then ask your agent to quiz you on something.
 
 
 ## Question types
 
-`mcq`, `multi`, `blank`, `short`, `code`, `match`. The first two, plus `blank` and `match`, are scored by the server; `short` and `code` come back marked for grading, which is the part a session is actually good at. Any question can be flagged "not sure", and that flag is reported alongside the answer — a right answer someone flagged is worth more coaching than a right answer they were sure of.
+- **Multiple choice** — pick one answer from a list.
+- **Multi-select** — pick every correct answer from a list.
+- **Fill in the blank** — fill in one or more blanks in a prompt; close synonyms count.
+- **Matching** — pair items from one list to another.
+- **Short answer** — answer in your own words. Your agent grades this one after you submit.
+- **Code** — write a code answer. Your agent grades this one after you submit.
+
+Any question can be flagged "not sure," and that flag is reported alongside the answer — a right answer someone flagged is worth more coaching than a right answer they were sure of.
 
 See `skills/any-quiz/SKILL.md` for the authoring schema.
 
@@ -40,8 +57,9 @@ The quiz logic (`bin/any-quiz.mjs`, plain Node, no harness dependency) is shared
 |---|---|---|
 | Claude Code | `skills/any-quiz/SKILL.md` | `.claude-plugin/` |
 | Pi | `pi-skills/any-quiz/SKILL.md` | `pi` key in `package.json` |
+| Codex | `codex-skills/any-quiz/SKILL.md` | symlink into `.agents/skills` |
 
-Adapters differ only where the harness forces it — path to `bin/any-quiz.mjs` (Claude Code resolves it via `${CLAUDE_PLUGIN_ROOT}`; Pi has no such variable, so its skill uses a path relative to the skill directory) and how a long-lived process is run (Claude Code backgrounds it and waits for the exit notification; Pi has no background bash, so its version runs the command in the foreground and blocks on it). Everything else — the procedure, schema, coaching instructions — is copied as-is.
+Adapters differ only where the harness forces it — path to `bin/any-quiz.mjs` (Claude Code resolves it via `${CLAUDE_PLUGIN_ROOT}`; Pi and Codex have no such variable, so their skills use a path relative to the skill directory) and how a long-lived process is run (Claude Code backgrounds it and waits for the exit notification; Pi and Codex have no confirmed background-bash equivalent, so their versions run the command in the foreground and block on it). Everything else — the procedure, schema, coaching instructions — is copied as-is.
 
 To add a harness: drop `<harness>-skills/any-quiz/SKILL.md`, adjust only what that harness's skill/process conventions force, wire it into that harness's own manifest convention, and add a row to the table above. Full process in `.claude/skills/harness-ports/SKILL.md`.
 
