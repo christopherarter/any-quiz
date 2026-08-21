@@ -1,8 +1,16 @@
 {
   "name": "any-quiz",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
+  "keywords": [
+    "pi-package"
+  ],
+  "pi": {
+    "skills": [
+      "./pi-skills"
+    ]
+  },
   "engines": {
     "node": ">=22.18"
   },
