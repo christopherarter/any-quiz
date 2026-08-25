@@ -1,6 +1,6 @@
 import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import {
@@ -10,6 +10,7 @@ import {
   loadPublic,
   QuizError,
   readAnswers,
+  scaffoldQuiz,
   validateQuestions,
   writeAnswers,
 } from '../lib/quiz.ts'
@@ -28,6 +29,9 @@ const LEFT_IDS_RE = /left ids/
 const LANGUAGE_RE = /language/
 const MISSING_PROMPT_RE = /missing prompt/
 const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T/
+const ID_RE = /^[0-9a-f]{4}$/
+const KEBAB_RE = /kebab-case/
+const DIR_NAME_RE = /^\d{4}-\d{2}-\d{2}-rust-lifetimes-[0-9a-f]{4}$/
 
 // biome-ignore lint/suspicious/noExplicitAny: the point of these tests is to feed invalid shapes in
 const fixture = (): any =>
@@ -209,4 +213,61 @@ test('readAnswers throws QuizError on a corrupt answers file', () => {
   const dir = tmp()
   writeFileSync(answersPath(dir), '{ not json')
   expect(() => readAnswers(dir, 'a3f9', ['q1'])).toThrow(QuizError)
+})
+
+test('scaffoldQuiz writes meta.json with a generated id and timestamp', () => {
+  const baseDir = tmp()
+  const { dir, meta } = scaffoldQuiz(baseDir, {
+    slug: 'rust-lifetimes',
+    title: 'Rust Lifetimes & Borrowing',
+    topic: 'One sentence on what this quiz covers',
+  })
+
+  expect(basename(dir)).toMatch(DIR_NAME_RE)
+  expect(meta).toEqual({
+    id: expect.stringMatching(ID_RE),
+    slug: 'rust-lifetimes',
+    title: 'Rust Lifetimes & Borrowing',
+    topic: 'One sentence on what this quiz covers',
+    createdAt: expect.stringMatching(ISO_TIMESTAMP_RE),
+    parentQuizId: null,
+    targets: [],
+  })
+  expect(JSON.parse(readFileSync(join(dir, 'meta.json'), 'utf8'))).toEqual(meta)
+})
+
+test('scaffoldQuiz accepts an optional parentQuizId and targets', () => {
+  const { meta } = scaffoldQuiz(tmp(), {
+    slug: 'rust-lifetimes',
+    title: 'Follow-up',
+    topic: 'Targeting the misses',
+    parentQuizId: 'a3f9',
+    targets: ['q2', 'q4'],
+  })
+
+  expect(meta.parentQuizId).toBe('a3f9')
+  expect(meta.targets).toEqual(['q2', 'q4'])
+})
+
+test('scaffoldQuiz rejects a slug that is not kebab-case', () => {
+  const attempt = () => scaffoldQuiz(tmp(), { slug: 'Not Kebab!', title: 'T', topic: 'Top' })
+  expect(attempt).toThrow(QuizError)
+  try {
+    attempt()
+  } catch (err) {
+    expect((err as InstanceType<typeof QuizError>).errors.join('\n')).toMatch(KEBAB_RE)
+  }
+})
+
+test('scaffoldQuiz creates baseDir when it does not exist yet', () => {
+  const baseDir = join(tmp(), 'nested', 'any-quiz')
+  const { dir } = scaffoldQuiz(baseDir, { slug: 'rust-lifetimes', title: 'T', topic: 'Top' })
+  expect(existsSync(join(dir, 'meta.json'))).toBe(true)
+})
+
+test('scaffoldQuiz wraps a filesystem failure as QuizError', () => {
+  const filePath = join(tmp(), 'plain-file')
+  writeFileSync(filePath, 'x')
+  const attempt = () => scaffoldQuiz(filePath, { slug: 'rust-lifetimes', title: 'T', topic: 'Top' })
+  expect(attempt).toThrow(QuizError)
 })

@@ -11,29 +11,27 @@ Author a quiz, serve it in the browser, coach the user through the results.
 
 ### 1. Create the quiz folder
 
-Pick a kebab-case `slug` for the topic and a random 4-hex-character `id`.
+Pick a kebab-case `slug` for the topic, then scaffold the folder — this fills in the mechanical fields (`id`, `createdAt`, the folder path) so you only supply the content:
 
 ```
-~/.any-quiz/<YYYY-MM-DD>-<slug>-<id>/
+node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" scaffold ~/.any-quiz <slug> "<title>" "<topic>"
 ```
 
-Write `meta.json`:
+It prints `{ dir, meta }`; `dir` is the quiz folder for the rest of this procedure. For a follow-up quiz, add `--parent <id>` and repeat `--target <id>` for each missed question instead of hand-writing `meta.json`. A bad slug (not kebab-case) exits `2` with the reason on stderr.
 
-```json
-{
-  "id": "a3f9",
-  "slug": "rust-lifetimes",
-  "title": "Rust Lifetimes & Borrowing",
-  "topic": "One sentence on what this quiz covers",
-  "createdAt": "2026-08-17T14:02:11Z",
-  "parentQuizId": null,
-  "targets": []
-}
+### 2. Write the questions
+
+Write `questions.json` in `dir` — schema below. Aim for 5–10 questions unless the user asks otherwise. Mix types; do not make every question multiple choice.
+
+### 3. Validate
+
+```
+node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" <dir> --check
 ```
 
-Write `questions.json` — schema below. Aim for 5–10 questions unless the user asks otherwise. Mix types; do not make every question multiple choice.
+Exit `0` prints `{ ok, title, questionCount }` — the schema is good. Exit `2` prints the specific validation errors on stderr; fix `questions.json` and check again before serving.
 
-### 2. Serve it
+### 4. Serve it
 
 ```
 node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" <quiz-dir>
@@ -41,7 +39,7 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" <quiz-dir>
 
 Run with `run_in_background: true`. Report just the URL and question count — `Quiz up: <url> — 8 questions.` Do not mention topics, entities, or anything else drawn from the questions themselves; you wrote the answer key and anything you quote from memory risks being one. Then **stop**. Do not poll, do not ask whether they are finished, do not start another task that expects their attention. The process exit is your signal.
 
-### 3. Coach
+### 5. Coach
 
 When the process exits, you receive its stdout:
 
@@ -83,9 +81,9 @@ Open with a one-line score: `**4/5 auto-scored** · 2 flagged · 1 needs grading
 
 Then coach in prose, grouped by the signal tiers above — confident misconceptions first, quiet correct answers last — using a short header per question (`**Q2 — Big-O of a hash lookup**`) rather than a wall of paragraphs. Skip a tier entirely if nothing landed there; don't write "nothing to report here." Close with the follow-up offer as its own line, not folded into the last question's coaching.
 
-### 4. Follow-up quizzes
+### 6. Follow-up quizzes
 
-Same procedure, with `meta.json` setting `parentQuizId` to the previous quiz's `id` and `targets` to the missed question ids.
+Same procedure, scaffolding with `--parent <previous id>` and `--target <id>` for each missed question.
 
 ## Question schema
 
@@ -120,6 +118,9 @@ Rules the validator enforces — a violation exits `2` and serves nothing:
 | `--retake` | required to re-serve an already-submitted quiz; archives the previous attempt |
 | `--port N` | pin a port (falls back to an ephemeral one if busy) |
 | `--no-open` | do not launch a browser |
+| `--check` | validate `questions.json` and exit, instead of serving |
+
+`scaffold`'s own flags: `--parent <id>` sets `parentQuizId`; repeatable `--target <id>` sets `targets`.
 
 ## Exit codes
 

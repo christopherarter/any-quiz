@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, symlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, symlinkSync, writeFileSync } from 'node:fs'
 import { connect, createServer as netCreateServer, type Socket } from 'node:net'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -12,6 +12,7 @@ const EXIT_OK = 0
 const EXIT_BAD_INPUT = 2
 const EXIT_ABANDONED = 3
 const SAMPLE_PORT = 8080
+const SAMPLE_QUESTION_COUNT = 6
 
 const ARCHIVE_RE = /^answers-\d{8}T\d{6}Z\.json$/
 const USAGE_RE = /usage:/
@@ -37,12 +38,19 @@ function idleKeepAlive(base: string): Promise<Socket> {
 }
 
 test('parseArgs reads the directory, port, and flags', () => {
-  expect(parseArgs(['/q'])).toEqual({ dir: '/q', port: 0, open: true, retake: false })
-  expect(parseArgs(['/q', '--port', '8080', '--no-open', '--retake'])).toEqual({
+  expect(parseArgs(['/q'])).toEqual({
+    dir: '/q',
+    port: 0,
+    open: true,
+    retake: false,
+    check: false,
+  })
+  expect(parseArgs(['/q', '--port', '8080', '--no-open', '--retake', '--check'])).toEqual({
     dir: '/q',
     port: SAMPLE_PORT,
     open: false,
     retake: true,
+    check: true,
   })
 })
 
@@ -87,6 +95,36 @@ test('exits 2 on an unusable --port value', async () => {
   const s = start([freshQuizDir(), '--port', 'abc'])
   expect(await s.exited).toBe(EXIT_BAD_INPUT)
   expect(s.stderr()).toMatch(PORT_FLAG_RE)
+})
+
+test('--check exits 0 with a summary and never opens a port', async () => {
+  const s = start([freshQuizDir(), '--check'])
+  expect(await s.exited).toBe(EXIT_OK)
+  expect(s.stderr()).not.toMatch(URL_RE)
+  expect(JSON.parse(s.stdout())).toEqual({
+    ok: true,
+    title: 'All Question Types',
+    questionCount: SAMPLE_QUESTION_COUNT,
+  })
+})
+
+test('scaffold subcommand creates the quiz folder and writes meta.json', async () => {
+  const baseDir = mkdtempSync(join(tmpdir(), 'anyquiz-scaffold-'))
+  const s = start(['scaffold', baseDir, 'rust-lifetimes', 'Rust Lifetimes', 'One sentence'])
+  expect(await s.exited).toBe(EXIT_OK)
+
+  const result = JSON.parse(s.stdout())
+  expect(result.meta.slug).toBe('rust-lifetimes')
+  expect(result.meta.title).toBe('Rust Lifetimes')
+  expect(result.meta.topic).toBe('One sentence')
+  expect(existsSync(join(result.dir, 'meta.json'))).toBe(true)
+})
+
+test('scaffold subcommand exits 2 with a usage message when required args are missing', async () => {
+  const s = start(['scaffold', mkdtempSync(join(tmpdir(), 'anyquiz-scaffold-'))])
+  expect(await s.exited).toBe(EXIT_BAD_INPUT)
+  expect(s.stderr()).toMatch(USAGE_RE)
+  expect(s.stdout()).toBe('')
 })
 
 // The submit response and the process exit are driven from the same tick, so this checks

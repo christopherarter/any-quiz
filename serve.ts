@@ -4,7 +4,14 @@ import type { Server } from 'node:http'
 import process from 'node:process'
 import { DIST_DIR, isDistFresh } from './lib/buildinfo.ts'
 import { openBrowser } from './lib/open.ts'
-import { answersPath, archiveAnswers, loadFull, QuizError, readAnswers } from './lib/quiz.ts'
+import {
+  answersPath,
+  archiveAnswers,
+  loadFull,
+  QuizError,
+  readAnswers,
+  scaffoldQuiz,
+} from './lib/quiz.ts'
 import { createServer } from './lib/server.ts'
 import type { Meta, Question, ResultPayload } from './lib/types.ts'
 
@@ -14,7 +21,9 @@ const EXIT_ABANDONED = 3
 const MAX_PORT = 65_535
 const JSON_INDENT = 2
 
-const USAGE = 'usage: serve.ts <quiz-dir> [--port N] [--no-open] [--retake]'
+const USAGE = 'usage: serve.ts <quiz-dir> [--port N] [--no-open] [--retake] [--check]'
+const SCAFFOLD_USAGE =
+  'usage: serve.ts scaffold <base-dir> <slug> <title> <topic> [--parent id] [--target id]...'
 
 // Everything human-readable goes to stderr so stdout carries exactly one thing: the
 // result payload. The calling session parses stdout, so a stray banner there would be a
@@ -106,6 +115,13 @@ function main(): void {
   }
 
   const { meta, questions } = loadQuiz(opts.dir, opts.retake)
+
+  if (opts.check) {
+    const summary = { ok: true, title: meta.title, questionCount: questions.length }
+    process.stdout.write(`${JSON.stringify(summary, null, JSON_INDENT)}\n`)
+    return
+  }
+
   const server = createServer({ dir: opts.dir })
 
   server.on('submitted', (payload: ResultPayload) => {
@@ -141,6 +157,30 @@ function main(): void {
   })
 }
 
+function mainScaffold(argv: string[]): void {
+  const opts = parseScaffoldArgs(argv)
+  if (opts.baseDir === null || opts.slug === null || opts.title === null || opts.topic === null) {
+    fail(SCAFFOLD_USAGE)
+  }
+
+  let result: { dir: string; meta: Meta }
+  try {
+    result = scaffoldQuiz(opts.baseDir, {
+      slug: opts.slug,
+      title: opts.title,
+      topic: opts.topic,
+      parentQuizId: opts.parent,
+      targets: opts.targets,
+    })
+  } catch (err) {
+    if (err instanceof QuizError) {
+      fail(err.message, err.errors)
+    }
+    throw err
+  }
+  process.stdout.write(`${JSON.stringify(result, null, JSON_INDENT)}\n`)
+}
+
 // Importing this module for `parseArgs` (as the tests do) must not start a server, so the
 // CLI only runs when this file is the process entry point.
 // Compared through `realpathSync` because the documented install is a symlink into
@@ -160,7 +200,12 @@ function invokedDirectly(): boolean {
 }
 
 if (invokedDirectly()) {
-  main()
+  const [subcommand, ...rest] = process.argv.slice(2)
+  if (subcommand === 'scaffold') {
+    mainScaffold(rest)
+  } else {
+    main()
+  }
 }
 
 // The two exports sit at the end to satisfy `useExportsLast`; `parseArgs` is a hoisted
@@ -171,6 +216,7 @@ export interface Options {
   port: number
   open: boolean
   retake: boolean
+  check: boolean
 }
 
 // Deliberately a pure parser: it reports what was typed and nothing more. Rejecting an
@@ -178,7 +224,7 @@ export interface Options {
 // having to intercept a process exit. The manual index (rather than for...of) is what
 // lets `--port` consume the argument that follows it.
 export function parseArgs(argv: string[]): Options {
-  const out: Options = { dir: null, port: 0, open: true, retake: false }
+  const out: Options = { dir: null, port: 0, open: true, retake: false, check: false }
   let i = 0
   while (i < argv.length) {
     const arg = argv[i]
@@ -190,9 +236,57 @@ export function parseArgs(argv: string[]): Options {
       out.open = false
     } else if (arg === '--retake') {
       out.retake = true
+    } else if (arg === '--check') {
+      out.check = true
     } else if (out.dir === null && arg !== undefined) {
       out.dir = arg
     }
   }
+  return out
+}
+
+export interface ScaffoldArgs {
+  baseDir: string | null
+  slug: string | null
+  title: string | null
+  topic: string | null
+  parent: string | null
+  targets: string[]
+}
+
+// The base dir, slug, title, and topic are positional (in that order); `--parent` and
+// repeatable `--target` are the only flags, matching the optional fields on `ScaffoldInput`.
+export function parseScaffoldArgs(argv: string[]): ScaffoldArgs {
+  const out: ScaffoldArgs = {
+    baseDir: null,
+    slug: null,
+    title: null,
+    topic: null,
+    parent: null,
+    targets: [],
+  }
+  const positionals: string[] = []
+  let i = 0
+  while (i < argv.length) {
+    const arg = argv[i]
+    i += 1
+    if (arg === '--parent') {
+      out.parent = argv[i] ?? null
+      i += 1
+    } else if (arg === '--target') {
+      const target = argv[i]
+      if (target !== undefined) {
+        out.targets.push(target)
+      }
+      i += 1
+    } else if (arg !== undefined) {
+      positionals.push(arg)
+    }
+  }
+  const [baseDir, slug, title, topic] = positionals
+  out.baseDir = baseDir ?? null
+  out.slug = slug ?? null
+  out.title = title ?? null
+  out.topic = topic ?? null
   return out
 }

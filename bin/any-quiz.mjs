@@ -95,7 +95,8 @@ function openBrowser(url2, platform = process.platform) {
 }
 
 // lib/quiz.ts
-import { existsSync as existsSync2, readFileSync as readFileSync2, renameSync, writeFileSync } from "node:fs";
+import { randomBytes } from "node:crypto";
+import { existsSync as existsSync2, mkdirSync, readFileSync as readFileSync2, renameSync, writeFileSync } from "node:fs";
 import { join as join2 } from "node:path";
 
 // node_modules/zod/v4/classic/external.js
@@ -14794,6 +14795,10 @@ var QuizError = class extends Error {
 };
 var STAMP_STRIP_RE = /[-:]/g;
 var STAMP_FRACTIONAL_SECONDS_RE = /\.\d+Z$/;
+var SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+var ID_BYTES = 2;
+var DATE_LENGTH = 10;
+var META_INDENT = 2;
 function skeleton(quizId, questionIds) {
   const now = (/* @__PURE__ */ new Date()).toISOString();
   const responses = {};
@@ -14866,6 +14871,36 @@ function archiveAnswers(dir) {
   const target = join2(dir, `answers-${stamp}.json`);
   renameSync(path, target);
   return target;
+}
+function scaffoldQuiz(baseDir, input) {
+  if (!SLUG_RE.test(input.slug)) {
+    throw new QuizError("slug must be kebab-case", [
+      `"${input.slug}" must be kebab-case: lowercase letters, digits, and hyphens only`
+    ]);
+  }
+  const id = randomBytes(ID_BYTES).toString("hex");
+  const createdAt = (/* @__PURE__ */ new Date()).toISOString();
+  const dir = join2(baseDir, `${createdAt.slice(0, DATE_LENGTH)}-${input.slug}-${id}`);
+  try {
+    mkdirSync(baseDir, { recursive: true });
+    mkdirSync(dir);
+  } catch (err) {
+    const error51 = new QuizError(`cannot create quiz directory at ${dir}`, [err.message]);
+    error51.cause = err;
+    throw error51;
+  }
+  const meta3 = {
+    id,
+    slug: input.slug,
+    title: input.title,
+    topic: input.topic,
+    createdAt,
+    parentQuizId: input.parentQuizId ?? null,
+    targets: input.targets ?? []
+  };
+  writeFileSync(join2(dir, "meta.json"), `${JSON.stringify(meta3, null, META_INDENT)}
+`);
+  return { dir, meta: meta3 };
 }
 
 // node_modules/@hono/node-server/dist/constants-BLSFu_RU.mjs
@@ -18990,7 +19025,8 @@ var EXIT_BAD_INPUT = 2;
 var EXIT_ABANDONED = 3;
 var MAX_PORT = 65535;
 var JSON_INDENT = 2;
-var USAGE = "usage: serve.ts <quiz-dir> [--port N] [--no-open] [--retake]";
+var USAGE = "usage: serve.ts <quiz-dir> [--port N] [--no-open] [--retake] [--check]";
+var SCAFFOLD_USAGE = "usage: serve.ts scaffold <base-dir> <slug> <title> <topic> [--parent id] [--target id]...";
 function log(msg) {
   process3.stderr.write(`${msg}
 `);
@@ -19061,6 +19097,12 @@ function main() {
     log("any-quiz: warning \u2014 app/dist is stale; run `npm run build`");
   }
   const { meta: meta3, questions } = loadQuiz(opts.dir, opts.retake);
+  if (opts.check) {
+    const summary = { ok: true, title: meta3.title, questionCount: questions.length };
+    process3.stdout.write(`${JSON.stringify(summary, null, JSON_INDENT)}
+`);
+    return;
+  }
   const server = createServer2({ dir: opts.dir });
   server.on("submitted", (payload) => {
     process3.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}
@@ -19085,6 +19127,29 @@ function main() {
     announce(server, meta3, questions.length, opts.open);
   });
 }
+function mainScaffold(argv) {
+  const opts = parseScaffoldArgs(argv);
+  if (opts.baseDir === null || opts.slug === null || opts.title === null || opts.topic === null) {
+    fail(SCAFFOLD_USAGE);
+  }
+  let result;
+  try {
+    result = scaffoldQuiz(opts.baseDir, {
+      slug: opts.slug,
+      title: opts.title,
+      topic: opts.topic,
+      parentQuizId: opts.parent,
+      targets: opts.targets
+    });
+  } catch (err) {
+    if (err instanceof QuizError) {
+      fail(err.message, err.errors);
+    }
+    throw err;
+  }
+  process3.stdout.write(`${JSON.stringify(result, null, JSON_INDENT)}
+`);
+}
 function invokedDirectly() {
   const [, entry] = process3.argv;
   if (entry === void 0) {
@@ -19097,10 +19162,15 @@ function invokedDirectly() {
   }
 }
 if (invokedDirectly()) {
-  main();
+  const [subcommand, ...rest] = process3.argv.slice(2);
+  if (subcommand === "scaffold") {
+    mainScaffold(rest);
+  } else {
+    main();
+  }
 }
 function parseArgs(argv) {
-  const out = { dir: null, port: 0, open: true, retake: false };
+  const out = { dir: null, port: 0, open: true, retake: false, check: false };
   let i = 0;
   while (i < argv.length) {
     const arg = argv[i];
@@ -19112,12 +19182,49 @@ function parseArgs(argv) {
       out.open = false;
     } else if (arg === "--retake") {
       out.retake = true;
+    } else if (arg === "--check") {
+      out.check = true;
     } else if (out.dir === null && arg !== void 0) {
       out.dir = arg;
     }
   }
   return out;
 }
+function parseScaffoldArgs(argv) {
+  const out = {
+    baseDir: null,
+    slug: null,
+    title: null,
+    topic: null,
+    parent: null,
+    targets: []
+  };
+  const positionals = [];
+  let i = 0;
+  while (i < argv.length) {
+    const arg = argv[i];
+    i += 1;
+    if (arg === "--parent") {
+      out.parent = argv[i] ?? null;
+      i += 1;
+    } else if (arg === "--target") {
+      const target = argv[i];
+      if (target !== void 0) {
+        out.targets.push(target);
+      }
+      i += 1;
+    } else if (arg !== void 0) {
+      positionals.push(arg);
+    }
+  }
+  const [baseDir, slug, title, topic] = positionals;
+  out.baseDir = baseDir ?? null;
+  out.slug = slug ?? null;
+  out.title = title ?? null;
+  out.topic = topic ?? null;
+  return out;
+}
 export {
-  parseArgs
+  parseArgs,
+  parseScaffoldArgs
 };

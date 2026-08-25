@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
+import { randomBytes } from 'node:crypto'
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { validateQuestions } from './question-schema.ts'
 import type {
@@ -21,6 +22,10 @@ class QuizError extends Error {
 
 const STAMP_STRIP_RE = /[-:]/g
 const STAMP_FRACTIONAL_SECONDS_RE = /\.\d+Z$/
+const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/
+const ID_BYTES = 2
+const DATE_LENGTH = 10
+const META_INDENT = 2
 
 function skeleton(quizId: string, questionIds: string[]): Answers {
   const now = new Date().toISOString()
@@ -102,6 +107,50 @@ export function archiveAnswers(dir: string): string {
   const target = join(dir, `answers-${stamp}.json`)
   renameSync(path, target)
   return target
+}
+
+export interface ScaffoldInput {
+  slug: string
+  title: string
+  topic: string
+  parentQuizId?: string | null
+  targets?: string[]
+}
+
+// The mechanical fields here (id, createdAt, folder path) are exactly where a small model
+// tends to invent a bad hex string or malformed timestamp -- generating them deterministically
+// leaves the model only the content fields (title, topic, slug) to supply.
+export function scaffoldQuiz(baseDir: string, input: ScaffoldInput): { dir: string; meta: Meta } {
+  if (!SLUG_RE.test(input.slug)) {
+    throw new QuizError('slug must be kebab-case', [
+      `"${input.slug}" must be kebab-case: lowercase letters, digits, and hyphens only`,
+    ])
+  }
+
+  const id = randomBytes(ID_BYTES).toString('hex')
+  const createdAt = new Date().toISOString()
+  const dir = join(baseDir, `${createdAt.slice(0, DATE_LENGTH)}-${input.slug}-${id}`)
+
+  try {
+    mkdirSync(baseDir, { recursive: true })
+    mkdirSync(dir)
+  } catch (err) {
+    const error = new QuizError(`cannot create quiz directory at ${dir}`, [(err as Error).message])
+    error.cause = err
+    throw error
+  }
+
+  const meta: Meta = {
+    id,
+    slug: input.slug,
+    title: input.title,
+    topic: input.topic,
+    createdAt,
+    parentQuizId: input.parentQuizId ?? null,
+    targets: input.targets ?? [],
+  }
+  writeFileSync(join(dir, 'meta.json'), `${JSON.stringify(meta, null, META_INDENT)}\n`)
+  return { dir, meta }
 }
 
 // biome-ignore lint/performance/noBarrelFile: validateQuestions/TYPES live in question-schema.ts to keep quiz.ts under the line-count cap; every existing caller already imports them from lib/quiz.ts
