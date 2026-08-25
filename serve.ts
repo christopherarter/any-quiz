@@ -7,13 +7,15 @@ import { openBrowser } from './lib/open.ts'
 import {
   answersPath,
   archiveAnswers,
+  buildFinishPayload,
   loadFull,
   QuizError,
   readAnswers,
+  readHistory,
   scaffoldQuiz,
 } from './lib/quiz.ts'
 import { createServer } from './lib/server.ts'
-import type { Meta, Question, ResultPayload } from './lib/types.ts'
+import type { FinishPayload, Meta, Question, ResultPayload } from './lib/types.ts'
 
 const EXIT_OK = 0
 const EXIT_BAD_INPUT = 2
@@ -115,6 +117,7 @@ function main(): void {
   }
 
   const { meta, questions } = loadQuiz(opts.dir, opts.retake)
+  const kind = meta.kind ?? 'quiz'
 
   if (opts.check) {
     const summary = { ok: true, title: meta.title, questionCount: questions.length }
@@ -129,8 +132,22 @@ function main(): void {
     shutdown(server, EXIT_OK)
   })
 
+  server.on('finished', (payload: FinishPayload) => {
+    process.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}\n`)
+    shutdown(server, EXIT_OK)
+  })
+
   for (const signal of ['SIGINT', 'SIGTERM'] as const) {
     process.on(signal, () => {
+      if (kind === 'set') {
+        const { runs } = readHistory(opts.dir)
+        if (runs.length > 0) {
+          const payload = buildFinishPayload(meta, opts.dir, runs)
+          process.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}\n`)
+          shutdown(server, EXIT_OK)
+          return
+        }
+      }
       log('any-quiz: abandoned; the draft is saved and the quiz can be re-served')
       shutdown(server, EXIT_ABANDONED)
     })

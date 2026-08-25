@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url'
 
 const SERVE = fileURLToPath(new URL('../../serve.ts', import.meta.url))
 const FIXTURE = fileURLToPath(new URL('../../examples/all-types', import.meta.url))
+const SET_FIXTURE = fileURLToPath(new URL('../../examples/set-example', import.meta.url))
 
 export const URL_RE = /http:\/\/127\.0\.0\.1:(\d+)/
 
@@ -24,6 +25,12 @@ export interface Child {
 export function freshQuizDir(): string {
   const dir = mkdtempSync(join(tmpdir(), 'anyquiz-cli-'))
   cpSync(FIXTURE, dir, { recursive: true })
+  return dir
+}
+
+export function freshSetDir(): string {
+  const dir = mkdtempSync(join(tmpdir(), 'anyquiz-cli-set-'))
+  cpSync(SET_FIXTURE, dir, { recursive: true })
   return dir
 }
 
