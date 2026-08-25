@@ -19070,10 +19070,15 @@ function registerSubmit(app, ctx) {
   });
 }
 function registerFinish(app, ctx) {
+  let finished = false;
   app.post("/api/finish", (c) => {
+    if (finished) {
+      return c.json({ error: "this set has already finished" }, CONFLICT);
+    }
+    finished = true;
     const { runs } = readHistory(ctx.dir);
     const response = c.json({ ok: true }, OK);
-    ctx.emitFinished(buildFinishPayload(ctx.meta, ctx.dir, runs));
+    ctx.emitFinished(buildFinishPayload(ctx.meta, ctx.dir, runs.slice(ctx.runsAtStart)));
     return response;
   });
 }
@@ -19099,6 +19104,7 @@ function createServer2({ dir }) {
     questionIds: questions.map((q) => q.id),
     known: new Set(questions.map((q) => q.id)),
     kind: meta3.kind ?? "quiz",
+    runsAtStart: readHistory(dir).runs.length,
     emitSubmitted: (payload) => {
       server.emit("submitted", payload);
     },
@@ -19189,6 +19195,7 @@ function main() {
   }
   const { meta: meta3, questions } = loadQuiz(opts.dir, opts.retake);
   const kind = meta3.kind ?? "quiz";
+  const runsAtStart = readHistory(opts.dir).runs.length;
   if (opts.check) {
     const summary = { ok: true, title: meta3.title, questionCount: questions.length };
     process3.stdout.write(`${JSON.stringify(summary, null, JSON_INDENT)}
@@ -19210,8 +19217,9 @@ function main() {
     process3.on(signal, () => {
       if (kind === "set") {
         const { runs } = readHistory(opts.dir);
-        if (runs.length > 0) {
-          const payload = buildFinishPayload(meta3, opts.dir, runs);
+        const sittingRuns = runs.slice(runsAtStart);
+        if (sittingRuns.length > 0) {
+          const payload = buildFinishPayload(meta3, opts.dir, sittingRuns);
           process3.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}
 `);
           shutdown(server, EXIT_OK);
