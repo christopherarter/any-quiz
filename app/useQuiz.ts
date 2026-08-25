@@ -1,5 +1,13 @@
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import type { Answers, AnswerValue, Meta, PublicQuestion, ResponseEntry } from '../lib/types.ts'
+import type {
+  Answers,
+  AnswerValue,
+  Meta,
+  PublicQuestion,
+  QuizKind,
+  ResponseEntry,
+} from '../lib/types.ts'
+import { reorderQuestions } from './lib/order.ts'
 
 // Long enough that a burst of typing is one write, short enough that a draft is on disk
 // before the user's attention moves on. An edit made inside the last window before the tab
@@ -22,6 +30,7 @@ interface QuizData {
 
 interface Loaded extends QuizData {
   responses: Responses
+  order?: string[]
   submitted: boolean
 }
 
@@ -38,11 +47,20 @@ interface Editor {
   toggleFlag: (id: string) => void
 }
 
+interface SubmitResult {
+  correct: number
+  total: number
+  perQuestion: Record<string, boolean>
+}
+
 interface SubmitDeps {
+  kind: QuizKind
   latest: RefObject<Responses>
   cancel: () => void
   setStatus: (status: Status) => void
   setError: (message: string | null) => void
+  setRunResult: (result: { correct: number; total: number } | null) => void
+  refetchAnswers: () => Promise<void>
 }
 
 function describe(err: unknown): string {
@@ -74,10 +92,21 @@ async function putResponses(responses: Responses): Promise<void> {
   }
 }
 
-async function postSubmit(): Promise<void> {
+// A quiz's submit response is `{ok: true}`; a set's is `{ok: true, result: {...}}` --
+// `result` is undefined for a quiz and read only by the 'set' branch in useSubmit.
+async function postSubmit(): Promise<SubmitResult | null> {
   const res = await fetch('/api/submit', { method: 'POST' })
   if (!res.ok) {
     throw new Error(`submitting failed (${res.status})`)
+  }
+  const body = (await res.json()) as { result?: SubmitResult }
+  return body.result ?? null
+}
+
+async function postFinish(): Promise<void> {
+  const res = await fetch('/api/finish', { method: 'POST' })
+  if (!res.ok) {
+    throw new Error(`finishing failed (${res.status})`)
   }
 }
 
@@ -94,7 +123,12 @@ function useLoad(onLoad: (loaded: Loaded) => void, onFail: (message: string) => 
       if (cancelled) {
         return
       }
-      onLoad({ ...quiz, responses: saved.responses, submitted: saved.status === 'submitted' })
+      onLoad({
+        ...quiz,
+        responses: saved.responses,
+        order: saved.order,
+        submitted: saved.status === 'submitted',
+      })
     }
     load().catch((err: unknown) => {
       if (cancelled) {
@@ -198,7 +232,8 @@ function useEditor(queue: (id: string, entry: ResponseEntry) => void): Editor {
 // closes the attempt on the first one. A guard here as well was tried and removed: with the
 // button disabled nothing could reach it, so it was untestable code claiming to be a
 // safeguard. The test that clicks Done twice pins the behaviour either way.
-function useSubmit({ latest, cancel, setStatus, setError }: SubmitDeps): () => void {
+function useSubmit(deps: SubmitDeps): () => void {
+  const { kind, latest, cancel, setStatus, setError, setRunResult, refetchAnswers } = deps
   return useCallback(() => {
     cancel()
     setStatus('submitting')
@@ -207,14 +242,45 @@ function useSubmit({ latest, cancel, setStatus, setError }: SubmitDeps): () => v
     // that gets graded, so it must not depend on which debounce windows happened to land.
     putResponses(latest.current)
       .then(postSubmit)
-      .then(() => {
+      .then(async (result) => {
+        if (kind === 'set') {
+          if (result === null) {
+            setRunResult(null)
+          } else {
+            setRunResult({ correct: result.correct, total: result.total })
+          }
+          await refetchAnswers()
+          setStatus('ready')
+          return
+        }
         setStatus('submitted')
       })
       .catch((err: unknown) => {
         setStatus('ready')
         setError(`${describe(err)} — your answers were not sent.`)
       })
-  }, [cancel, latest, setError, setStatus])
+  }, [cancel, kind, latest, refetchAnswers, setError, setRunResult, setStatus])
+}
+
+function useFinish(deps: {
+  cancel: () => void
+  setStatus: (status: Status) => void
+  setError: (message: string | null) => void
+}): () => void {
+  const { cancel, setStatus, setError } = deps
+  return useCallback(() => {
+    cancel()
+    setStatus('submitting')
+    setError(null)
+    postFinish()
+      .then(() => {
+        setStatus('submitted')
+      })
+      .catch((err: unknown) => {
+        setStatus('ready')
+        setError(`${describe(err)} — could not finish.`)
+      })
+  }, [cancel, setError, setStatus])
 }
 
 export interface QuizState {
@@ -223,22 +289,49 @@ export interface QuizState {
   questions: PublicQuestion[]
   responses: Responses
   error: string | null
+  runResult: { correct: number; total: number } | null
   setValue: (id: string, value: AnswerValue) => void
   toggleFlag: (id: string) => void
   submit: () => void
+  finish: () => void
+  clearRunResult: () => void
 }
 
 export function useQuiz(): QuizState {
   const [status, setStatus] = useState<Status>('loading')
   const [data, setData] = useState<QuizData | null>(null)
+  const [order, setOrder] = useState<string[] | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
+  const [runResult, setRunResult] = useState<{ correct: number; total: number } | null>(null)
   const { queue, cancel } = useAutosave(setError)
   const { responses, latest, seed, setValue, toggleFlag } = useEditor(queue)
-  const submit = useSubmit({ latest, cancel, setStatus, setError })
+  const kind: QuizKind = data?.meta.kind ?? 'quiz'
+
+  const refetchAnswers = useCallback(async () => {
+    const saved = await getJson<Answers>('/api/answers')
+    seed(saved.responses)
+    setOrder(saved.order)
+  }, [seed])
+
+  const submit = useSubmit({
+    kind,
+    latest,
+    cancel,
+    setStatus,
+    setError,
+    setRunResult,
+    refetchAnswers,
+  })
+  const finish = useFinish({ cancel, setStatus, setError })
+
+  const clearRunResult = useCallback(() => {
+    setRunResult(null)
+  }, [])
 
   const onLoad = useCallback(
     (loaded: Loaded) => {
       seed(loaded.responses)
+      setOrder(loaded.order)
       setData({ meta: loaded.meta, questions: loaded.questions })
       if (loaded.submitted) {
         setStatus('submitted')
@@ -265,11 +358,14 @@ export function useQuiz(): QuizState {
   return {
     status,
     meta: data?.meta ?? null,
-    questions: data?.questions ?? [],
+    questions: reorderQuestions(data?.questions ?? [], order),
     responses,
     error,
+    runResult,
     setValue,
     toggleFlag,
     submit,
+    finish,
+    clearRunResult,
   }
 }

@@ -14,6 +14,9 @@ const FLAG_OFF = '⚐ not sure'
 const DONE = 'Done'
 const SEND_ANYWAY = 'Send anyway'
 const SENDING = 'Sending…'
+const CHECK_ANSWERS = 'Check answers'
+const RUN_AGAIN = 'Run again'
+const FINISH_STUDYING = 'Finish studying'
 
 interface CardProps {
   question: PublicQuestion
@@ -30,6 +33,7 @@ interface FooterProps {
   flagged: number
   confirming: boolean
   sending: boolean
+  isSet: boolean
   error: string | null
   onDone: () => void
   onCancel: () => void
@@ -50,12 +54,15 @@ function progressLabel(answered: number, total: number, flagged: number): string
   return counted
 }
 
-function doneLabel(confirming: boolean, sending: boolean): string {
+function doneLabel(confirming: boolean, sending: boolean, isSet: boolean): string {
   if (sending) {
     return SENDING
   }
   if (confirming) {
     return SEND_ANYWAY
+  }
+  if (isSet) {
+    return CHECK_ANSWERS
   }
   return DONE
 }
@@ -129,7 +136,7 @@ function Card({ question, index, total, entry, onValue, onFlag }: CardProps): Re
 }
 
 function Footer(props: FooterProps): ReactElement {
-  const { answered, total, flagged, confirming, sending, error, onDone, onCancel } = props
+  const { answered, total, flagged, confirming, sending, isSet, error, onDone, onCancel } = props
   let pending = 0
   if (confirming) {
     pending = total - answered
@@ -141,24 +148,81 @@ function Footer(props: FooterProps): ReactElement {
       <Alert message={error} />
       <Confirmation onCancel={onCancel} unanswered={pending} />
       <button className="done" disabled={sending} onClick={onDone} type="button">
-        {doneLabel(confirming, sending)}
+        {doneLabel(confirming, sending, isSet)}
+      </button>
+    </footer>
+  )
+}
+
+function scoreLabel(correct: number, total: number): string {
+  return `${correct}/${total}`
+}
+
+// Sets keep the underlying editor's progress line visible next to the score: the server
+// resets and reshuffles the run as part of scoring the submit, so "answered" already
+// reflects the *next* run by the time this renders -- that's the signal a study session
+// restarted, not stale leftovers from the run just graded.
+function RunResultFooter({
+  correct,
+  total,
+  answered,
+  flagged,
+  onRunAgain,
+  onFinish,
+}: {
+  correct: number
+  total: number
+  answered: number
+  flagged: number
+  onRunAgain: () => void
+  onFinish: () => void
+}): ReactElement {
+  return (
+    <footer>
+      <span className="progress">{scoreLabel(correct, total)}</span>
+      <span className="progress">{progressLabel(answered, total, flagged)}</span>
+      <button className="run-again" onClick={onRunAgain} type="button">
+        {RUN_AGAIN}
+      </button>
+      <button className="done" onClick={onFinish} type="button">
+        {FINISH_STUDYING}
       </button>
     </footer>
   )
 }
 
 export function Quiz(): ReactElement {
-  const { status, meta, questions, responses, error, setValue, toggleFlag, submit } = useQuiz()
+  const {
+    status,
+    meta,
+    questions,
+    responses,
+    error,
+    setValue,
+    toggleFlag,
+    submit,
+    runResult,
+    clearRunResult,
+    finish,
+  } = useQuiz()
   const [confirming, setConfirming] = useState(false)
   const { answered, total, flagged } = summarize(questions, responses)
+  const isSet = meta?.kind === 'set'
 
+  // A set has no unanswered-question confirmation: "Check answers" is never a terminal
+  // action -- Run again always undoes it -- so there is nothing here for the prompt to
+  // protect against, unlike a quiz's one-shot Done.
   const handleDone = useCallback(() => {
+    if (isSet) {
+      submit()
+      return
+    }
     if (answered < total && !confirming) {
       setConfirming(true)
       return
     }
     submit()
-  }, [answered, confirming, submit, total])
+  }, [answered, confirming, isSet, submit, total])
 
   const handleCancel = useCallback(() => {
     setConfirming(false)
@@ -184,6 +248,34 @@ export function Quiz(): ReactElement {
     return <p className="done-msg">{OPENING}</p>
   }
 
+  let footer: ReactElement
+  if (runResult === null) {
+    footer = (
+      <Footer
+        answered={answered}
+        confirming={confirming}
+        error={error}
+        flagged={flagged}
+        isSet={isSet}
+        onCancel={handleCancel}
+        onDone={handleDone}
+        sending={status === 'submitting'}
+        total={total}
+      />
+    )
+  } else {
+    footer = (
+      <RunResultFooter
+        answered={answered}
+        correct={runResult.correct}
+        flagged={flagged}
+        onFinish={finish}
+        onRunAgain={clearRunResult}
+        total={runResult.total}
+      />
+    )
+  }
+
   return (
     <>
       <header>
@@ -203,16 +295,7 @@ export function Quiz(): ReactElement {
           />
         ))}
       </main>
-      <Footer
-        answered={answered}
-        confirming={confirming}
-        error={error}
-        flagged={flagged}
-        onCancel={handleCancel}
-        onDone={handleDone}
-        sending={status === 'submitting'}
-        total={total}
-      />
+      {footer}
     </>
   )
 }

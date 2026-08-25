@@ -21,12 +21,13 @@ const META: Meta = {
   parentQuizId: null,
   targets: [],
 }
+const SET_META: Meta = { ...META, id: 'b7c2', kind: 'set' }
 const QUESTIONS: PublicQuestion[] = [
   { id: 'q1', type: 'short', prompt: 'First question?' },
   { id: 'q2', type: 'short', prompt: 'Second question?' },
 ]
 
-function draft(responses: Record<string, ResponseEntry>): Answers {
+function draft(responses: Record<string, ResponseEntry>, order?: string[]): Answers {
   return {
     quizId: META.id,
     status: 'draft',
@@ -34,6 +35,7 @@ function draft(responses: Record<string, ResponseEntry>): Answers {
     updatedAt: META.createdAt,
     submittedAt: null,
     responses,
+    ...(order === undefined ? {} : { order }),
   }
 }
 
@@ -46,7 +48,10 @@ function reply(status: number, body: unknown): unknown {
 
 let puts: Record<string, ResponseEntry>[]
 let submits: number
+let finishes: number
 let answers: Answers
+let currentMeta: Meta
+let submitResult: unknown
 let quizStatus: number
 let putStatus: number
 let submitStatus: number
@@ -54,7 +59,10 @@ let submitStatus: number
 beforeEach(() => {
   puts = []
   submits = 0
+  finishes = 0
   answers = draft({})
+  currentMeta = META
+  submitResult = { ok: true }
   quizStatus = OK_STATUS
   putStatus = NO_CONTENT_STATUS
   submitStatus = OK_STATUS
@@ -65,7 +73,7 @@ beforeEach(() => {
   vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
     const method = init?.method ?? 'GET'
     if (url === '/api/quiz') {
-      return Promise.resolve(reply(quizStatus, { meta: META, questions: QUESTIONS }))
+      return Promise.resolve(reply(quizStatus, { meta: currentMeta, questions: QUESTIONS }))
     }
     if (url === '/api/answers' && method === 'GET') {
       return Promise.resolve(reply(OK_STATUS, answers))
@@ -77,7 +85,11 @@ beforeEach(() => {
     }
     if (url === '/api/submit') {
       submits += 1
-      return Promise.resolve(reply(submitStatus, { ok: true }))
+      return Promise.resolve(reply(submitStatus, submitResult))
+    }
+    if (url === '/api/finish') {
+      finishes += 1
+      return Promise.resolve(reply(OK_STATUS, { ok: true }))
     }
     throw new Error(`unexpected fetch: ${url}`)
   })
@@ -242,4 +254,77 @@ test('done cannot be fired twice into a duplicate submission', async () => {
   fireEvent.click(done)
   await screen.findByText(/sent back to Claude/i)
   expect(submits).toBe(1)
+})
+
+test('questions render in answers.order when the server provides one', async () => {
+  answers = draft({}, ['q2', 'q1'])
+  render(<Quiz />)
+  const prompts = await screen.findAllByText(/question\?$/)
+  expect(prompts.map((el) => el.textContent)).toEqual(['Second question?', 'First question?'])
+})
+
+test('a set shows "Check answers" instead of "Done" before the first run', async () => {
+  currentMeta = SET_META
+  render(<Quiz />)
+  await screen.findByText(/0\/2 answered/)
+  expect(screen.getByRole('button', { name: /check answers/i })).toBeDefined()
+  expect(screen.queryByRole('button', { name: /^done$/i })).toBeNull()
+})
+
+test('submitting a set shows the score and Run again / Finish studying, not the terminal screen', async () => {
+  currentMeta = SET_META
+  submitResult = {
+    ok: true,
+    result: { correct: 1, total: 2, perQuestion: { q1: true, q2: false } },
+  }
+  answers = draft({
+    q1: { value: 'one', flagged: false },
+    q2: { value: 'two', flagged: false },
+  })
+  const user = typist()
+  render(<Quiz />)
+  await screen.findByText(/2\/2 answered/)
+  await user.click(screen.getByRole('button', { name: /check answers/i }))
+  expect(await screen.findByText('1/2')).toBeDefined()
+  expect(screen.getByRole('button', { name: /run again/i })).toBeDefined()
+  expect(screen.getByRole('button', { name: /finish studying/i })).toBeDefined()
+  expect(screen.queryByText(/sent back to Claude/i)).toBeNull()
+  expect(submits).toBe(1)
+})
+
+test('run again clears the score; the editor was already refreshed by the submit itself', async () => {
+  currentMeta = SET_META
+  submitResult = { ok: true, result: { correct: 2, total: 2, perQuestion: { q1: true, q2: true } } }
+  answers = draft({
+    q1: { value: 'one', flagged: false },
+    q2: { value: 'two', flagged: false },
+  })
+  const user = typist()
+  render(<Quiz />)
+  await screen.findByText(/2\/2 answered/)
+
+  // The real server resets and reshuffles answers.json as part of scoring the submit;
+  // reassigning here before the click stands in for that, since the mock has no server.
+  answers = draft({}, ['q2', 'q1'])
+
+  await user.click(screen.getByRole('button', { name: /check answers/i }))
+  await screen.findByText('2/2')
+  expect(await screen.findByText(/0\/2 answered/)).toBeDefined()
+
+  await user.click(screen.getByRole('button', { name: /run again/i }))
+  expect(screen.queryByText('2/2')).toBeNull()
+  expect(screen.getByRole('button', { name: /check answers/i })).toBeDefined()
+})
+
+test('finish studying sends /api/finish and shows the terminal screen', async () => {
+  currentMeta = SET_META
+  submitResult = { ok: true, result: { correct: 2, total: 2, perQuestion: { q1: true, q2: true } } }
+  const user = typist()
+  render(<Quiz />)
+  await screen.findByText(/0\/2 answered/)
+  await user.click(screen.getByRole('button', { name: /check answers/i }))
+  await screen.findByText('2/2')
+  await user.click(screen.getByRole('button', { name: /finish studying/i }))
+  expect(await screen.findByText(/sent back to Claude/i)).toBeDefined()
+  expect(finishes).toBe(1)
 })
