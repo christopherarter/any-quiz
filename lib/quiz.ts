@@ -178,6 +178,7 @@ export interface ScaffoldInput {
   topic: string
   parentQuizId?: string | null
   targets?: string[]
+  kind?: QuizKind
 }
 
 // The mechanical fields here (id, createdAt, folder path) are exactly where a small model
@@ -211,6 +212,9 @@ export function scaffoldQuiz(baseDir: string, input: ScaffoldInput): { dir: stri
     createdAt,
     parentQuizId: input.parentQuizId ?? null,
     targets: input.targets ?? [],
+  }
+  if (input.kind === 'set') {
+    meta.kind = 'set'
   }
   writeFileSync(join(dir, 'meta.json'), `${JSON.stringify(meta, null, META_INDENT)}\n`)
   return { dir, meta }

@@ -1,3 +1,4 @@
+// biome-ignore lint/style/noExcessiveLinesPerFile: test suite for lib/quiz.ts
 import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
@@ -371,4 +372,21 @@ test('buildFinishPayload assembles the finish event payload from meta, dir, and 
     kind: 'set',
     runs,
   })
+})
+
+test('scaffoldQuiz writes kind "set" into meta.json when requested', () => {
+  const { dir, meta } = scaffoldQuiz(tmp(), {
+    slug: 'heap-basics-set',
+    title: 'Heap Basics',
+    topic: 'Drill the basics',
+    kind: 'set',
+  })
+  expect(meta.kind).toBe('set')
+  expect(JSON.parse(readFileSync(join(dir, 'meta.json'), 'utf8')).kind).toBe('set')
+})
+
+test('scaffoldQuiz omits kind entirely when not requested', () => {
+  const { dir, meta } = scaffoldQuiz(tmp(), { slug: 'rust-lifetimes', title: 'T', topic: 'Top' })
+  expect(meta).not.toHaveProperty('kind')
+  expect(JSON.parse(readFileSync(join(dir, 'meta.json'), 'utf8'))).not.toHaveProperty('kind')
 })
