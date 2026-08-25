@@ -58,6 +58,11 @@ interface QuizContext {
   questionIds: string[]
   known: Set<string>
   kind: QuizKind
+  // Number of runs already in history.json before this server started -- everywhere
+  // `runs` gets read for reporting purposes, it must be sliced by this so a re-served
+  // set folder reports only the current sitting's runs, not every sitting ever run in
+  // that folder.
+  runsAtStart: number
   // Set once the server object exists, so the submit handler can announce a finished
   // attempt without the handler itself holding a reference to the server.
   emitSubmitted: (payload: ResultPayload) => void
@@ -152,10 +157,15 @@ function registerSubmit(app: Hono, ctx: QuizContext): void {
 }
 
 function registerFinish(app: Hono, ctx: QuizContext): void {
+  let finished = false
   app.post('/api/finish', (c) => {
+    if (finished) {
+      return c.json({ error: 'this set has already finished' }, CONFLICT)
+    }
+    finished = true
     const { runs } = readHistory(ctx.dir)
     const response = c.json({ ok: true }, OK)
-    ctx.emitFinished(buildFinishPayload(ctx.meta, ctx.dir, runs))
+    ctx.emitFinished(buildFinishPayload(ctx.meta, ctx.dir, runs.slice(ctx.runsAtStart)))
     return response
   })
 }
@@ -189,6 +199,7 @@ export function createServer({ dir }: { dir: string }): Server {
     questionIds: questions.map((q) => q.id),
     known: new Set(questions.map((q) => q.id)),
     kind: meta.kind ?? 'quiz',
+    runsAtStart: readHistory(dir).runs.length,
     emitSubmitted: (payload) => {
       server.emit('submitted', payload)
     },

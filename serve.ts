@@ -118,6 +118,7 @@ function main(): void {
 
   const { meta, questions } = loadQuiz(opts.dir, opts.retake)
   const kind = meta.kind ?? 'quiz'
+  const runsAtStart = readHistory(opts.dir).runs.length
 
   if (opts.check) {
     const summary = { ok: true, title: meta.title, questionCount: questions.length }
@@ -141,8 +142,9 @@ function main(): void {
     process.on(signal, () => {
       if (kind === 'set') {
         const { runs } = readHistory(opts.dir)
-        if (runs.length > 0) {
-          const payload = buildFinishPayload(meta, opts.dir, runs)
+        const sittingRuns = runs.slice(runsAtStart)
+        if (sittingRuns.length > 0) {
+          const payload = buildFinishPayload(meta, opts.dir, sittingRuns)
           process.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}\n`)
           shutdown(server, EXIT_OK)
           return

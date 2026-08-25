@@ -32,3 +32,21 @@ test('clicking finish exits 0 with the runs payload without waiting for a signal
   const payload = JSON.parse(s.stdout())
   expect(payload.runs).toHaveLength(1)
 })
+
+test('a second sitting on an already-drilled set folder with zero new runs abandons, not reports the prior sitting', async () => {
+  const dir = freshSetDir()
+
+  const first = start([dir])
+  const firstBase = await first.ready
+  expect((await fetch(`${firstBase}/api/submit`, { method: 'POST' })).status).toBe(200)
+  first.child.kill('SIGTERM')
+  expect(await first.exited).toBe(EXIT_OK)
+  const firstPayload = JSON.parse(first.stdout())
+  expect(firstPayload.runs).toHaveLength(1)
+
+  const second = start([dir])
+  await second.ready
+  second.child.kill('SIGTERM')
+  expect(await second.exited).toBe(EXIT_ABANDONED)
+  expect(second.stdout()).toBe('')
+})

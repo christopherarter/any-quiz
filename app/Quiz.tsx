@@ -167,6 +167,8 @@ function RunResultFooter({
   total,
   answered,
   flagged,
+  sending,
+  error,
   onRunAgain,
   onFinish,
 }: {
@@ -174,6 +176,8 @@ function RunResultFooter({
   total: number
   answered: number
   flagged: number
+  sending: boolean
+  error: string | null
   onRunAgain: () => void
   onFinish: () => void
 }): ReactElement {
@@ -181,10 +185,11 @@ function RunResultFooter({
     <footer>
       <span className="progress">{scoreLabel(correct, total)}</span>
       <span className="progress">{progressLabel(answered, total, flagged)}</span>
-      <button className="run-again" onClick={onRunAgain} type="button">
+      <Alert message={error} />
+      <button className="run-again" disabled={sending} onClick={onRunAgain} type="button">
         {RUN_AGAIN}
       </button>
-      <button className="done" onClick={onFinish} type="button">
+      <button className="done" disabled={sending} onClick={onFinish} type="button">
         {FINISH_STUDYING}
       </button>
     </footer>
@@ -268,9 +273,11 @@ export function Quiz(): ReactElement {
       <RunResultFooter
         answered={answered}
         correct={runResult.correct}
+        error={error}
         flagged={flagged}
         onFinish={finish}
         onRunAgain={clearRunResult}
+        sending={status === 'submitting'}
         total={runResult.total}
       />
     )

@@ -5,11 +5,13 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, expect, test } from 'vitest'
+import { appendHistoryEntry } from '../lib/quiz.ts'
 import { createServer } from '../lib/server.ts'
 
 const SET_FIXTURE = fileURLToPath(new URL('../examples/set-example', import.meta.url))
 const QUIZ_FIXTURE = fileURLToPath(new URL('../examples/all-types', import.meta.url))
 const OK = 200
+const CONFLICT = 409
 const NOT_FOUND = 404
 const SET_QUESTION_IDS = ['q1', 'q2', 'q3', 'q4']
 
@@ -144,4 +146,46 @@ test('POST /api/finish does not exist for a quiz', async () => {
   server = s
   const res = await fetch(`${b}/api/finish`, { method: 'POST' })
   expect(res.status).toBe(NOT_FOUND)
+})
+
+test('a second POST /api/finish is rejected and "finished" is emitted only once', async () => {
+  const { server: s, base: b } = await listen(freshDirFrom(SET_FIXTURE))
+  server = s
+
+  await fetch(`${b}/api/submit`, { method: 'POST' })
+
+  let emissions = 0
+  server.on('finished', () => {
+    emissions += 1
+  })
+
+  const first = await fetch(`${b}/api/finish`, { method: 'POST' })
+  expect(first.status).toBe(OK)
+
+  const second = await fetch(`${b}/api/finish`, { method: 'POST' })
+  expect(second.status).toBe(CONFLICT)
+
+  expect(emissions).toBe(1)
+})
+
+test('finish payload only reports runs from this sitting, not earlier ones already in history.json', async () => {
+  const dir = freshDirFrom(SET_FIXTURE)
+  appendHistoryEntry(dir, {
+    ranAt: new Date().toISOString(),
+    correct: 1,
+    total: 4,
+    perQuestion: { q1: true, q2: false, q3: false, q4: false },
+    flagged: [],
+  })
+
+  const { server: s, base: b } = await listen(dir)
+  server = s
+
+  await fetch(`${b}/api/submit`, { method: 'POST' })
+
+  const emitted = once(server, 'finished')
+  await fetch(`${b}/api/finish`, { method: 'POST' })
+  const [payload] = await emitted
+
+  expect(payload.runs).toHaveLength(1)
 })
