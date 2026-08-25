@@ -38,6 +38,11 @@ export interface ResponseEntry {
   flagged: boolean
 }
 
+// 'quiz' is what every folder was before this field existed, so it is also what an
+// absent field means -- every caller normalizes with `meta.kind ?? 'quiz'` rather than
+// this type carrying `undefined` itself.
+export type QuizKind = 'quiz' | 'set'
+
 export interface Answers {
   quizId: string
   status: 'draft' | 'submitted'
@@ -45,6 +50,8 @@ export interface Answers {
   updatedAt: string
   submittedAt: string | null
   responses: Record<string, ResponseEntry>
+  // Set-only: the current run's question order. Never present for a quiz.
+  order?: string[]
 }
 
 export interface Meta {
@@ -55,6 +62,8 @@ export interface Meta {
   createdAt: string
   parentQuizId: string | null
   targets: string[]
+  // Absent means 'quiz'. Never written as the literal "quiz" -- see QuizKind.
+  kind?: QuizKind
 }
 
 export interface QuestionsDoc {
@@ -69,4 +78,26 @@ export interface ResultPayload {
   needsGrading: string[]
   flagged: string[]
   responses: Record<string, ResponseEntry>
+}
+
+export interface HistoryEntry {
+  ranAt: string
+  correct: number
+  total: number
+  perQuestion: Record<string, boolean>
+  flagged: string[]
+}
+
+export interface HistoryDoc {
+  version: 1
+  runs: HistoryEntry[]
+}
+
+// The `POST /api/finish` / `'finished'` event payload -- distinct from ResultPayload,
+// which is one scored quiz attempt, not a whole sitting's worth of set runs.
+export interface FinishPayload {
+  quizId: string
+  quizDir: string
+  kind: 'set'
+  runs: HistoryEntry[]
 }

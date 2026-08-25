@@ -1,5 +1,14 @@
 import { expectTypeOf, test } from 'vitest'
-import type { PublicQuestion, Question, QuestionType } from '../lib/types.ts'
+import type {
+  Answers,
+  FinishPayload,
+  HistoryEntry,
+  Meta,
+  PublicQuestion,
+  Question,
+  QuestionType,
+  QuizKind,
+} from '../lib/types.ts'
 
 test('Question is a union of all six types', () => {
   expectTypeOf<QuestionType>().toEqualTypeOf<
@@ -45,4 +54,15 @@ test('narrowing on type gives access only to that member fields', () => {
     return []
   }
   expectTypeOf(narrow).returns.toEqualTypeOf<string[]>()
+})
+
+test('QuizKind is quiz or set, and Meta/Answers carry the new optional fields', () => {
+  expectTypeOf<QuizKind>().toEqualTypeOf<'quiz' | 'set'>()
+  expectTypeOf<Meta['kind']>().toEqualTypeOf<QuizKind | undefined>()
+  expectTypeOf<Answers['order']>().toEqualTypeOf<string[] | undefined>()
+})
+
+test('FinishPayload carries a fixed kind of "set" and the full run history', () => {
+  expectTypeOf<FinishPayload['kind']>().toEqualTypeOf<'set'>()
+  expectTypeOf<FinishPayload['runs']>().toEqualTypeOf<HistoryEntry[]>()
 })
