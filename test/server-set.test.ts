@@ -1,3 +1,4 @@
+import { once } from 'node:events'
 import { cpSync, mkdtempSync, readFileSync } from 'node:fs'
 import type { Server } from 'node:http'
 import { tmpdir } from 'node:os'
@@ -9,6 +10,7 @@ import { createServer } from '../lib/server.ts'
 const SET_FIXTURE = fileURLToPath(new URL('../examples/set-example', import.meta.url))
 const QUIZ_FIXTURE = fileURLToPath(new URL('../examples/all-types', import.meta.url))
 const OK = 200
+const NOT_FOUND = 404
 const SET_QUESTION_IDS = ['q1', 'q2', 'q3', 'q4']
 
 function freshDirFrom(fixture: string): string {
@@ -119,4 +121,27 @@ test('submitting a set does not emit "submitted" -- the process must keep runnin
   })
   await fetch(`${started.base}/api/submit`, { method: 'POST' })
   expect(emitted).toBe(false)
+})
+
+test('POST /api/finish emits the finish payload with every completed run and responds ok', async () => {
+  const dir = freshDirFrom(SET_FIXTURE)
+  const { server: s, base: b } = await listen(dir)
+  server = s
+
+  await fetch(`${b}/api/submit`, { method: 'POST' })
+  const emitted = once(server, 'finished')
+  const res = await fetch(`${b}/api/finish`, { method: 'POST' })
+  expect(res.status).toBe(OK)
+  const [payload] = await emitted
+  expect(payload.quizId).toBe('b7c2')
+  expect(payload.quizDir).toBe(dir)
+  expect(payload.kind).toBe('set')
+  expect(payload.runs).toHaveLength(1)
+})
+
+test('POST /api/finish does not exist for a quiz', async () => {
+  const { server: s, base: b } = await listen(freshDirFrom(QUIZ_FIXTURE))
+  server = s
+  const res = await fetch(`${b}/api/finish`, { method: 'POST' })
+  expect(res.status).toBe(NOT_FOUND)
 })

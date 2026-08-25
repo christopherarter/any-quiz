@@ -8,14 +8,16 @@ import { PutAnswersBodySchema } from './answers-schema.ts'
 import { DIST_DIR } from './buildinfo.ts'
 import {
   appendHistoryEntry,
+  buildFinishPayload,
   loadFull,
   loadPublic,
   readAnswers,
+  readHistory,
   skeleton,
   writeAnswers,
 } from './quiz.ts'
 import { scoreQuiz } from './score.ts'
-import type { Meta, Question, QuizKind, ResultPayload } from './types.ts'
+import type { FinishPayload, Meta, Question, QuizKind, ResultPayload } from './types.ts'
 
 const OK = 200
 const NO_CONTENT = 204
@@ -59,6 +61,7 @@ interface QuizContext {
   // Set once the server object exists, so the submit handler can announce a finished
   // attempt without the handler itself holding a reference to the server.
   emitSubmitted: (payload: ResultPayload) => void
+  emitFinished: (payload: FinishPayload) => void
 }
 
 function registerAnswers(app: Hono, ctx: QuizContext): void {
@@ -148,12 +151,24 @@ function registerSubmit(app: Hono, ctx: QuizContext): void {
   })
 }
 
+function registerFinish(app: Hono, ctx: QuizContext): void {
+  app.post('/api/finish', (c) => {
+    const { runs } = readHistory(ctx.dir)
+    const response = c.json({ ok: true }, OK)
+    ctx.emitFinished(buildFinishPayload(ctx.meta, ctx.dir, runs))
+    return response
+  })
+}
+
 function buildApp(ctx: QuizContext): Hono {
   const app = new Hono()
 
   app.get('/api/quiz', (c) => c.json(loadPublic(ctx.dir), OK))
   registerAnswers(app, ctx)
   registerSubmit(app, ctx)
+  if (ctx.kind === 'set') {
+    registerFinish(app, ctx)
+  }
   app.all('/api/*', (c) => c.json({ error: 'unknown endpoint' }, NOT_FOUND))
   app.get('*', serveStatic({ root: DIST_DIR }))
 
@@ -176,6 +191,9 @@ export function createServer({ dir }: { dir: string }): Server {
     kind: meta.kind ?? 'quiz',
     emitSubmitted: (payload) => {
       server.emit('submitted', payload)
+    },
+    emitFinished: (payload) => {
+      server.emit('finished', payload)
     },
   }
   // `createAdaptorServer`'s return type covers the http2 adapters this project never
