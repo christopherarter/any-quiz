@@ -23,7 +23,7 @@ const JSON_INDENT = 2
 
 const USAGE = 'usage: serve.ts <quiz-dir> [--port N] [--no-open] [--retake] [--check]'
 const SCAFFOLD_USAGE =
-  'usage: serve.ts scaffold <base-dir> <slug> <title> <topic> [--parent id] [--target id]...'
+  'usage: serve.ts scaffold <base-dir> <slug> <title> <topic> [--parent id] [--target id]... [--kind set]'
 
 // Everything human-readable goes to stderr so stdout carries exactly one thing: the
 // result payload. The calling session parses stdout, so a stray banner there would be a
@@ -157,11 +157,26 @@ function main(): void {
   })
 }
 
+// Not a ternary: this repo's biome preset ("all") enables lint/style/noTernary, so every
+// `cond ? a : b` in this codebase is an if/else (or, here, an early-return function) instead
+// -- confirmed the hard way during Task 5's review, where the plan's own first draft of this
+// exact pattern failed the gate.
+function resolveScaffoldKind(raw: string | null): 'set' | undefined {
+  if (raw === 'set') {
+    return 'set'
+  }
+  return undefined
+}
+
 function mainScaffold(argv: string[]): void {
   const opts = parseScaffoldArgs(argv)
   if (opts.baseDir === null || opts.slug === null || opts.title === null || opts.topic === null) {
     fail(SCAFFOLD_USAGE)
   }
+  if (opts.kind !== null && opts.kind !== 'quiz' && opts.kind !== 'set') {
+    fail(`--kind must be "quiz" or "set", got "${opts.kind}"`)
+  }
+  const kind = resolveScaffoldKind(opts.kind)
 
   let result: { dir: string; meta: Meta }
   try {
@@ -171,6 +186,7 @@ function mainScaffold(argv: string[]): void {
       topic: opts.topic,
       parentQuizId: opts.parent,
       targets: opts.targets,
+      kind,
     })
   } catch (err) {
     if (err instanceof QuizError) {
@@ -206,6 +222,49 @@ if (invokedDirectly()) {
   } else {
     main()
   }
+}
+
+// Helper functions for flag parsing in parseScaffoldArgs
+function handleParentFlag(
+  arg: string | undefined,
+  out: ScaffoldArgs,
+  argv: string[],
+  i: number,
+): boolean {
+  if (arg === '--parent') {
+    out.parent = argv[i] ?? null
+    return true
+  }
+  return false
+}
+
+function handleTargetFlag(
+  arg: string | undefined,
+  out: ScaffoldArgs,
+  argv: string[],
+  i: number,
+): boolean {
+  if (arg === '--target') {
+    const target = argv[i]
+    if (target !== undefined) {
+      out.targets.push(target)
+    }
+    return true
+  }
+  return false
+}
+
+function handleKindFlag(
+  arg: string | undefined,
+  out: ScaffoldArgs,
+  argv: string[],
+  i: number,
+): boolean {
+  if (arg === '--kind') {
+    out.kind = argv[i] ?? null
+    return true
+  }
+  return false
 }
 
 // The two exports sit at the end to satisfy `useExportsLast`; `parseArgs` is a hoisted
@@ -252,6 +311,7 @@ export interface ScaffoldArgs {
   topic: string | null
   parent: string | null
   targets: string[]
+  kind: string | null
 }
 
 // The base dir, slug, title, and topic are positional (in that order); `--parent` and
@@ -264,20 +324,18 @@ export function parseScaffoldArgs(argv: string[]): ScaffoldArgs {
     topic: null,
     parent: null,
     targets: [],
+    kind: null,
   }
   const positionals: string[] = []
   let i = 0
   while (i < argv.length) {
     const arg = argv[i]
     i += 1
-    if (arg === '--parent') {
-      out.parent = argv[i] ?? null
+    if (handleParentFlag(arg, out, argv, i)) {
       i += 1
-    } else if (arg === '--target') {
-      const target = argv[i]
-      if (target !== undefined) {
-        out.targets.push(target)
-      }
+    } else if (handleTargetFlag(arg, out, argv, i)) {
+      i += 1
+    } else if (handleKindFlag(arg, out, argv, i)) {
       i += 1
     } else if (arg !== undefined) {
       positionals.push(arg)

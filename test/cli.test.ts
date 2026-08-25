@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, test } from 'vitest'
 import { openBrowser } from '../lib/open.ts'
-import { parseArgs } from '../serve.ts'
+import { parseArgs, parseScaffoldArgs } from '../serve.ts'
 import { freshQuizDir, SERVE, start, startAt, URL_RE } from './support/cli-child.ts'
 
 const OK = 200
@@ -21,6 +21,7 @@ const UNKNOWN_TYPE_RE = /unknown type/
 const PORT_FLAG_RE = /--port/
 const RETAKE_FLAG_RE = /--retake/
 const BUSY_RE = /busy/
+const KIND_FLAG_RE = /--kind/
 
 // Sends a request over a raw socket and leaves it open afterwards, exactly as a browser's
 // keep-alive connection sits idle between requests. `fetch` pools connections the same
@@ -255,4 +256,56 @@ test('runs when invoked through a symlink, as the install instructions do', asyn
   expect(base).toMatch(URL_RE)
   s.child.kill('SIGINT')
   expect(await s.exited).toBe(EXIT_ABANDONED)
+})
+
+test('parseScaffoldArgs reads --kind alongside the existing flags', () => {
+  expect(parseScaffoldArgs(['/base', 'slug', 'Title', 'Topic', '--kind', 'set'])).toEqual({
+    baseDir: '/base',
+    slug: 'slug',
+    title: 'Title',
+    topic: 'Topic',
+    parent: null,
+    targets: [],
+    kind: 'set',
+  })
+})
+
+test('scaffold --kind set writes {"kind":"set"} into meta.json', async () => {
+  const baseDir = mkdtempSync(join(tmpdir(), 'anyquiz-scaffold-'))
+  const s = start([
+    'scaffold',
+    baseDir,
+    'heap-basics-set',
+    'Heap Basics',
+    'One sentence',
+    '--kind',
+    'set',
+  ])
+  expect(await s.exited).toBe(EXIT_OK)
+  const result = JSON.parse(s.stdout())
+  expect(result.meta.kind).toBe('set')
+})
+
+test('scaffold without --kind writes no kind field at all', async () => {
+  const baseDir = mkdtempSync(join(tmpdir(), 'anyquiz-scaffold-'))
+  const s = start(['scaffold', baseDir, 'rust-lifetimes', 'Rust Lifetimes', 'One sentence'])
+  expect(await s.exited).toBe(EXIT_OK)
+  const result = JSON.parse(s.stdout())
+  expect(result.meta).not.toHaveProperty('kind')
+})
+
+test('scaffold rejects an unrecognized --kind value', async () => {
+  const baseDir = mkdtempSync(join(tmpdir(), 'anyquiz-scaffold-'))
+  const s = start([
+    'scaffold',
+    baseDir,
+    'rust-lifetimes',
+    'Rust Lifetimes',
+    'One sentence',
+    '--kind',
+    'nope',
+  ])
+  expect(await s.exited).toBe(EXIT_BAD_INPUT)
+  expect(s.stderr()).toMatch(KIND_FLAG_RE)
+  expect(s.stdout()).toBe('')
 })
