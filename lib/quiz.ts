@@ -8,6 +8,7 @@ import type {
   PublicQuestion,
   Question,
   QuestionsDoc,
+  QuizKind,
   ResponseEntry,
 } from './types.ts'
 
@@ -27,15 +28,6 @@ const ID_BYTES = 2
 const DATE_LENGTH = 10
 const META_INDENT = 2
 
-function skeleton(quizId: string, questionIds: string[]): Answers {
-  const now = new Date().toISOString()
-  const responses: Record<string, ResponseEntry> = {}
-  for (const id of questionIds) {
-    responses[id] = { value: null, flagged: false }
-  }
-  return { quizId, status: 'draft', startedAt: now, updatedAt: now, submittedAt: null, responses }
-}
-
 function readJson(path: string, label: string): unknown {
   let raw: string
   try {
@@ -52,6 +44,44 @@ function readJson(path: string, label: string): unknown {
     error.cause = err
     throw error
   }
+}
+
+// Fisher-Yates. `order[i]`/`order[j]` are always in bounds by the loop's own invariant,
+// but noUncheckedIndexedAccess types them as possibly undefined regardless -- the guard
+// satisfies tsc without a cast.
+function shuffledOrder(questionIds: string[]): string[] {
+  const order = [...questionIds]
+  for (let i = order.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const a = order[i]
+    const b = order[j]
+    if (a === undefined || b === undefined) {
+      continue
+    }
+    order[i] = b
+    order[j] = a
+  }
+  return order
+}
+
+export function skeleton(quizId: string, questionIds: string[], kind: QuizKind): Answers {
+  const now = new Date().toISOString()
+  const responses: Record<string, ResponseEntry> = {}
+  for (const id of questionIds) {
+    responses[id] = { value: null, flagged: false }
+  }
+  const base: Answers = {
+    quizId,
+    status: 'draft',
+    startedAt: now,
+    updatedAt: now,
+    submittedAt: null,
+    responses,
+  }
+  if (kind === 'set') {
+    return { ...base, order: shuffledOrder(questionIds) }
+  }
+  return base
 }
 
 export function loadFull(dir: string): { meta: Meta; questions: Question[] } {
@@ -77,10 +107,15 @@ export function answersPath(dir: string): string {
   return join(dir, 'answers.json')
 }
 
-export function readAnswers(dir: string, quizId: string, questionIds: string[]): Answers {
+export function readAnswers(
+  dir: string,
+  quizId: string,
+  questionIds: string[],
+  kind: QuizKind,
+): Answers {
   const path = answersPath(dir)
   if (!existsSync(path)) {
-    return skeleton(quizId, questionIds)
+    return skeleton(quizId, questionIds, kind)
   }
   const saved = readJson(path, 'answers.json') as Answers
   saved.responses ??= {}

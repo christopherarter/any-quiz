@@ -163,7 +163,7 @@ test('loadFull throws QuizError for a missing directory', () => {
 const tmp = () => mkdtempSync(join(tmpdir(), 'anyquiz-'))
 
 test('readAnswers returns a skeleton when no file exists', () => {
-  const a = readAnswers(tmp(), 'a3f9', ['q1', 'q2'])
+  const a = readAnswers(tmp(), 'a3f9', ['q1', 'q2'], 'quiz')
   expect(a.quizId).toBe('a3f9')
   expect(a.status).toBe('draft')
   expect(a.submittedAt).toBeNull()
@@ -175,24 +175,24 @@ test('readAnswers returns a skeleton when no file exists', () => {
 
 test('writeAnswers then readAnswers round-trips', () => {
   const dir = tmp()
-  const a = readAnswers(dir, 'a3f9', ['q1'])
+  const a = readAnswers(dir, 'a3f9', ['q1'], 'quiz')
   a.responses.q1 = { value: 'b', flagged: true }
   writeAnswers(dir, a)
   // biome-ignore lint/suspicious/noUnnecessaryConditions: tsc requires the `?.` under noUncheckedIndexedAccess even though biome's inferencer doesn't model it
-  expect(readAnswers(dir, 'a3f9', ['q1']).responses.q1?.value).toBe('b')
+  expect(readAnswers(dir, 'a3f9', ['q1'], 'quiz').responses.q1?.value).toBe('b')
 })
 
 test('writeAnswers stamps updatedAt and leaves no tmp file behind', () => {
   const dir = tmp()
-  writeAnswers(dir, readAnswers(dir, 'a3f9', ['q1']))
-  expect(readAnswers(dir, 'a3f9', ['q1']).updatedAt).toMatch(ISO_TIMESTAMP_RE)
+  writeAnswers(dir, readAnswers(dir, 'a3f9', ['q1'], 'quiz'))
+  expect(readAnswers(dir, 'a3f9', ['q1'], 'quiz').updatedAt).toMatch(ISO_TIMESTAMP_RE)
   expect(readdirSync(dir)).toEqual(['answers.json'])
 })
 
 test('readAnswers backfills question ids added since the draft was saved', () => {
   const dir = tmp()
-  writeAnswers(dir, readAnswers(dir, 'a3f9', ['q1']))
-  expect(readAnswers(dir, 'a3f9', ['q1', 'q2']).responses.q2).toEqual({
+  writeAnswers(dir, readAnswers(dir, 'a3f9', ['q1'], 'quiz'))
+  expect(readAnswers(dir, 'a3f9', ['q1', 'q2'], 'quiz').responses.q2).toEqual({
     value: null,
     flagged: false,
   })
@@ -200,7 +200,7 @@ test('readAnswers backfills question ids added since the draft was saved', () =>
 
 test('archiveAnswers renames the file to a filename-safe timestamp', () => {
   const dir = tmp()
-  const a = readAnswers(dir, 'a3f9', ['q1'])
+  const a = readAnswers(dir, 'a3f9', ['q1'], 'quiz')
   a.status = 'submitted'
   a.submittedAt = '2026-08-17T14:11:48.000Z'
   writeAnswers(dir, a)
@@ -213,7 +213,7 @@ test('archiveAnswers renames the file to a filename-safe timestamp', () => {
 test('readAnswers throws QuizError on a corrupt answers file', () => {
   const dir = tmp()
   writeFileSync(answersPath(dir), '{ not json')
-  expect(() => readAnswers(dir, 'a3f9', ['q1'])).toThrow(QuizError)
+  expect(() => readAnswers(dir, 'a3f9', ['q1'], 'quiz')).toThrow(QuizError)
 })
 
 test('scaffoldQuiz writes meta.json with a generated id and timestamp', () => {
@@ -294,4 +294,15 @@ test('loadFull rejects short/code questions when meta.kind is "set"', () => {
   writeFileSync(join(dir, 'meta.json'), JSON.stringify({ ...meta, kind: 'set' }))
   writeFileSync(join(dir, 'questions.json'), JSON.stringify(fixture()))
   expect(() => loadFull(dir)).toThrow(QuizError)
+})
+
+test('readAnswers with kind "quiz" builds a skeleton with no order', () => {
+  const a = readAnswers(tmp(), 'a3f9', ['q1', 'q2'], 'quiz')
+  expect(a.order).toBeUndefined()
+})
+
+test('readAnswers with kind "set" builds a skeleton whose order is a shuffle of every question id', () => {
+  const a = readAnswers(tmp(), 'a3f9', ['q1', 'q2', 'q3'], 'set')
+  expect(a.order).toBeDefined()
+  expect([...(a.order ?? [])].sort()).toEqual(['q1', 'q2', 'q3'])
 })

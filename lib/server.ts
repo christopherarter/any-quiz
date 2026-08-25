@@ -54,7 +54,9 @@ interface QuizContext {
 }
 
 function registerAnswers(app: Hono, ctx: QuizContext): void {
-  app.get('/api/answers', (c) => c.json(readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds), OK))
+  app.get('/api/answers', (c) =>
+    c.json(readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.meta.kind ?? 'quiz'), OK),
+  )
 
   app.put(
     '/api/answers',
@@ -73,7 +75,7 @@ function registerAnswers(app: Hono, ctx: QuizContext): void {
       if (unknown.length > 0) {
         return c.json({ error: `unknown question ids: ${unknown.join(', ')}` }, BAD_REQUEST)
       }
-      const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds)
+      const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.meta.kind ?? 'quiz')
       for (const [id, entry] of Object.entries(incoming)) {
         answers.responses[id] = {
           value: entry.value ?? null,
@@ -91,7 +93,7 @@ function registerAnswers(app: Hono, ctx: QuizContext): void {
 // `process.exit` would make the server untestable and unusable from anything else.
 function registerSubmit(app: Hono, ctx: QuizContext): void {
   app.post('/api/submit', (c) => {
-    const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds)
+    const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.meta.kind ?? 'quiz')
     if (answers.status === 'submitted') {
       return c.json({ error: 'this quiz has already been submitted' }, CONFLICT)
     }

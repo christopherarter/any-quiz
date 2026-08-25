@@ -79,7 +79,7 @@ function loadQuiz(dir: string, retake: boolean): { meta: Meta; questions: Questi
     return loaded
   }
   const ids = loaded.questions.map((q) => q.id)
-  if (readAnswers(dir, loaded.meta.id, ids).status !== 'submitted') {
+  if (readAnswers(dir, loaded.meta.id, ids, loaded.meta.kind ?? 'quiz').status !== 'submitted') {
     return loaded
   }
   if (!retake) {
