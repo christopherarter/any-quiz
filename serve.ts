@@ -224,49 +224,6 @@ if (invokedDirectly()) {
   }
 }
 
-// Helper functions for flag parsing in parseScaffoldArgs
-function handleParentFlag(
-  arg: string | undefined,
-  out: ScaffoldArgs,
-  argv: string[],
-  i: number,
-): boolean {
-  if (arg === '--parent') {
-    out.parent = argv[i] ?? null
-    return true
-  }
-  return false
-}
-
-function handleTargetFlag(
-  arg: string | undefined,
-  out: ScaffoldArgs,
-  argv: string[],
-  i: number,
-): boolean {
-  if (arg === '--target') {
-    const target = argv[i]
-    if (target !== undefined) {
-      out.targets.push(target)
-    }
-    return true
-  }
-  return false
-}
-
-function handleKindFlag(
-  arg: string | undefined,
-  out: ScaffoldArgs,
-  argv: string[],
-  i: number,
-): boolean {
-  if (arg === '--kind') {
-    out.kind = argv[i] ?? null
-    return true
-  }
-  return false
-}
-
 // The two exports sit at the end to satisfy `useExportsLast`; `parseArgs` is a hoisted
 // function declaration, so `resolveOptions` above can still call it.
 
@@ -331,11 +288,17 @@ export function parseScaffoldArgs(argv: string[]): ScaffoldArgs {
   while (i < argv.length) {
     const arg = argv[i]
     i += 1
-    if (handleParentFlag(arg, out, argv, i)) {
+    if (arg === '--parent') {
+      out.parent = argv[i] ?? null
       i += 1
-    } else if (handleTargetFlag(arg, out, argv, i)) {
+    } else if (arg === '--target') {
+      const target = argv[i]
+      if (target !== undefined) {
+        out.targets.push(target)
+      }
       i += 1
-    } else if (handleKindFlag(arg, out, argv, i)) {
+    } else if (arg === '--kind') {
+      out.kind = argv[i] ?? null
       i += 1
     } else if (arg !== undefined) {
       positionals.push(arg)
