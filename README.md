@@ -82,13 +82,14 @@ To add a harness: drop `<harness>-skills/any-quiz/SKILL.md`, adjust only what th
 Each quiz is a folder under `~/.any-quiz/`:
 
     2026-08-17-rust-lifetimes-a3f9/
-      meta.json       title, topic, follow-up lineage
+      meta.json       title, topic, follow-up lineage, kind ("quiz" or the flash-card "set")
       questions.json  prompts plus the answer key
       answers.json    your responses, written as you go
+      history.json    set only — score and flags for each run, oldest first
 
 The answer key lives in `questions.json` but is stripped before anything reaches the browser, and the browser is typed against `PublicQuestion` so reading it is a compile error.
 
-Submitting closes the attempt. Re-serving the same folder needs `--retake`, which archives the finished attempt rather than overwriting it.
+Submitting a quiz closes the attempt; re-serving the same folder needs `--retake`, which archives the finished attempt rather than overwriting it. A set instead scores each run, appends it to `history.json`, and resets the draft for another run — the folder never becomes unretakeable, and `--retake` doesn't apply to it.
 
 ## Develop
 
