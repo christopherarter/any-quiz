@@ -8,7 +8,7 @@ import { PutAnswersBodySchema } from './answers-schema.ts'
 import { DIST_DIR } from './buildinfo.ts'
 import { loadFull, loadPublic, readAnswers, writeAnswers } from './quiz.ts'
 import { scoreQuiz } from './score.ts'
-import type { Meta, Question, ResultPayload } from './types.ts'
+import type { Meta, Question, QuizKind, ResultPayload } from './types.ts'
 
 const OK = 200
 const NO_CONTENT = 204
@@ -48,6 +48,7 @@ interface QuizContext {
   questions: Question[]
   questionIds: string[]
   known: Set<string>
+  kind: QuizKind
   // Set once the server object exists, so the submit handler can announce a finished
   // attempt without the handler itself holding a reference to the server.
   emitSubmitted: (payload: ResultPayload) => void
@@ -55,7 +56,7 @@ interface QuizContext {
 
 function registerAnswers(app: Hono, ctx: QuizContext): void {
   app.get('/api/answers', (c) =>
-    c.json(readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.meta.kind ?? 'quiz'), OK),
+    c.json(readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind), OK),
   )
 
   app.put(
@@ -75,7 +76,7 @@ function registerAnswers(app: Hono, ctx: QuizContext): void {
       if (unknown.length > 0) {
         return c.json({ error: `unknown question ids: ${unknown.join(', ')}` }, BAD_REQUEST)
       }
-      const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.meta.kind ?? 'quiz')
+      const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind)
       for (const [id, entry] of Object.entries(incoming)) {
         answers.responses[id] = {
           value: entry.value ?? null,
@@ -93,7 +94,7 @@ function registerAnswers(app: Hono, ctx: QuizContext): void {
 // `process.exit` would make the server untestable and unusable from anything else.
 function registerSubmit(app: Hono, ctx: QuizContext): void {
   app.post('/api/submit', (c) => {
-    const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.meta.kind ?? 'quiz')
+    const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind)
     if (answers.status === 'submitted') {
       return c.json({ error: 'this quiz has already been submitted' }, CONFLICT)
     }
@@ -146,6 +147,7 @@ export function createServer({ dir }: { dir: string }): Server {
     questions,
     questionIds: questions.map((q) => q.id),
     known: new Set(questions.map((q) => q.id)),
+    kind: meta.kind ?? 'quiz',
     emitSubmitted: (payload) => {
       server.emit('submitted', payload)
     },
