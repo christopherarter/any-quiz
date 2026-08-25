@@ -3,13 +3,18 @@ import { tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import type { HistoryEntry, Meta } from '../lib/types.ts'
 import {
+  appendHistoryEntry,
   answersPath,
   archiveAnswers,
+  buildFinishPayload,
+  historyPath,
   loadFull,
   loadPublic,
   QuizError,
   readAnswers,
+  readHistory,
   scaffoldQuiz,
   validateQuestions,
   writeAnswers,
@@ -305,4 +310,61 @@ test('readAnswers with kind "set" builds a skeleton whose order is a shuffle of 
   const a = readAnswers(tmp(), 'a3f9', ['q1', 'q2', 'q3'], 'set')
   expect(a.order).toBeDefined()
   expect([...(a.order ?? [])].sort()).toEqual(['q1', 'q2', 'q3'])
+})
+
+test('historyPath points at history.json inside the quiz dir', () => {
+  const dir = tmp()
+  expect(historyPath(dir)).toBe(join(dir, 'history.json'))
+})
+
+test('readHistory returns an empty run list when no file exists yet', () => {
+  expect(readHistory(tmp())).toEqual({ version: 1, runs: [] })
+})
+
+test('appendHistoryEntry persists an entry and readHistory reads it back', () => {
+  const dir = tmp()
+  const entry: HistoryEntry = {
+    ranAt: '2026-08-25T14:05:02.000Z',
+    correct: 3,
+    total: 4,
+    perQuestion: { q1: true, q2: false, q3: true, q4: true },
+    flagged: ['q2'],
+  }
+  appendHistoryEntry(dir, entry)
+  expect(readHistory(dir)).toEqual({ version: 1, runs: [entry] })
+})
+
+test('appendHistoryEntry appends to existing runs rather than overwriting them', () => {
+  const dir = tmp()
+  const first: HistoryEntry = { ranAt: 't1', correct: 1, total: 4, perQuestion: {}, flagged: [] }
+  const second: HistoryEntry = { ranAt: 't2', correct: 2, total: 4, perQuestion: {}, flagged: [] }
+  appendHistoryEntry(dir, first)
+  appendHistoryEntry(dir, second)
+  expect(readHistory(dir).runs).toEqual([first, second])
+})
+
+test('appendHistoryEntry throws QuizError on a corrupt history file', () => {
+  const dir = tmp()
+  writeFileSync(historyPath(dir), '{ not json')
+  expect(() => appendHistoryEntry(dir, { ranAt: 't1', correct: 0, total: 0, perQuestion: {}, flagged: [] })).toThrow(QuizError)
+})
+
+test('buildFinishPayload assembles the finish event payload from meta, dir, and runs', () => {
+  const meta: Meta = {
+    id: 'b7c2',
+    slug: 'heap-basics-set',
+    title: 'Heap Basics',
+    topic: 'Drill the basics',
+    createdAt: '2026-08-25T00:00:00.000Z',
+    parentQuizId: null,
+    targets: [],
+    kind: 'set',
+  }
+  const runs: HistoryEntry[] = [{ ranAt: 't1', correct: 1, total: 1, perQuestion: { q1: true }, flagged: [] }]
+  expect(buildFinishPayload(meta, '/some/dir', runs)).toEqual({
+    quizId: 'b7c2',
+    quizDir: '/some/dir',
+    kind: 'set',
+    runs,
+  })
 })

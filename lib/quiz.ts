@@ -4,6 +4,9 @@ import { join } from 'node:path'
 import { validateQuestions } from './question-schema.ts'
 import type {
   Answers,
+  FinishPayload,
+  HistoryDoc,
+  HistoryEntry,
   Meta,
   PublicQuestion,
   Question,
@@ -142,6 +145,31 @@ export function archiveAnswers(dir: string): string {
   const target = join(dir, `answers-${stamp}.json`)
   renameSync(path, target)
   return target
+}
+
+export function historyPath(dir: string): string {
+  return join(dir, 'history.json')
+}
+
+export function readHistory(dir: string): HistoryDoc {
+  const path = historyPath(dir)
+  if (!existsSync(path)) {
+    return { version: 1, runs: [] }
+  }
+  return readJson(path, 'history.json') as HistoryDoc
+}
+
+export function appendHistoryEntry(dir: string, entry: HistoryEntry): void {
+  const history = readHistory(dir)
+  history.runs.push(entry)
+  const path = historyPath(dir)
+  const tmpPath = `${path}.tmp`
+  writeFileSync(tmpPath, `${JSON.stringify(history, null, 2)}\n`)
+  renameSync(tmpPath, path)
+}
+
+export function buildFinishPayload(meta: Meta, dir: string, runs: HistoryEntry[]): FinishPayload {
+  return { quizId: meta.id, quizDir: dir, kind: 'set', runs }
 }
 
 export interface ScaffoldInput {
