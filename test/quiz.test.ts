@@ -32,6 +32,7 @@ const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T/
 const ID_RE = /^[0-9a-f]{4}$/
 const KEBAB_RE = /kebab-case/
 const DIR_NAME_RE = /^\d{4}-\d{2}-\d{2}-rust-lifetimes-[0-9a-f]{4}$/
+const NOT_ALLOWED_IN_SET_RE = /not allowed in a flash card set/
 
 // biome-ignore lint/suspicious/noExplicitAny: the point of these tests is to feed invalid shapes in
 const fixture = (): any =>
@@ -270,4 +271,27 @@ test('scaffoldQuiz wraps a filesystem failure as QuizError', () => {
   writeFileSync(filePath, 'x')
   const attempt = () => scaffoldQuiz(filePath, { slug: 'rust-lifetimes', title: 'T', topic: 'Top' })
   expect(attempt).toThrow(QuizError)
+})
+
+test('kind defaults to quiz, so short and code remain valid with no second argument', () => {
+  expect(validateQuestions(fixture())).toEqual([])
+})
+
+test('set-kind rejects short and code questions', () => {
+  expect(validateQuestions(fixture(), 'set').join('\n')).toMatch(NOT_ALLOWED_IN_SET_RE)
+})
+
+test('set-kind accepts the four closed types with short/code removed', () => {
+  const doc = fixture()
+  // biome-ignore lint/suspicious/noExplicitAny: fixture() is untyped by design; see its own comment
+  doc.questions = doc.questions.filter((q: any) => q.type !== 'short' && q.type !== 'code')
+  expect(validateQuestions(doc, 'set')).toEqual([])
+})
+
+test('loadFull rejects short/code questions when meta.kind is "set"', () => {
+  const dir = tmp()
+  const meta = JSON.parse(readFileSync(join(FIXTURE_DIR, 'meta.json'), 'utf8'))
+  writeFileSync(join(dir, 'meta.json'), JSON.stringify({ ...meta, kind: 'set' }))
+  writeFileSync(join(dir, 'questions.json'), JSON.stringify(fixture()))
+  expect(() => loadFull(dir)).toThrow(QuizError)
 })

@@ -57,7 +57,7 @@ function readJson(path: string, label: string): unknown {
 export function loadFull(dir: string): { meta: Meta; questions: Question[] } {
   const meta = readJson(join(dir, 'meta.json'), 'meta.json') as Meta
   const doc = readJson(join(dir, 'questions.json'), 'questions.json')
-  const errors = validateQuestions(doc)
+  const errors = validateQuestions(doc, meta.kind ?? 'quiz')
   if (errors.length > 0) {
     throw new QuizError('questions.json failed validation', errors)
   }

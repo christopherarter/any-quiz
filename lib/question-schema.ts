@@ -1,11 +1,13 @@
 import { z } from 'zod'
-import type { QuestionType } from './types.ts'
+import type { QuestionType, QuizKind } from './types.ts'
 
 // Validation runs over untrusted JSON, so everything here is `unknown`-shaped on
 // purpose. `Loose` is the shape we probe before we are entitled to a Question.
 type Loose = Record<string, unknown>
 
 const TYPES: QuestionType[] = ['mcq', 'multi', 'blank', 'short', 'code', 'match']
+
+const SET_DISALLOWED_TYPES: ReadonlySet<QuestionType> = new Set<QuestionType>(['short', 'code'])
 
 const placeholders = (prompt: string): string[] =>
   [...prompt.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1] as string)
@@ -167,7 +169,13 @@ const TypeSchema = z.enum(TYPES as [QuestionType, ...QuestionType[]], {
 // non-string `prompt`, or missing `answer` all stop before the per-type schema runs --
 // that schema (e.g. blank's `.matchAll()` on `prompt`) assumes those basics already
 // hold, and would throw on malformed input instead of reporting it.
-function validateQuestion(raw: unknown, index: number, seen: Set<string>, out: string[]): void {
+function validateQuestion(
+  raw: unknown,
+  index: number,
+  seen: Set<string>,
+  out: string[],
+  kind: QuizKind,
+): void {
   const q = (raw ?? {}) as Loose
 
   const idResult = IdSchema.safeParse(q.id)
@@ -193,6 +201,11 @@ function validateQuestion(raw: unknown, index: number, seen: Set<string>, out: s
     return
   }
 
+  if (kind === 'set' && SET_DISALLOWED_TYPES.has(typeResult.data)) {
+    out.push(`${id}: type "${typeResult.data}" is not allowed in a flash card set`)
+    return
+  }
+
   if (q.answer === undefined) {
     out.push(`${id}: missing answer`)
     return
@@ -208,7 +221,7 @@ function validateQuestion(raw: unknown, index: number, seen: Set<string>, out: s
 
 const RootSchema = z.looseObject({ version: z.unknown(), questions: z.unknown() })
 
-function validateQuestions(doc: unknown): string[] {
+function validateQuestions(doc: unknown, kind: QuizKind = 'quiz'): string[] {
   const rootResult = RootSchema.safeParse(doc)
   if (!rootResult.success) {
     return ['questions.json must be a JSON object']
@@ -237,7 +250,7 @@ function validateQuestions(doc: unknown): string[] {
 
   const seen = new Set<string>()
   for (const [i, entry] of questionsResult.data.entries()) {
-    validateQuestion(entry, i, seen, out)
+    validateQuestion(entry, i, seen, out, kind)
   }
   return out
 }
