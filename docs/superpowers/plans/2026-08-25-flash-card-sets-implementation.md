@@ -2018,7 +2018,11 @@ function useSubmit(deps: SubmitDeps): () => void {
       .then(postSubmit)
       .then(async (result) => {
         if (kind === 'set') {
-          setRunResult(result === null ? null : { correct: result.correct, total: result.total })
+          if (result === null) {
+            setRunResult(null)
+          } else {
+            setRunResult({ correct: result.correct, total: result.total })
+          }
           await refetchAnswers()
           setStatus('ready')
           return
@@ -2294,6 +2298,32 @@ export function Quiz(): ReactElement {
     return <p className="done-msg">{OPENING}</p>
   }
 
+  let footer: ReactElement
+  if (runResult === null) {
+    footer = (
+      <Footer
+        answered={answered}
+        confirming={confirming}
+        error={error}
+        flagged={flagged}
+        isSet={isSet}
+        onCancel={handleCancel}
+        onDone={handleDone}
+        sending={status === 'submitting'}
+        total={total}
+      />
+    )
+  } else {
+    footer = (
+      <RunResultFooter
+        correct={runResult.correct}
+        onFinish={finish}
+        onRunAgain={clearRunResult}
+        total={runResult.total}
+      />
+    )
+  }
+
   return (
     <>
       <header>
@@ -2313,26 +2343,7 @@ export function Quiz(): ReactElement {
           />
         ))}
       </main>
-      {runResult === null ? (
-        <Footer
-          answered={answered}
-          confirming={confirming}
-          error={error}
-          flagged={flagged}
-          isSet={isSet}
-          onCancel={handleCancel}
-          onDone={handleDone}
-          sending={status === 'submitting'}
-          total={total}
-        />
-      ) : (
-        <RunResultFooter
-          correct={runResult.correct}
-          onFinish={finish}
-          onRunAgain={clearRunResult}
-          total={runResult.total}
-        />
-      )}
+      {footer}
     </>
   )
 }
