@@ -14615,6 +14615,7 @@ config(en_default());
 
 // lib/question-schema.ts
 var TYPES = ["mcq", "multi", "blank", "short", "code", "match"];
+var SET_DISALLOWED_TYPES = /* @__PURE__ */ new Set(["short", "code"]);
 var placeholders = (prompt) => [...prompt.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]);
 var sameSet = (a, b) => a.length === b.length && [...a].sort().join("|") === [...b].sort().join("|");
 var firstIssue = (result) => result.error.issues[0]?.message ?? "invalid";
@@ -14724,41 +14725,45 @@ var PromptSchema = requiredString("missing prompt");
 var TypeSchema = external_exports.enum(TYPES, {
   error: (issue2) => `unknown type "${String(issue2.input)}"`
 });
-function validateQuestion(raw2, index, seen, out) {
+function validateQuestion(raw2, index, state, kind) {
   const q = raw2 ?? {};
   const idResult = IdSchema.safeParse(q.id);
   if (!idResult.success) {
-    out.push(`question #${index + 1}: ${firstIssue(idResult)}`);
+    state.out.push(`question #${index + 1}: ${firstIssue(idResult)}`);
     return;
   }
   const { data: id } = idResult;
-  if (seen.has(id)) {
-    out.push(`${id}: duplicate id`);
+  if (state.seen.has(id)) {
+    state.out.push(`${id}: duplicate id`);
   }
-  seen.add(id);
+  state.seen.add(id);
   const promptResult = PromptSchema.safeParse(q.prompt);
   if (!promptResult.success) {
-    out.push(`${id}: ${firstIssue(promptResult)}`);
+    state.out.push(`${id}: ${firstIssue(promptResult)}`);
     return;
   }
   const typeResult = TypeSchema.safeParse(q.type);
   if (!typeResult.success) {
-    out.push(`${id}: ${firstIssue(typeResult)}`);
+    state.out.push(`${id}: ${firstIssue(typeResult)}`);
+    return;
+  }
+  if (kind === "set" && SET_DISALLOWED_TYPES.has(typeResult.data)) {
+    state.out.push(`${id}: type "${typeResult.data}" is not allowed in a flash card set`);
     return;
   }
   if (q.answer === void 0) {
-    out.push(`${id}: missing answer`);
+    state.out.push(`${id}: missing answer`);
     return;
   }
   const result = QUESTION_SCHEMAS[typeResult.data].safeParse(q);
   if (!result.success) {
     for (const issue2 of result.error.issues) {
-      out.push(`${id}: ${issue2.message}`);
+      state.out.push(`${id}: ${issue2.message}`);
     }
   }
 }
 var RootSchema = external_exports.looseObject({ version: external_exports.unknown(), questions: external_exports.unknown() });
-function validateQuestions(doc) {
+function validateQuestions(doc, kind = "quiz") {
   const rootResult = RootSchema.safeParse(doc);
   if (!rootResult.success) {
     return ["questions.json must be a JSON object"];
@@ -14777,9 +14782,9 @@ function validateQuestions(doc) {
     out.push(firstIssue(questionsResult));
     return out;
   }
-  const seen = /* @__PURE__ */ new Set();
+  const state = { seen: /* @__PURE__ */ new Set(), out };
   for (const [i, entry] of questionsResult.data.entries()) {
-    validateQuestion(entry, i, seen, out);
+    validateQuestion(entry, i, state, kind);
   }
   return out;
 }
@@ -14799,14 +14804,6 @@ var SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 var ID_BYTES = 2;
 var DATE_LENGTH = 10;
 var META_INDENT = 2;
-function skeleton(quizId, questionIds) {
-  const now = (/* @__PURE__ */ new Date()).toISOString();
-  const responses = {};
-  for (const id of questionIds) {
-    responses[id] = { value: null, flagged: false };
-  }
-  return { quizId, status: "draft", startedAt: now, updatedAt: now, submittedAt: null, responses };
-}
 function readJson(path, label) {
   let raw2;
   try {
@@ -14824,10 +14821,43 @@ function readJson(path, label) {
     throw error51;
   }
 }
+function shuffledOrder(questionIds) {
+  const order2 = [...questionIds];
+  for (let i = order2.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const a = order2[i];
+    const b = order2[j];
+    if (a === void 0 || b === void 0) {
+      continue;
+    }
+    order2[i] = b;
+    order2[j] = a;
+  }
+  return order2;
+}
+function skeleton(quizId, questionIds, kind) {
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  const responses = {};
+  for (const id of questionIds) {
+    responses[id] = { value: null, flagged: false };
+  }
+  const base = {
+    quizId,
+    status: "draft",
+    startedAt: now,
+    updatedAt: now,
+    submittedAt: null,
+    responses
+  };
+  if (kind === "set") {
+    return { ...base, order: shuffledOrder(questionIds) };
+  }
+  return base;
+}
 function loadFull(dir) {
   const meta3 = readJson(join2(dir, "meta.json"), "meta.json");
   const doc = readJson(join2(dir, "questions.json"), "questions.json");
-  const errors = validateQuestions(doc);
+  const errors = validateQuestions(doc, meta3.kind ?? "quiz");
   if (errors.length > 0) {
     throw new QuizError("questions.json failed validation", errors);
   }
@@ -14844,10 +14874,10 @@ function loadPublic(dir) {
 function answersPath(dir) {
   return join2(dir, "answers.json");
 }
-function readAnswers(dir, quizId, questionIds) {
+function readAnswers(dir, quizId, questionIds, kind) {
   const path = answersPath(dir);
   if (!existsSync2(path)) {
-    return skeleton(quizId, questionIds);
+    return skeleton(quizId, questionIds, kind);
   }
   const saved = readJson(path, "answers.json");
   saved.responses ??= {};
@@ -14871,6 +14901,28 @@ function archiveAnswers(dir) {
   const target = join2(dir, `answers-${stamp}.json`);
   renameSync(path, target);
   return target;
+}
+function historyPath(dir) {
+  return join2(dir, "history.json");
+}
+function readHistory(dir) {
+  const path = historyPath(dir);
+  if (!existsSync2(path)) {
+    return { version: 1, runs: [] };
+  }
+  return readJson(path, "history.json");
+}
+function appendHistoryEntry(dir, entry) {
+  const history = readHistory(dir);
+  history.runs.push(entry);
+  const path = historyPath(dir);
+  const tmpPath = `${path}.tmp`;
+  writeFileSync(tmpPath, `${JSON.stringify(history, null, 2)}
+`);
+  renameSync(tmpPath, path);
+}
+function buildFinishPayload(meta3, dir, runs) {
+  return { quizId: meta3.id, quizDir: dir, kind: "set", runs };
 }
 function scaffoldQuiz(baseDir, input) {
   if (!SLUG_RE.test(input.slug)) {
@@ -14898,6 +14950,9 @@ function scaffoldQuiz(baseDir, input) {
     parentQuizId: input.parentQuizId ?? null,
     targets: input.targets ?? []
   };
+  if (input.kind === "set") {
+    meta3.kind = "set";
+  }
   writeFileSync(join2(dir, "meta.json"), `${JSON.stringify(meta3, null, META_INDENT)}
 `);
   return { dir, meta: meta3 };
@@ -18941,7 +18996,10 @@ function toErrorBag(issues) {
   return bag;
 }
 function registerAnswers(app, ctx) {
-  app.get("/api/answers", (c) => c.json(readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds), OK));
+  app.get(
+    "/api/answers",
+    (c) => c.json(readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind), OK)
+  );
   app.put(
     "/api/answers",
     bodyLimit({ maxSize: MAX_BODY }),
@@ -18959,7 +19017,7 @@ function registerAnswers(app, ctx) {
       if (unknown2.length > 0) {
         return c.json({ error: `unknown question ids: ${unknown2.join(", ")}` }, BAD_REQUEST);
       }
-      const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds);
+      const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind);
       for (const [id, entry] of Object.entries(incoming)) {
         answers.responses[id] = {
           value: entry.value ?? null,
@@ -18973,9 +19031,27 @@ function registerAnswers(app, ctx) {
 }
 function registerSubmit(app, ctx) {
   app.post("/api/submit", (c) => {
-    const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds);
+    const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind);
     if (answers.status === "submitted") {
       return c.json({ error: "this quiz has already been submitted" }, CONFLICT);
+    }
+    if (ctx.kind === "set") {
+      const { auto: auto2, flagged: flagged2 } = scoreQuiz(ctx.questions, answers.responses);
+      appendHistoryEntry(ctx.dir, {
+        ranAt: (/* @__PURE__ */ new Date()).toISOString(),
+        correct: auto2.correct,
+        total: auto2.total,
+        perQuestion: auto2.perQuestion,
+        flagged: flagged2
+      });
+      writeAnswers(ctx.dir, skeleton(ctx.meta.id, ctx.questionIds, "set"));
+      return c.json(
+        {
+          ok: true,
+          result: { correct: auto2.correct, total: auto2.total, perQuestion: auto2.perQuestion }
+        },
+        OK
+      );
     }
     answers.status = "submitted";
     answers.submittedAt = (/* @__PURE__ */ new Date()).toISOString();
@@ -18993,11 +19069,22 @@ function registerSubmit(app, ctx) {
     return response;
   });
 }
+function registerFinish(app, ctx) {
+  app.post("/api/finish", (c) => {
+    const { runs } = readHistory(ctx.dir);
+    const response = c.json({ ok: true }, OK);
+    ctx.emitFinished(buildFinishPayload(ctx.meta, ctx.dir, runs));
+    return response;
+  });
+}
 function buildApp(ctx) {
   const app = new Hono2();
   app.get("/api/quiz", (c) => c.json(loadPublic(ctx.dir), OK));
   registerAnswers(app, ctx);
   registerSubmit(app, ctx);
+  if (ctx.kind === "set") {
+    registerFinish(app, ctx);
+  }
   app.all("/api/*", (c) => c.json({ error: "unknown endpoint" }, NOT_FOUND));
   app.get("*", serveStatic({ root: DIST_DIR }));
   return app;
@@ -19011,8 +19098,12 @@ function createServer2({ dir }) {
     questions,
     questionIds: questions.map((q) => q.id),
     known: new Set(questions.map((q) => q.id)),
+    kind: meta3.kind ?? "quiz",
     emitSubmitted: (payload) => {
       server.emit("submitted", payload);
+    },
+    emitFinished: (payload) => {
+      server.emit("finished", payload);
     }
   };
   server = createAdaptorServer({ fetch: buildApp(ctx).fetch });
@@ -19026,7 +19117,7 @@ var EXIT_ABANDONED = 3;
 var MAX_PORT = 65535;
 var JSON_INDENT = 2;
 var USAGE = "usage: serve.ts <quiz-dir> [--port N] [--no-open] [--retake] [--check]";
-var SCAFFOLD_USAGE = "usage: serve.ts scaffold <base-dir> <slug> <title> <topic> [--parent id] [--target id]...";
+var SCAFFOLD_USAGE = "usage: serve.ts scaffold <base-dir> <slug> <title> <topic> [--parent id] [--target id]... [--kind set]";
 function log(msg) {
   process3.stderr.write(`${msg}
 `);
@@ -19067,7 +19158,7 @@ function loadQuiz(dir, retake) {
     return loaded;
   }
   const ids = loaded.questions.map((q) => q.id);
-  if (readAnswers(dir, loaded.meta.id, ids).status !== "submitted") {
+  if (readAnswers(dir, loaded.meta.id, ids, loaded.meta.kind ?? "quiz").status !== "submitted") {
     return loaded;
   }
   if (!retake) {
@@ -19097,6 +19188,7 @@ function main() {
     log("any-quiz: warning \u2014 app/dist is stale; run `npm run build`");
   }
   const { meta: meta3, questions } = loadQuiz(opts.dir, opts.retake);
+  const kind = meta3.kind ?? "quiz";
   if (opts.check) {
     const summary = { ok: true, title: meta3.title, questionCount: questions.length };
     process3.stdout.write(`${JSON.stringify(summary, null, JSON_INDENT)}
@@ -19109,8 +19201,23 @@ function main() {
 `);
     shutdown(server, EXIT_OK);
   });
+  server.on("finished", (payload) => {
+    process3.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}
+`);
+    shutdown(server, EXIT_OK);
+  });
   for (const signal of ["SIGINT", "SIGTERM"]) {
     process3.on(signal, () => {
+      if (kind === "set") {
+        const { runs } = readHistory(opts.dir);
+        if (runs.length > 0) {
+          const payload = buildFinishPayload(meta3, opts.dir, runs);
+          process3.stdout.write(`${JSON.stringify(payload, null, JSON_INDENT)}
+`);
+          shutdown(server, EXIT_OK);
+          return;
+        }
+      }
       log("any-quiz: abandoned; the draft is saved and the quiz can be re-served");
       shutdown(server, EXIT_ABANDONED);
     });
@@ -19127,11 +19234,21 @@ function main() {
     announce(server, meta3, questions.length, opts.open);
   });
 }
+function resolveScaffoldKind(raw2) {
+  if (raw2 === "set") {
+    return "set";
+  }
+  return void 0;
+}
 function mainScaffold(argv) {
   const opts = parseScaffoldArgs(argv);
   if (opts.baseDir === null || opts.slug === null || opts.title === null || opts.topic === null) {
     fail(SCAFFOLD_USAGE);
   }
+  if (opts.kind !== null && opts.kind !== "quiz" && opts.kind !== "set") {
+    fail(`--kind must be "quiz" or "set", got "${opts.kind}"`);
+  }
+  const kind = resolveScaffoldKind(opts.kind);
   let result;
   try {
     result = scaffoldQuiz(opts.baseDir, {
@@ -19139,7 +19256,8 @@ function mainScaffold(argv) {
       title: opts.title,
       topic: opts.topic,
       parentQuizId: opts.parent,
-      targets: opts.targets
+      targets: opts.targets,
+      kind
     });
   } catch (err) {
     if (err instanceof QuizError) {
@@ -19197,7 +19315,8 @@ function parseScaffoldArgs(argv) {
     title: null,
     topic: null,
     parent: null,
-    targets: []
+    targets: [],
+    kind: null
   };
   const positionals = [];
   let i = 0;
@@ -19212,6 +19331,9 @@ function parseScaffoldArgs(argv) {
       if (target !== void 0) {
         out.targets.push(target);
       }
+      i += 1;
+    } else if (arg === "--kind") {
+      out.kind = argv[i] ?? null;
       i += 1;
     } else if (arg !== void 0) {
       positionals.push(arg);
