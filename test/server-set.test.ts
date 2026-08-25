@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync } from 'node:fs'
+import { cpSync, mkdtempSync, readFileSync } from 'node:fs'
 import type { Server } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -50,4 +50,73 @@ test('GET /api/answers on a quiz never has an order field', async () => {
   const res = await fetch(`${b2}/api/answers`)
   const answers = await res.json()
   expect(answers.order).toBeUndefined()
+})
+
+function putAnswers(base: string, body: unknown): Promise<Response> {
+  return fetch(`${base}/api/answers`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+}
+
+test('submitting a set scores it, appends history, and resets to a fresh reshuffled draft', async () => {
+  const dir = freshDirFrom(SET_FIXTURE)
+  const started = await listen(dir)
+  server = started.server
+
+  await putAnswers(started.base, {
+    responses: {
+      q1: { value: 'b', flagged: false },
+      q2: { value: ['a', 'c'], flagged: false },
+      q3: { value: { 1: 'complete', 2: 'array' }, flagged: true },
+      q4: { value: { l1: 'r1', l2: 'r2', l3: 'r1' }, flagged: false },
+    },
+  })
+
+  const res = await fetch(`${started.base}/api/submit`, { method: 'POST' })
+  expect(res.status).toBe(OK)
+  const body = await res.json()
+  expect(body).toEqual({
+    ok: true,
+    result: {
+      correct: 3,
+      total: 4,
+      perQuestion: { q1: true, q2: true, q3: true, q4: false },
+    },
+  })
+
+  const history = JSON.parse(readFileSync(join(dir, 'history.json'), 'utf8'))
+  expect(history.runs).toHaveLength(1)
+  expect(history.runs[0].correct).toBe(3)
+  expect(history.runs[0].flagged).toEqual(['q3'])
+
+  const after = await (await fetch(`${started.base}/api/answers`)).json()
+  expect(after.status).toBe('draft')
+  expect(after.responses.q1).toEqual({ value: null, flagged: false })
+  expect(after.order).toBeDefined()
+})
+
+test('a set never becomes unretakeable — submitting twice appends two history runs', async () => {
+  const dir = freshDirFrom(SET_FIXTURE)
+  const started = await listen(dir)
+  server = started.server
+
+  expect((await fetch(`${started.base}/api/submit`, { method: 'POST' })).status).toBe(OK)
+  expect((await fetch(`${started.base}/api/submit`, { method: 'POST' })).status).toBe(OK)
+
+  const history = JSON.parse(readFileSync(join(dir, 'history.json'), 'utf8'))
+  expect(history.runs).toHaveLength(2)
+})
+
+test('submitting a set does not emit "submitted" -- the process must keep running', async () => {
+  const started = await listen(freshDirFrom(SET_FIXTURE))
+  server = started.server
+
+  let emitted = false
+  server.on('submitted', () => {
+    emitted = true
+  })
+  await fetch(`${started.base}/api/submit`, { method: 'POST' })
+  expect(emitted).toBe(false)
 })

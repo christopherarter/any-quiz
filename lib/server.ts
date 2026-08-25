@@ -6,7 +6,14 @@ import { Hono } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { PutAnswersBodySchema } from './answers-schema.ts'
 import { DIST_DIR } from './buildinfo.ts'
-import { loadFull, loadPublic, readAnswers, writeAnswers } from './quiz.ts'
+import {
+  appendHistoryEntry,
+  loadFull,
+  loadPublic,
+  readAnswers,
+  skeleton,
+  writeAnswers,
+} from './quiz.ts'
 import { scoreQuiz } from './score.ts'
 import type { Meta, Question, QuizKind, ResultPayload } from './types.ts'
 
@@ -97,6 +104,25 @@ function registerSubmit(app: Hono, ctx: QuizContext): void {
     const answers = readAnswers(ctx.dir, ctx.meta.id, ctx.questionIds, ctx.kind)
     if (answers.status === 'submitted') {
       return c.json({ error: 'this quiz has already been submitted' }, CONFLICT)
+    }
+
+    if (ctx.kind === 'set') {
+      const { auto, flagged } = scoreQuiz(ctx.questions, answers.responses)
+      appendHistoryEntry(ctx.dir, {
+        ranAt: new Date().toISOString(),
+        correct: auto.correct,
+        total: auto.total,
+        perQuestion: auto.perQuestion,
+        flagged,
+      })
+      writeAnswers(ctx.dir, skeleton(ctx.meta.id, ctx.questionIds, 'set'))
+      return c.json(
+        {
+          ok: true,
+          result: { correct: auto.correct, total: auto.total, perQuestion: auto.perQuestion },
+        },
+        OK,
+      )
     }
 
     answers.status = 'submitted'
