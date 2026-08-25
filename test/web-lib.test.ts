@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import { parseBlanks } from '../app/lib/blanks.ts'
+import { reorderQuestions } from '../app/lib/order.ts'
 import { isAnswered, summarize } from '../app/lib/progress.ts'
 import { loadPublic } from '../lib/quiz.ts'
 import type { PublicQuestion, ResponseEntry } from '../lib/types.ts'
@@ -139,4 +140,27 @@ test('summarize counts a flagged but unanswered question in flagged only', () =>
     total: FIXTURE_QUESTION_COUNT,
     flagged: 1,
   })
+})
+
+test('reorderQuestions returns the same array reference when order is undefined', () => {
+  expect(reorderQuestions(questions, undefined)).toBe(questions)
+})
+
+test('reorderQuestions reorders by the given id sequence', () => {
+  const ids = questions.map((each) => each.id)
+  const reversed = [...ids].reverse()
+  expect(reorderQuestions(questions, reversed).map((each) => each.id)).toEqual(reversed)
+})
+
+test('reorderQuestions drops stale ids and appends ids missing from order', () => {
+  const [first, second] = questions
+  if (!(first && second)) {
+    throw new Error('fixture drifted')
+  }
+  const result = reorderQuestions(questions, [second.id, 'nonexistent'])
+  expect(result[0]?.id).toBe(second.id)
+  expect(result).toHaveLength(questions.length)
+  expect(result.map((each) => each.id).sort((a, b) => a.localeCompare(b))).toEqual(
+    questions.map((each) => each.id).sort((a, b) => a.localeCompare(b)),
+  )
 })
