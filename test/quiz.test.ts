@@ -3,10 +3,9 @@ import { tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
-import type { HistoryEntry, Meta } from '../lib/types.ts'
 import {
-  appendHistoryEntry,
   answersPath,
+  appendHistoryEntry,
   archiveAnswers,
   buildFinishPayload,
   historyPath,
@@ -19,6 +18,7 @@ import {
   validateQuestions,
   writeAnswers,
 } from '../lib/quiz.ts'
+import type { HistoryEntry, Meta } from '../lib/types.ts'
 
 const JSON_OBJECT_RE = /JSON object/
 const VERSION_RE = /version/
@@ -346,7 +346,9 @@ test('appendHistoryEntry appends to existing runs rather than overwriting them',
 test('appendHistoryEntry throws QuizError on a corrupt history file', () => {
   const dir = tmp()
   writeFileSync(historyPath(dir), '{ not json')
-  expect(() => appendHistoryEntry(dir, { ranAt: 't1', correct: 0, total: 0, perQuestion: {}, flagged: [] })).toThrow(QuizError)
+  expect(() =>
+    appendHistoryEntry(dir, { ranAt: 't1', correct: 0, total: 0, perQuestion: {}, flagged: [] }),
+  ).toThrow(QuizError)
 })
 
 test('buildFinishPayload assembles the finish event payload from meta, dir, and runs', () => {
@@ -360,7 +362,9 @@ test('buildFinishPayload assembles the finish event payload from meta, dir, and 
     targets: [],
     kind: 'set',
   }
-  const runs: HistoryEntry[] = [{ ranAt: 't1', correct: 1, total: 1, perQuestion: { q1: true }, flagged: [] }]
+  const runs: HistoryEntry[] = [
+    { ranAt: 't1', correct: 1, total: 1, perQuestion: { q1: true }, flagged: [] },
+  ]
   expect(buildFinishPayload(meta, '/some/dir', runs)).toEqual({
     quizId: 'b7c2',
     quizDir: '/some/dir',
