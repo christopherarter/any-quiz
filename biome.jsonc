@@ -101,19 +101,6 @@
           }
         }
       }
-    },
-    {
-      "includes": ["serve.ts", "test/cli.test.ts"],
-      "linter": {
-        "rules": {
-          "style": {
-            // Increased limit: the CLI and its tests are monolithic files that grew to
-            // support comprehensive flag parsing and integration testing. Splitting them
-            // would obscure the entry point and test structure.
-            "noExcessiveLinesPerFile": { "level": "off" }
-          }
-        }
-      }
     }
   ]
 }
