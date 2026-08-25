@@ -9,6 +9,11 @@ const TYPES: QuestionType[] = ['mcq', 'multi', 'blank', 'short', 'code', 'match'
 
 const SET_DISALLOWED_TYPES: ReadonlySet<QuestionType> = new Set<QuestionType>(['short', 'code'])
 
+interface ValidationState {
+  seen: Set<string>
+  out: string[]
+}
+
 const placeholders = (prompt: string): string[] =>
   [...prompt.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1] as string)
 
@@ -165,56 +170,55 @@ const TypeSchema = z.enum(TYPES as [QuestionType, ...QuestionType[]], {
   error: (issue) => `unknown type "${String(issue.input)}"`,
 })
 
-// Validates a single question and appends any problems to `out`. A non-string `type`,
+// Validates a single question and appends any problems to `state.out`. A non-string `type`,
 // non-string `prompt`, or missing `answer` all stop before the per-type schema runs --
 // that schema (e.g. blank's `.matchAll()` on `prompt`) assumes those basics already
 // hold, and would throw on malformed input instead of reporting it.
 function validateQuestion(
   raw: unknown,
   index: number,
-  seen: Set<string>,
-  out: string[],
+  state: ValidationState,
   kind: QuizKind,
 ): void {
   const q = (raw ?? {}) as Loose
 
   const idResult = IdSchema.safeParse(q.id)
   if (!idResult.success) {
-    out.push(`question #${index + 1}: ${firstIssue(idResult)}`)
+    state.out.push(`question #${index + 1}: ${firstIssue(idResult)}`)
     return
   }
   const { data: id } = idResult
-  if (seen.has(id)) {
-    out.push(`${id}: duplicate id`)
+  if (state.seen.has(id)) {
+    state.out.push(`${id}: duplicate id`)
   }
-  seen.add(id)
+  state.seen.add(id)
 
   const promptResult = PromptSchema.safeParse(q.prompt)
   if (!promptResult.success) {
-    out.push(`${id}: ${firstIssue(promptResult)}`)
+    state.out.push(`${id}: ${firstIssue(promptResult)}`)
     return
   }
 
   const typeResult = TypeSchema.safeParse(q.type)
   if (!typeResult.success) {
-    out.push(`${id}: ${firstIssue(typeResult)}`)
+    state.out.push(`${id}: ${firstIssue(typeResult)}`)
     return
   }
 
   if (kind === 'set' && SET_DISALLOWED_TYPES.has(typeResult.data)) {
-    out.push(`${id}: type "${typeResult.data}" is not allowed in a flash card set`)
+    state.out.push(`${id}: type "${typeResult.data}" is not allowed in a flash card set`)
     return
   }
 
   if (q.answer === undefined) {
-    out.push(`${id}: missing answer`)
+    state.out.push(`${id}: missing answer`)
     return
   }
 
   const result = QUESTION_SCHEMAS[typeResult.data].safeParse(q)
   if (!result.success) {
     for (const issue of result.error.issues) {
-      out.push(`${id}: ${issue.message}`)
+      state.out.push(`${id}: ${issue.message}`)
     }
   }
 }
@@ -248,9 +252,9 @@ function validateQuestions(doc: unknown, kind: QuizKind = 'quiz'): string[] {
     return out
   }
 
-  const seen = new Set<string>()
+  const state: ValidationState = { seen: new Set<string>(), out }
   for (const [i, entry] of questionsResult.data.entries()) {
-    validateQuestion(entry, i, seen, out, kind)
+    validateQuestion(entry, i, state, kind)
   }
   return out
 }
