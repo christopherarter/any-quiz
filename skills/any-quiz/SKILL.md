@@ -85,6 +85,37 @@ Then coach in prose, grouped by the signal tiers above — confident misconcepti
 
 Same procedure, scaffolding with `--parent <previous id>` and `--target <id>` for each missed question.
 
+## Flash card sets
+
+Use this instead of a one-shot quiz when the user wants to drill material repeatedly in one sitting — "make me a flash card set on X", "let me drill X", "quiz me on X until I get it." A set restricts questions to the four self-scoring types (`mcq`/`multi`/`blank`/`match` — no `short`/`code`, since a set never grades through you) and can be run as many times as the user wants before they're done.
+
+### Author it
+
+Same as step 1, with `--kind set`:
+
+```
+node "${CLAUDE_PLUGIN_ROOT}/bin/any-quiz.mjs" scaffold ~/.any-quiz <slug> "<title>" "<topic>" --kind set
+```
+
+Everything else — writing `questions.json`, `--check`, serving — is identical to a quiz. The server reshuffles question order every run and reports each run's score the instant the user submits it; it keeps running until the user clicks "Finish studying" or closes the tab.
+
+### Wrap-up
+
+The process exits once the user finishes the sitting (or SIGINT/SIGTERM catches it having completed at least one run). stdout is:
+
+```json
+{
+  "quizId": "b7c2",
+  "quizDir": "/Users/you/.any-quiz/2026-08-25-heap-basics-set-b7c2",
+  "kind": "set",
+  "runs": [
+    { "ranAt": "2026-08-25T14:05:02Z", "correct": 3, "total": 4, "perQuestion": { "q1": true, "q2": false, "q3": true, "q4": true }, "flagged": ["q2"] }
+  ]
+}
+```
+
+There's no grading step — every type in a set is auto-scored. Report the score trend across `runs` (improving, flat, or worse) and which card ids came up wrong most often. Offer to keep drilling (re-serve the same folder — a set never becomes unretakeable) or move to a new topic.
+
 ## Question schema
 
 `questions.json` is `{"version": 1, "questions": [...]}`. Every question needs `id`, `type`, `prompt`, and `answer`; add `rationale` as well, because coaching reads it.
@@ -120,8 +151,8 @@ Rules the validator enforces — a violation exits `2` and serves nothing:
 | `--no-open` | do not launch a browser |
 | `--check` | validate `questions.json` and exit, instead of serving |
 
-`scaffold`'s own flags: `--parent <id>` sets `parentQuizId`; repeatable `--target <id>` sets `targets`.
+`scaffold`'s own flags: `--parent <id>` sets `parentQuizId`; repeatable `--target <id>` sets `targets`; `--kind set` marks the folder a flash card set (omit for a normal quiz).
 
 ## Exit codes
 
-`0` submitted · `2` invalid quiz or refused start · `3` abandoned
+`0` submitted (quiz) or finished with ≥1 run (set) · `2` invalid quiz or refused start · `3` abandoned (quiz) or closed with zero runs completed (set)
